@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clubs Management IIT Gandhinagar</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom styles */
+        #hero {
+            background-image: url('path/to/your/hero/background/image.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="font-sans bg-white">
+
+    <!-- Navigation -->
+    <nav class="bg-gray-800 text-white p-4 fixed w-full z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <img src="path/to/your/logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
+            <div class="flex-grow">
+                <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a>
+            </div>
+            <div>
+                <a href="anshul2.html" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a>
+                <a href="councils.html" class="px-4 py-2 hover:bg-gray-700 transition-colors">Councils</a>
+                <a href="events.html" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
+                <a href="#login" class="px-4 py-2 hover:bg-gray-700 transition-colors">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Carousel -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="20231203171925_IMG_2141.JPG" class="d-block w-100" alt="First slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1>First slide label</h1>
+                    <p>Some representative placeholder content for the first slide.</p>
+                  </div>
+            </div>
+            <div class="carousel-item">
+                <img src="20231203175437_IMG_2169.JPG" class="d-block w-100" alt="Second slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h1>First slide label</h1>
+                    <p>Some representative placeholder content for the first slide.</p>
+                  </div>
+            </div>
+            <div class="carousel-item">
+                <img src="20231203171925_IMG_2141.JPG" class="d-block w-100" alt="Third slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>First slide label</h5>
+                    <p>Some representative placeholder content for the first slide.</p>
+                  </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="h-screen flex flex-col justify-center items-center text-center">
+        <h1 class="text-5xl font-bold text-white shadow-lg">Welcome to Clubs Management</h1>
+        <h2 class="text-2xl text-white shadow-lg">IIT Gandhinagar</h2>
+    </section>
+    <title>Student Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        .info label {
+            font-weight: bold;
+        }
+        .info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Information</h1>
+        <div class="info">
+            <label for="name">Name:</label>
+            <p>{{studentInfo.FIRST_NAME}}</p>
+        </div>
+        <div class="info">
+            <label for="contact">Contact Number:</label>
+            <p>{{ studentInfo.CONTACT_NO }}</p>
+        </div>
+        <div class="info">
+            <label for="email">Email:</label>
+            <p>{{studentInfo.EMAIL}}</p>
+        </div>
+        <div class="info">
+            <label for="firstName">First Name:</label>
+            <p>{{studentInfo.FIRST_NAME}}</p>
+        </div>
+        <div class="info">
+            <label for="lastName">Last Name:</label>
+            <p>{{studentInfo.MIDDLE_NAME}}</p>
+        </div>
+        <div class="info">
+            <label for="address">Address:</label>
+            <p>{{ studentInfo.STREET}}</p>
+        </div>
+        <div class="info">
+            <label for="dob">Date of Birth:</label>
+            <p>{{studentInfo.DATE_OF_BIRTH}}</p>
+        </div>
+        <div class="info">
+            <label for="age">Age:</label>
+            <p>{{studentInfo.AGE}}</p>
+        </div>
+        <div class="info">
+            <label for="program">Programme:</label>
+            <p>{{studentInfo.DISCIPLINE}}</p>
+        </div>
+    </div>
+
+
+
+    <!-- Your remaining HTML content goes here -->
+
+    <footer class="bg-gray-800 text-white p-5 text-center">Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat</footer>
+
+    <!-- JavaScript for Carousel functionality (Bootstrap required) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.carousel').carousel({
+            interval: 2000
+        });
+    });
+</script>
+</body>
+</html>

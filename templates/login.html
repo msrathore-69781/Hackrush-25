@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clubs Management IIT Gandhinagar</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        #hero {
+            background-image: url('C:\Users\SHRIJAN SAHU\Desktop\DBMS website\iitgn campus.jpeg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="font-sans bg-white">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 text-white p-4 fixed w-full z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Include the local path for the logo -->
+            <img src="C:\Users\SHRIJAN SAHU\Desktop\DBMS website\iitgn logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
+            <div class="flex-grow">
+                <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a>
+            </div>
+            <div>
+                <a href="anshul2" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a>
+                <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Councils</a>
+                <a href="events" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
+                <a href="#login" class="px-4 py-2 hover:bg-gray-700 transition-colors">Login</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <section id="hero" class="h-screen flex flex-col justify-center items-center text-center">
+        <h1 class="text-5xl font-bold text-white shadow-lg">Welcome to Clubs Management</h1>
+        <h2 class="text-2xl text-white shadow-lg">IIT Gandhinagar</h2>
+    </section>
+    <!-- Placeholder for Clubs, Councils, and Events Sections -->
+    <!-- <section id="clubs" class="container mx-auto text-center py-20">
+        <h3 class="text-3xl font-bold mb-10">Clubs</h3>
+        <div class="overflow-x-auto">
+            <table class="table-auto border-collapse w-full">
+                <thead>
+                    <tr class="text-lg font-semibold">
+                        <th class="px-4 py-2 border">Club Name</th>
+                        <th class="px-4 py-2 border">Club Type</th>
+                        <th class="px-4 py-2 border">Councils Affiliated</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    <!-- Repeat this row for each club with the actual data -->
+                    <!-- <tr>
+                        <td class="border px-4 py-2">16Pixels</td>
+                        <td class="border px-4 py-2">Photography Club</td>
+                        <td class="border px-4 py-2">Cultural Council</td>
+                    </tr>
+                    <!-- ... other clubs -->
+                <!-- </tbody>
+            </table>
+        </div>
+    </section> --> 
+    <!-- <section id="councils" class="container mx-auto text-center py-20">
+        <h3 class="text-3xl font-bold mb-10">Councils</h3>
+        <div class="overflow-x-auto">
+            <table class="table-auto border-collapse w-full">
+                <thead>
+                    <tr class="text-lg font-semibold">
+                        <th class="px-4 py-2 border">Council Name</th>
+                        <th class="px-4 py-2 border">Description</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    <!-- Repeat this row for each council with the actual data -->
+                    <!-- <tr>
+                        <td class="border px-4 py-2">Academic Council</td>
+                        <td class="border px-4 py-2">Manages academic affairs of students</td>
+                    </tr>
+                    <!-- ... other councils -->
+                <!-- </tbody>
+            </table>
+        </div>
+    </section> -->
+     
+
+    <!-- <section id="events" class="container mx-auto text-center py-20">
+        <h3 class="text-3xl font-bold mb-10">Events</h3>
+        <div class="mb-10">
+            <h4 class="text-2xl font-bold mb-5">Upcoming Events</h4>
+            <!-- Upcoming events list or table here -->
+        <!-- </div>
+        <div>
+            <h4 class="text-2xl font-bold mb-5">Recently Conducted Events</h4>
+            <!-- Recently conducted events list or table here -->
+        <!-- </div>
+    </section> --> 
+    
+
+    <section id="login" class="container mx-auto text-center py-20">
+        <div class="flex justify-center space-x-10">
+            <!-- Student Login -->
+            <div class="w-full max-w-xs">
+                <h3 class="text-3xl font-bold mb-10">Student Login</h3>
+                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <!-- <form action ='/' method="POST">
+                        <input type="text" id="email" name="email" placeholder="Student ID" class="px-4 py-2 mb-4 border rounded w-full" required>
+                        <input type="password" id="password" name="password" placeholder="Password" class="px-4 py-2 mb-4 border rounded w-full" required>
+                        <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full">Submit</button>
+                    </form> -->
+
+                    <form action="{{ url_for('login') }}" method="post">
+                        {% if message is defined and message %}
+                            <div class="alert alert-warning">{{ message }}</div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Password:</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" name="password">
+                        </div>    
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+
+
+
+                </div>
+            </div>
+    
+            <!-- Employee Login -->
+            <!-- <div class="w-full max-w-xs">
+                <h3 class="text-3xl font-bold mb-10">Employee Login</h3>
+                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <form action="/employee_login_endpoint" method="post">
+                        <input type="text" id="employee-id" name="employee_id" placeholder="Employee ID" class="px-4 py-2 mb-4 border rounded w-full" required>
+                        <input type="password" id="employee-password" name="employee_password" placeholder="Password" class="px-4 py-2 mb-4 border rounded w-full" required>
+                        <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div> -->
+    </section>
+
+    <footer class="bg-gray-800 text-white p-5 text-center">
+        Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat
+    </footer>
+
+   
+    <!-- JavaScript for smooth scrolling (this should match with your script3.js functionality) -->
+    <!-- <script>
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script> -->
+    <!-- <script>
+        // Placeholder for actual login check logic
+        function isLoggedIn() {
+            // You would replace this with actual logic to determine if the user is logged in
+            return false; 
+        }
+    
+        function requireLogin(event) {
+            if (!isLoggedIn()) {
+                event.preventDefault();
+                alert('You need to log in first.');
+            }
+        }
+    
+        document.querySelectorAll('nav a[href$=".html"]').forEach(link => {
+            link.addEventListener('click', requireLogin);
+        });
+    </script>
+     -->
+</body>
+</html>
+
+
+
+
+
