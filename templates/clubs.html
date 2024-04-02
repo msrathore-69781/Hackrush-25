@@ -9,14 +9,14 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5 mb-3">Upcoming Events</h1>
+        <h1 class="mt-5 mb-3">Clubs</h1>
         <div class="row">
-            {% for event in events %}
+            {% for club in clubs %}
             <div class="col-md-4">
                 <div class="card mb-4">
-                    <img src="Palette.jpg" class="card-img-top" alt="{{ event.title }}">
+                    <img src="Palette.jpg" class="card-img-top">
                     <div class="card-body">
-                        <h2 class="card-title">{{ event.EVENTS_NAME }}</h5>
+                        <h2 class="card-title">{{  }}</h5>
                         <p class="card-text-large" style="font-size: 22px;">{{ event.DESCRIPTION }}</p>
                         <i><h6>{{event.DATE}}</h4></i>
                         <!-- <a href="{{ url_for('event', event_name=event.EVENTS_NAME) }}" >Read More</a> -->

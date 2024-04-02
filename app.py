@@ -99,22 +99,110 @@ def events():
 
 @app.route('/event', methods = ['POST','GET'])
 def event():
-    event_name = request.args.get('event_name')
+    # event_name = request.args.get('event_name')
+    # print(event_name)
     try: 
         cursor = conn.cursor(dictionary=True)
         # Query to retrieve club information
         # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
-        cursor.execute('select * from EVENT where %s=',event_name)
-        event = cursor.fetchone()
+        cursor.execute('select * from EVENT;')
+        event = cursor.fetchall()
         print(event)
             # Render the template with club information
-        return render_template('event.html', event=event)
+        return render_template('event.html', events=event)
     except mysql.connector.Error as e:
-        return f"Error retrieving club information: {e}"
+        return f"Error retrieving event information: {e}"
     finally:
         # Close database connection
         cursor.close()
         conn.close()
+        
+        
+# # Dummy Data (for demonstration)
+# all_members = [
+#     {"Name": "Taylor Swift", "Role": "Member", "Email": "swifttailor@iign.ac.in"},
+#     # Add more member data as needed
+# ]
+
+# # Function to Fetch Members from Database
+# def fetch_members_from_database(selected_value):
+#     conn = mysql.connector.connect(**mysql_config)
+#     cursor = conn.cursor(dictionary=True)
+
+#     # Query database based on selected value
+#     if selected_value == 'All member':
+#         cursor.execute("SELECT * FROM COUNCIL_MEMBERS")
+#     elif selected_value == 'General Members only':
+#         cursor.execute("SELECT * FROM COUNCIL_MEMBERS WHERE POSITION = 'GENERAL MEMBER'")
+#     elif selected_value == 'Secretary':
+#         cursor.execute("SELECT * FROM COUNCIL_MEMBERS WHERE POSITION = 'SECRETARY'")
+#     elif selected_value == 'Coordinators':
+#         cursor.execute("SELECT * FROM COUNCIL_MEMBERS WHERE POSITION ='COORDINATOR''")
+
+#     members = cursor.fetchall()
+
+#     cursor.close()
+#     conn.close()
+
+#     return members
+
+# # Route to Fetch Members and Render Template
+# @app.route('/council_members', methods=['POST'])
+# def fetch_members():
+#     selected_option = request.form['option']
+#     fetched_members = fetch_members_from_database(selected_option)
+#     return render_template('council_members.html', members=fetched_members)
+
+# def get_data_from_mysql(option):
+#     conn = mysql.connector.connect(**mysql_config)
+#     cursor = conn.cursor()
+#     query = f"SELECT * FROM COUNCIL_MEMBERS WHERE POSITION = '{option}'"
+#     cursor.execute(query)
+#     data = cursor.fetchall()
+#     conn.close()
+#     return data
+
+# # Route for the home page with dropdown menu
+# @app.route('/council_members')
+# def index():
+#     return render_template('tr.html')
+
+# # Route to handle form submission and display data
+# @app.route('/submit_council_members', methods=['POST'])
+# def submit():
+#     option = request.form['option']
+#     member = get_data_from_mysql(option)
+#     print(member)
+#     return render_template('result.html', data=member)
+@app.route('/council_members/<council>')
+def council_members(council):
+    return render_template('council_members.html',council=council)
+
+@app.route('/fetch_member/<council>', methods=['POST'])
+def fetch_members(council):
+    print(council)
+    
+    print("hhi")
+    print(council)
+    option = request.form['option']
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    # Query to fetch data based on the selected option
+    if option == 'All member':
+        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO and COUNCIL_MEMBERS.COUNCIL_NAME = '{council}';"
+    elif option == 'General Members only':
+        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'GENERAL MEMBER' and COUNCIL_MEMBERS.COUNCIL_NAME = '{council}';"
+    elif option =='Coordinators':
+        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'COORDINATOR' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council}';"
+    elif option == 'Secretary':
+        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'SECRETARY' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council}';"
+    cursor.execute(query)
+    data = cursor.fetchall()
+    print(data)
+    conn.close()
+    return render_template('council_members.html', data=data)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

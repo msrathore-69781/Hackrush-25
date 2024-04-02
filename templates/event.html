@@ -3,163 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Detail</title>
+    <title>Event Page</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .event-detail {
-            margin-top: 50px;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-        }
-        .event-image {
-            max-width: 100%;
-            border-radius: 10px;
-        }
-        .event-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .event-description {
-            font-size: 18px;
-            color: #666;
-            line-height: 1.6;
-        }
-        .back-btn {
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
+    <div class="container">
+        <h1 class="mt-5 mb-3">Upcoming Events</h1>
+        <div class="row">
+            {% for event in events %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="Palette.jpg" class="card-img-top" alt="{{ event.title }}">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ event.EVENTS_NAME }}</h5>
+                        <p class="card-text-large" style="font-size: 22px;">{{ event.DESCRIPTION }}</p>
+                        <i><h6>{{event.DATE}}</h4></i>
+                        <!-- <a href="{{ url_for('event', event_name=event.EVENTS_NAME) }}" >Read More</a> -->
+                       
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
-<div class="container">
-    <div class="event-detail">
-        <img src="Palette.jpg" class="event-image" alt="Event Image">
-        <h1 class="event-title">Event Name</h1>
-        <p class="event-description">   kkknkn</p>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="name">Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-        </div>
-
-        <a href="events" class="btn btn-primary back-btn">Back to Events</a>
-    </div>
-</div>
-
-<div class="container">
-    <h1>Student Information</h1>
-    <div class="info">
-        <label for="name">Name:</label>
-        <p>{{studentInfo.FIRST_NAME}}  {{studentInfo.MIDDLE_NAME}} {{studentInfo.LAST_NAME}}</p>
-    </div>
-    <div class="info">
-        <label for="email">Email:</label>
-        <p>{{studentInfo.EMAIL}}</p>
-    </div>
-    <div class="info">
-        <label for="roll_no">Roll Number:</label>
-        <p>{{studentInfo.ROLL_NO}}</p>
-    </div>
-    <div class="info">
-        <label for="contact">Contact Number:</label>
-        <p>{{ studentInfo.CONTACT_NO }}</p>
-    </div>
-    <div class="info">
-        <label for="firstName">First Name:</label>
-        <p>{{studentInfo.FIRST_NAME}}</p>
-    </div>
-    <div class="info">
-        <label for="middleName">Middle Name:</label>
-        <p>{{studentInfo.MIDDLE_NAME}}</p>
-    </div>
-    <div class="info">
-        <label for="lastName">Last Name:</label>
-        <p>{{studentInfo.LAST_NAME}}</p>
-    </div>
-    <div class="info">
-        <label for="address">Address:</label>
-        <p>{{ studentInfo.STREET}}, {{ studentInfo.CITY}}, {{studentInfo.STATE}}</p>
-    </div>
-    <div class="info">
-        <label for="dob">Date of Birth:</label>
-        <p>{{studentInfo.DATE_OF_BIRTH}}</p>
-    </div>
-    <div class="info">
-        <label for="age">Age:</label>
-        <p>{{studentInfo.AGE}}</p>
-    </div>
-    <div class="info">
-        <label for="program">Programme:</label>
-        <p>{{studentInfo.PROGRAMME}}({{studentInfo.DISCIPLINE}})</p>
-    </div>
-</div>
-
-
-
-<!-- Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
