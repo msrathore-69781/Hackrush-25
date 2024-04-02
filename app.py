@@ -27,8 +27,6 @@ def login():
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         roll_no = request.form['password']
-        print("Received email:", email)  # Debugging print statement
-        print("Received roll number:", roll_no)  # Debugging print statement
         cursor = conn.cursor(dictionary=True)
         try:
             cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s AND ROLL_NO = %s', (email, roll_no))
@@ -70,7 +68,9 @@ def council():
         # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
         cursor.execute(' Select council.COUNCIL_NAME ,council.DESCRIPTION, count(COUNCIL_MEMBERS.ROLLS_NO) as "TOTAL_MEMBERS" from council ,  COUNCIL_MEMBERS where council.COUNCIL_NAME = COUNCIL_MEMBERS.COUNCIL_NAME group by COUNCIL_MEMBERS.COUNCIL_NAME ')
         councils = cursor.fetchall()
-
+        print(councils)
+        session['councilName']= councils[0]['COUNCIL_NAME']
+        print(session['councilName'])
         # Render the template with club information
         return render_template('councils.html', councils=councils)
     except mysql.connector.Error as e:
@@ -89,7 +89,7 @@ def events():
         cursor.execute('select PLACE_AND_TIME.EVENTS_NAME, PLACE_AND_TIME.DATE, EVENT.DESCRIPTION from PLACE_AND_TIME , EVENT where PLACE_AND_TIME.EVENTS_NAME = EVENT.EVENT_NAME order by PLACE_AND_TIME.DATE DESC;')
         events = cursor.fetchall()
         # Render the template with club information
-        return render_template('events.html', events=events)
+        return render_template('events.html',e=events)
     except mysql.connector.Error as e:
         return f"Error retrieving club information: {e}"
     finally:
@@ -98,18 +98,19 @@ def events():
         conn.close()
 
 @app.route('/event', methods = ['POST','GET'])
-def event():
+def event(event):
     # event_name = request.args.get('event_name')
     # print(event_name)
+    conn = mysql.connector.connect(**mysql_config)
     try: 
         cursor = conn.cursor(dictionary=True)
         # Query to retrieve club information
         # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
-        cursor.execute('select * from EVENT;')
+        cursor.execute('select * from EVENT where EVENT_NAME= %s', ('{event}'))
         event = cursor.fetchall()
         print(event)
             # Render the template with club information
-        return render_template('event.html', events=event)
+        return render_template('event.html')
     except mysql.connector.Error as e:
         return f"Error retrieving event information: {e}"
     finally:
@@ -118,91 +119,98 @@ def event():
         conn.close()
         
         
-# # Dummy Data (for demonstration)
-# all_members = [
-#     {"Name": "Taylor Swift", "Role": "Member", "Email": "swifttailor@iign.ac.in"},
-#     # Add more member data as needed
-# ]
+@app.route('/council_members')
+def council_members():
+        return render_template('council_members.html')
 
-# # Function to Fetch Members from Database
-# def fetch_members_from_database(selected_value):
-#     conn = mysql.connector.connect(**mysql_config)
-#     cursor = conn.cursor(dictionary=True)
-
-#     # Query database based on selected value
-#     if selected_value == 'All member':
-#         cursor.execute("SELECT * FROM COUNCIL_MEMBERS")
-#     elif selected_value == 'General Members only':
-#         cursor.execute("SELECT * FROM COUNCIL_MEMBERS WHERE POSITION = 'GENERAL MEMBER'")
-#     elif selected_value == 'Secretary':
-#         cursor.execute("SELECT * FROM COUNCIL_MEMBERS WHERE POSITION = 'SECRETARY'")
-#     elif selected_value == 'Coordinators':
-#         cursor.execute("SELECT * FROM COUNCIL_MEMBERS WHERE POSITION ='COORDINATOR''")
-
-#     members = cursor.fetchall()
-
-#     cursor.close()
-#     conn.close()
-
-#     return members
-
-# # Route to Fetch Members and Render Template
-# @app.route('/council_members', methods=['POST'])
-# def fetch_members():
-#     selected_option = request.form['option']
-#     fetched_members = fetch_members_from_database(selected_option)
-#     return render_template('council_members.html', members=fetched_members)
-
-# def get_data_from_mysql(option):
-#     conn = mysql.connector.connect(**mysql_config)
-#     cursor = conn.cursor()
-#     query = f"SELECT * FROM COUNCIL_MEMBERS WHERE POSITION = '{option}'"
-#     cursor.execute(query)
-#     data = cursor.fetchall()
-#     conn.close()
-#     return data
-
-# # Route for the home page with dropdown menu
-# @app.route('/council_members')
-# def index():
-#     return render_template('tr.html')
-
-# # Route to handle form submission and display data
-# @app.route('/submit_council_members', methods=['POST'])
-# def submit():
-#     option = request.form['option']
-#     member = get_data_from_mysql(option)
-#     print(member)
-#     return render_template('result.html', data=member)
-@app.route('/council_members/<council>')
-def council_members(council):
-    return render_template('council_members.html',council=council)
-
-@app.route('/fetch_member/<council>', methods=['POST'])
-def fetch_members(council):
-    print(council)
-    
-    print("hhi")
-    print(council)
+@app.route('/fetch_member', methods=['POST'])
+def fetch_members():
     option = request.form['option']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
+    c= session['councilName']
     # Query to fetch data based on the selected option
     if option == 'All member':
-        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO and COUNCIL_MEMBERS.COUNCIL_NAME = '{council}';"
+        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO and COUNCIL_MEMBERS.COUNCIL_NAME = '{c}';"
     elif option == 'General Members only':
-        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'GENERAL MEMBER' and COUNCIL_MEMBERS.COUNCIL_NAME = '{council}';"
+        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'GENERAL MEMBER' and COUNCIL_MEMBERS.COUNCIL_NAME = '{c}';"
     elif option =='Coordinators':
-        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'COORDINATOR' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council}';"
+        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'COORDINATOR' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{c}';"
     elif option == 'Secretary':
-        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'SECRETARY' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council}';"
+        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'SECRETARY' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{c}';"
     cursor.execute(query)
     data = cursor.fetchall()
     print(data)
     conn.close()
     return render_template('council_members.html', data=data)
 
+@app.route('/equipment', methods=['POST','GET'])
+def equipment():
+    return render_template('equipments.html')
 
+
+@app.route('/equipmentaction', methods=['POST','GET'])
+def action():
+    if request.method == 'POST':
+        option = request.form['option']
+        conn = mysql.connector.connect(**mysql_config)
+        cursor = conn.cursor()
+        # Query to fetch data based on the selected option
+        if option == 'issue':
+            query = f"select unique(CLUB_NAME) from OWNS;"
+        cursor.execute(query)
+        clubs = cursor.fetchall()
+        conn.close()
+        print(clubs)
+        return render_template('equipments.html', clubs=clubs)
+    return render_template('equipments.html')
+
+@app.route('/selectclub', methods=['POST'])
+def selectclub():
+    option = request.form['option']
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    # Query to fetch data based on the selected option
+    query = f"select NAME from EQUIPMENT right join OWNS on OWNS.EQUIPMENT_ID = EQUIPMENT.EQUIPMENT_ID where OWNS.CLUB_NAME = {option};"
+    cursor.execute(query)
+    eq = cursor.fetchall()
+    conn.close()
+    return render_template('equipments.html', eq=eq)
+
+@app.route('/issueequipment', methods=['POST'])
+def issueequipment():
+    option = request.form['option']
+    sop = request.form['sop']
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    # Query to fetch data based on the selected option
+    
+    query = f"select AVAILABILTY, QUANTITY, EQUIPMENT_ID from EQUIPMENT where NAME = {option};"
+    cursor.execute(query)
+    eq = cursor.fetchone()
+    if (eq['AVAILABILITY']==0):
+        conn.close()
+        return "Not available at the moment"
+    
+    id = eq['EQUIPMENT_ID']
+    count = eq['QUANTITY']
+
+    query = f"insert into ISSUE ({id},{session['userid']},{datetime.now()},{None},{sop})"
+    cursor.execute(query)
+
+    query = f"select count(*) as c from ISSUE where EQUIPMENT_ID = {id} and RETURN_TIME = {None}"
+    cursor.execute(query)
+    eq = cursor.fetchone()
+    if eq['c']==count:
+        query = f"update EQUIPMENT set AVAILABILITY = 0 where EQUIPMENT_ID = {id}"
+        cursor.execute(query)
+    conn.close()
+    return "Successfuly issued"
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 if __name__ == "__main__":
     app.run(debug=True)

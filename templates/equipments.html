@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Handling</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="font-sans bg-white p-8">
+
+    <h1 class="text-2xl font-bold mb-4">Equipment Handling</h1>
+
+    <!-- Equipment Handling Dropdown -->
+    <div class="mb-4">
+        <label for="equipment-action" class="block text-sm font-medium text-gray-700">Equipment Action:</label>
+        <select id="equipment-action" class="form-select block w-full mt-1">
+            <option value="">Select Action</option>
+            <option value="issue">Issue</option>
+            <option value="return">Return</option>
+            <option value="view_history">View History</option>
+        </select>
+    </div>
+
+    <!-- Dynamic content will be inserted below -->
+    <div id="dynamic-content"></div>
+
+    <script>
+        document.getElementById('equipment-action').addEventListener('change', function() {
+            const action = this.value;
+            const dynamicContent = document.getElementById('dynamic-content');
+            dynamicContent.innerHTML = ''; // Clear previous content
+        
+            if (action == 'issue') {
+                // Add Club Names Dropdown
+                const clubSelect = document.createElement('select');
+                clubSelect.id = 'club-names';
+                clubSelect.classList.add('form-select', 'block', 'w-full', 'mt-1');
+                clubSelect.innerHTML = `
+                    <option value="">Select Club</option>
+                    {%for club in clubs%}
+                    <option value="club1">{{club.CLUB_NAME}}</option>
+                    {%endfor%}
+                `;
+                clubSelect.onchange = function() {
+                    // Equipment Select
+                    const equipmentSelect = document.createElement('select');
+                    equipmentSelect.id = 'equipment-list';
+                    equipmentSelect.classList.add('form-select', 'block', 'w-full', 'mt-1');
+                    equipmentSelect.innerHTML = `
+                        <option value="">Select Equipment</option>
+                        <option value="equipment1">Equipment 1</option>
+                        <option value="equipment2">Equipment 2</option>
+                        // Customize based on club
+                    `;
+                    dynamicContent.appendChild(equipmentSelect);
+        
+                    equipmentSelect.onchange = function() {
+                        const equipment = this.value;
+                        if (equipment) {
+                            // Add Statement of Purpose Input
+                            const purposeInput = document.createElement('input');
+                            purposeInput.type = 'text';
+                            purposeInput.placeholder = 'Enter Statement of Purpose';
+                            purposeInput.classList.add('form-input', 'block', 'w-full', 'mt-1');
+                            dynamicContent.appendChild(purposeInput);
+        
+                            // Submit and Cancel Buttons
+                            addSubmitAndCancelButtons(dynamicContent);
+                        }
+                    };
+                };
+                dynamicContent.appendChild(clubSelect);
+            }
+            // Implement "Return" and "View History" functionality as needed
+        });
+        
+        function addSubmitAndCancelButtons(container) {
+            // Prevent duplicate buttons
+            if (!document.getElementById('submit-btn') && !document.getElementById('cancel-btn')) {
+                // Submit Button
+                const submitButton = document.createElement('button');
+                submitButton.id = 'submit-btn';
+                submitButton.textContent = 'Submit';
+                submitButton.classList.add('mt-4', 'bg-blue-500', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'hover:bg-blue-700');
+                submitButton.type = 'button';
+        
+                // Cancel Button
+                const cancelButton = document.createElement('button');
+                cancelButton.id = 'cancel-btn';
+                cancelButton.textContent = 'Cancel';
+                cancelButton.classList.add('mt-4', 'ml-2', 'bg-gray-500', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'hover:bg-gray-700');
+                cancelButton.type = 'button';
+                cancelButton.onclick = function() {
+                    container.innerHTML = ''; // Clear dynamic content
+                };
+        
+                container.appendChild(submitButton);
+                container.appendChild(cancelButton);
+            }
+        }
+        </script>
+        
+</body>
+</html>
