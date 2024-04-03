@@ -134,9 +134,9 @@ def login():
         try:
             if email == "admin@iitgn.ac.in":
                 # password-check
-                if employee_id != user['EMPLOYEE_ID']:
-                    print("Incorrect Employee Password")
-                    message = "Incorrect Employee Password"
+                if pw != "manudb":
+                    print("Incorrect Password")
+                    message = "Incorrect Password"
 
                 session['loggedin'] = True
                 session['userid'] = 0
