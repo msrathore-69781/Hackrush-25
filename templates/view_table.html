@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Table</title>
+</head>
+<body>
+    <h1>Viewing Table: {{ table_name }}</h1>
+    
+    <!-- Container to display existing data -->
+    <div>
+        <h2>Existing Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    {% for column in columns %}
+                    <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in existing_data %}
+                <tr>
+                    {% for value in row %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <form>
+        <h2>Enter New Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Data Entry</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for column in columns %}
+                <tr>
+                    <td>{{ column }}</td>
+                    <td><input type="text" name="{{ column }}"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash , jsonify
 import mysql.connector
 import re
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -23,30 +24,41 @@ conn = mysql.connector.connect(**mysql_config)
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    message = ''
+    message = ""
+    ''' Log-in for Students '''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         roll_no = request.form['password']
+        print("Received email:", email)          # Debugging print statement
+        print("Received roll number:", roll_no)  # Debugging print statement
         cursor = conn.cursor(dictionary=True)
         try:
-            cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s AND ROLL_NO = %s', (email, roll_no))
+            # cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s AND ROLL_NO = %s', (email, roll_no))
+            cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s', (email,))
             user = cursor.fetchone()
-            print("User:", user)  # Debugging print statement
+            print("User:", user)                 # Debugging print statement
             if user:
-                session['loggedin'] = True
-                session['userid'] = user['ROLL_NO']
-                session['name'] = user['FIRST_NAME']
-                session['email'] = user['EMAIL']
-                message = 'Logged in successfully !'
-                # Page you want to navigate to if logged in successfully
-                return render_template('studentInfo.html', studentInfo = user)
+                # Password check
+                if roll_no != email.split("@")[0]:
+                    print("Incorrect Student Password")
+                    flash("Incorrect Student Password", 'error')         # Flash error message
+                else:
+                    session['loggedin'] = True
+                    session['userid'] = user['ROLL_NO']
+                    session['name'] = user['FIRST_NAME']
+                    session['email'] = user['EMAIL']
+                    return render_template('studentInfo.html', studentInfo=user)
             else:
-                print('User not found or incorrect email / password!')  # Debugging print statement
+                print('User not found (incorrect email)')  # Debugging print statement
+                flash("User not found (incorrect email)", 'error')
+
         except Exception as e:
-            print('Error:', e)  # Debugging print statement
+            flash("An error occurred. Please try again later.", 'error')  # Flash error message
+            print('Error:', e)                                            # Debugging print statement
             message = 'An error occurred during login.'
         finally:
             cursor.close()  # Always close the cursor
+
 
 
 # we want to show the login page by default
@@ -57,6 +69,7 @@ def logout():
     session.pop('loggedin', None)
     session.pop('userid', None)
     session.pop('email', None)
+    session.pop('name',None)
     return redirect(url_for('login'))
 
 #this is used to display council details 
@@ -98,7 +111,7 @@ def events():
         conn.close()
 
 @app.route('/event', methods = ['POST','GET'])
-def event(event):
+def event():
     # event_name = request.args.get('event_name')
     # print(event_name)
     conn = mysql.connector.connect(**mysql_config)
@@ -144,73 +157,220 @@ def fetch_members():
     conn.close()
     return render_template('council_members.html', data=data)
 
-@app.route('/equipment', methods=['POST','GET'])
+@app.route('/update_council_member', methods=['POST'])
+def update_council_member():
+    option = request.form['option2']
+    r= request.form['r']
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    c= session['councilName']
+    # Query to fetch data based on the selected option
+    if option == 'Add member':
+        query = f"insert into COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) values('{c}',{r},'GENERAL MEMBER');"
+    elif option == 'Remove Member':
+        query = f"delete from COUNCIL_MEMBERS where ROLLS_NO = {r} and POSITION = 'GENERAL MEMBER';"
+    elif option =='Add coordinator':
+        query = f"insert into COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) values('{c}',{r},'COORDINATOR');"
+    elif option == 'Remove coordinator':
+        query = f"delete from COUNCIL_MEMBERS where ROLLS_NO = {r} and POSITION = 'COORDINATOR';"
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+    return render_template('council_members.html')
+
+
+# Function to fetch all table names from MySQL
+def get_table_names():
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    cursor.execute("SHOW TABLES")
+    tables = [table[0] for table in cursor.fetchall()]
+    cursor.close()
+    conn.close()
+    return tables
+
+@app.route('/admin')
+def admin_panel():
+    tables = get_table_names()
+    print(tables)
+    return render_template('admin.html', tables=tables)
+
+@app.route('/view_table/<table_name>')
+def view_table(table_name):
+    # Establish a connection to MySQL
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+
+    # Fetch column names for the specified table
+    cursor.execute(f"SHOW COLUMNS FROM {table_name}")
+    columns = [column[0] for column in cursor.fetchall()]
+
+    # Close the cursor and connection
+    cursor.close()
+    conn.close()
+
+    # Render the HTML template with table name and column names
+    return render_template('view_table.html', table_name=table_name, columns=columns)
+@app.route('/addEvent', methods=['GET','POST'])
+def submit():
+    if request.method == 'POST' and 'event_name' in request.form and 'edition' in request.form and 'mode_of_conduct' in request.form and 'description' in request.form and 'participation_form' in request.form and 'rulebook_link' in request.form and 'budget' in request.form and 'team_name' in request.form and 'team_captain' in request.form and 'filler_roll_no' in request.form and 'organizer_roll_no' in request.form and 'responsibility' in request.form and 'club_name' in request.form:
+        event_name = request.form['event_name']
+        edition = int(request.form['edition'])
+        mode_of_conduct = request.form['mode_of_conduct']
+        description = request.form['description']
+        participation_form = request.form['participation_form']
+        rulebook_link = request.form['rulebook_link']
+        budget = float(request.form['budget'])
+
+        team_name = request.form['team_name']
+        team_captain = 1 if request.form['team_captain'] =='Yes' else 0
+        filler_roll_no = int(request.form['filler_roll_no'])
+
+
+        organizer_roll_no = int(request.form['organizer_roll_no'])
+        responsibility= request.form['responsibility']
+
+        club_name = request.form['club_name']
+
+        venue = request.form['venue']
+        date = request.form['date']
+        print(type(date))
+        
+
+        start_time = request.form['start_time']
+        end_time = request.form['end_time']
+        print(type(start_time))
+        print(end_time)
+
+
+
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO event 
+                (event_name, edition, mode_of_conduct, description, participation_form, rulebook_link, budget) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ''', (event_name, edition, mode_of_conduct, description, participation_form, rulebook_link, budget))
+            conn.commit()
+            cursor = conn.cursor()
+
+            cursor.execute('''
+                INSERT INTO participation
+                           (EVENTS_NAME,EDITIONS,ROLL_NO,TEAM_NAME,TEAM_CAPTAIN)
+                           VALUES (%s, %s, %s,%s,%s)''',
+                           (event_name,edition,filler_roll_no,team_name,team_captain))
+            conn.commit()
+            cursor = conn.cursor()
+
+            cursor.execute('''
+                INSERT INTO ORGANIZERS
+                           VALUES (%s, %s, %s,%s)
+                           ''',(event_name,edition,organizer_roll_no,responsibility))
+            conn.commit()
+            cursor = conn.cursor()
+
+            cursor.execute('''
+                INSERT INTO CONDUCTS
+                            VALUES (%s, %s, %s)
+                            ''',(club_name,event_name,edition))
+            conn.commit()
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO PLACE_AND_TIME 
+                            VALUES (%s, %s,%s,%s,%s,%s)
+                            ''',(venue,event_name,edition,date,start_time,end_time))    
+            conn.commit()                       
+            
+            cursor.close()
+            conn.close()
+            message = 'Event added successfully!'
+        except mysql.connector.Error as e:
+            message = f"Error adding event: {e}"
+    else:
+        message = "Missing form fields"
+   
+    return render_template('addEvent.html', message=message)
+
+
+@app.route('/equipment', methods=['GET'])
 def equipment():
-    return render_template('equipments.html')
+    return render_template('equipments.html', a=0)
 
-
-@app.route('/equipmentaction', methods=['POST','GET'])
+@app.route('/equipmentaction', methods=['POST'])
 def action():
-    if request.method == 'POST':
-        option = request.form['option']
-        conn = mysql.connector.connect(**mysql_config)
-        cursor = conn.cursor()
-        # Query to fetch data based on the selected option
-        if option == 'issue':
-            query = f"select unique(CLUB_NAME) from OWNS;"
-        cursor.execute(query)
-        clubs = cursor.fetchall()
-        conn.close()
-        print(clubs)
-        return render_template('equipments.html', clubs=clubs)
-    return render_template('equipments.html')
-
-@app.route('/selectclub', methods=['POST'])
-def selectclub():
-    option = request.form['option']
+    option = request.form.get('option')
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
     # Query to fetch data based on the selected option
-    query = f"select NAME from EQUIPMENT right join OWNS on OWNS.EQUIPMENT_ID = EQUIPMENT.EQUIPMENT_ID where OWNS.CLUB_NAME = {option};"
+    if option == 'issue':
+        query = f"select distinct club_name as NAME from EQUIPMENT;"
+        a=1
+    elif option == "view_history":
+        query = f"select * from ISSUE where ROLL_NO = {session['userid']}"
+        a=4
+    else:
+        query = f"select * from ISSUE where ROLL_NO = {session['userid']} and RETURN_TIME = {None}"
+        a=5
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    return render_template('equipments.html', data=data, a=a)
+
+@app.route('/selectclub', methods=['POST'])
+def selectclub():
+    option = request.form.get('option2')
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    # Query to fetch data based on the selected option
+    print("picked",option)
+    query = f"select NAME from EQUIPMENT where club_name = '{option}';"
     cursor.execute(query)
     eq = cursor.fetchall()
     conn.close()
-    return render_template('equipments.html', eq=eq)
+    return render_template('equipments.html', equipments=eq, a=2)
 
 @app.route('/issueequipment', methods=['POST'])
 def issueequipment():
-    option = request.form['option']
+    option = request.form.get('option')
     sop = request.form['sop']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
     # Query to fetch data based on the selected option
     
-    query = f"select AVAILABILTY, QUANTITY, EQUIPMENT_ID from EQUIPMENT where NAME = {option};"
+    query = f"select AVAILABILITY, QUANTITY, EQUIPMENT_ID from EQUIPMENT where NAME = '{option}';"
     cursor.execute(query)
     eq = cursor.fetchone()
-    if (eq['AVAILABILITY']==0):
+    if (eq[0]==0):
         conn.close()
-        return "Not available at the moment"
+        flash("Not available at the moment")
+        return render_template('equipments.html', a=0)
     
-    id = eq['EQUIPMENT_ID']
-    count = eq['QUANTITY']
+    else:
+        id = eq[2]
+        count = eq[1]
 
-    query = f"insert into ISSUE ({id},{session['userid']},{datetime.now()},{None},{sop})"
-    cursor.execute(query)
-
-    query = f"select count(*) as c from ISSUE where EQUIPMENT_ID = {id} and RETURN_TIME = {None}"
-    cursor.execute(query)
-    eq = cursor.fetchone()
-    if eq['c']==count:
-        query = f"update EQUIPMENT set AVAILABILITY = 0 where EQUIPMENT_ID = {id}"
+        query = f"insert into ISSUE values ({id},{session['userid']},'{datetime.now()}',NULL,'{sop}')"
         cursor.execute(query)
-    conn.close()
-    return "Successfuly issued"
 
+        query = f"select count(*) as c from ISSUE where EQUIPMENT_ID = {id} and RETURN_TIME = NULL"
+        cursor.execute(query)
+        eq = cursor.fetchone()
+        if eq[0]==count:
+            query = f"update EQUIPMENT set AVAILABILITY = 0 where EQUIPMENT_ID = {id}"
+            cursor.execute(query)
+        conn.close()
+        flash("Equipment Issued")
+        return render_template('equipments.html', a=0)
 
+@app.route('/returnequipment', methods=['POST'])
+def returnequipment():
+    option = request.form.get('option')
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    query = f"update ISSUE set RETURN_TIME = '{datetime.now()}' where ROLL_NO = {session['userid']} and EQUIPMENT_ID = {option} and RETURN_TIME = {None}"
+    flash("Equipment Returned")
+    return render_template('equipments.html', a=0)
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    

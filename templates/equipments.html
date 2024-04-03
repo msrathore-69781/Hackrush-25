@@ -13,34 +13,78 @@
     <!-- Equipment Handling Dropdown -->
     <div class="mb-4">
         <label for="equipment-action" class="block text-sm font-medium text-gray-700">Equipment Action:</label>
-        <select id="equipment-action" class="form-select block w-full mt-1">
-            <option value="">Select Action</option>
+        <form id="equipment-action" action="/equipmentaction" method="POST"><select name="option" onchange="this.form.submit()" class="form-select block w-full mt-1">
+            <option value="" disabled selected>Select Action</option>
             <option value="issue">Issue</option>
             <option value="return">Return</option>
             <option value="view_history">View History</option>
-        </select>
+        </select></form>
     </div>
 
-    <!-- Dynamic content will be inserted below -->
-    <div id="dynamic-content"></div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <p class="text-red font-thin">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
-    <script>
-        document.getElementById('equipment-action').addEventListener('change', function() {
-            const action = this.value;
-            const dynamicContent = document.getElementById('dynamic-content');
-            dynamicContent.innerHTML = ''; // Clear previous content
-        
-            if (action == 'issue') {
-                // Add Club Names Dropdown
-                const clubSelect = document.createElement('select');
-                clubSelect.id = 'club-names';
-                clubSelect.classList.add('form-select', 'block', 'w-full', 'mt-1');
-                clubSelect.innerHTML = `
-                    <option value="">Select Club</option>
-                    {%for club in clubs%}
-                    <option value="club1">{{club.CLUB_NAME}}</option>
-                    {%endfor%}
-                `;
+    {% if a==1 %}
+        <form id="selectclub" action="/selectclub" method="POST"><select name="option2" onchange="this.form.submit()" class="form-select block w-full mt-1">
+            <option value="" disabled selected>Select Club</option>
+            {% for club in data %}
+            <option value="{{club[0]}}">{{club[0]}}</option>
+            {% endfor %}
+        </select></form>
+    {% endif %}
+    
+    {% if a==2 %}
+        <form id="issueing" action="/issueequipment" method="POST"><select name="option" class="form-select block w-full mt-1">
+            <option value="">Select Equipment</option>
+            {% for equip in equipments %}
+            <option value="{{equip[0]}}">{{equip[0]}}</option>
+            {% endfor %}
+            <input type="text" id="sop" name="sop" placeholder="Enter Purpose">
+            <button type="submit" class="btn btn-primary">ISSUE</button>
+        </select></form>
+    {% endif %}
+
+    {% if a==4 %}
+        <h1>Results</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Roll Number</th>
+                    <th>Equipment ID</th>
+                    <th>Issue Time</th>
+                    <th>Return Time</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if a==5 %}
+        <form id="returning" action="/returnequipment" method="POST"><select name="option" class="form-select block w-full mt-1">
+            <option value="" disabled selected>Select Equipment</option>
+            {% for equip in data %}
+            <option value="{{equip[0]}}">{{equip[0]}}</option>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">RETURN</button>
+        </select></form>
+    {% endif %}
+                <!-- `;
                 clubSelect.onchange = function() {
                     // Equipment Select
                     const equipmentSelect = document.createElement('select');
@@ -98,7 +142,7 @@
                 container.appendChild(cancelButton);
             }
         }
-        </script>
+        </script> -->
         
 </body>
 </html>

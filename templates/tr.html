@@ -3,113 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Council Page - Clubs Management IIT Gandhinagar</title>
-    <!-- Tailwind CSS and Bootstrap CDN links -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Dropdown Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body class="font-sans bg-white">
+<body>
+    <select id="dropdown1">
+        <option value="issue">ISSUE</option>
+        <option value="Return">Return</option>
+        <option value="view_history">view history</option>
+    </select>
 
-    <!-- Same Navigation as rough.html -->
-    <!-- Place the header HTML code from rough.html here -->
-    <body class="font-sans bg-white">
+    <select id="dropdown2"></select>
+    <select id="dropdown3"></select>
 
-        <!-- Navigation -->
-        <nav class="bg-gray-800 text-white p-4 fixed top-0 w-full z-10">
-            <div class="container mx-auto flex justify-between items-center">
-                <img src="iitgn logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
-                <div class="flex-grow">
-                    <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a>
-                </div>
-                <div>
-                    <a href="council" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a>
-                    <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Councils</a>
-                    <a href="events" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
-                    <a href="login" class="px-4 py-2 hover:bg-gray-700 transition-colors">Login</a>
-                </div>
-            </div>
-        </nav>
-    
+    <script>
+        $(document).ready(function() {
+            // Event listener for dropdown change
+            $('#dropdown1').change(function() {
+                var selectedValue = $(this).val();
 
-    <!-- Main Content -->
-    <div class="container mx-auto mt-24 p-8">
-        <div class="flex flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
-    
-            <!-- Council Image -->
-            <div class="w-25 h-25 md:w-1/2 flex justify-center md:justify-start items-start md:pr-8">
-                <img src="16-pixels_small.jpg" alt="16 Pixels" class="rounded-md shadow-lg">
-            </div>
-    
-            <!-- Council Text Information -->
-            <div class="w-full md:w-1/4 md:pl-12">
-                <h1 class="text-4xl font-bold mb-5">16 Pixels</h1>
-                <p class="text-lg mb-9">16 Pixels, the photography club at IITGN, captures every precious moment and shares it with the IITGN community. IITGN folks are also allowed to pursue their interest in photography. Numerous events, workshops, and competitions are conducted to encourage students to learn and build professional photography skills.
-                Club Secretary:</p>
-
-            </div>
-            <h1>Dropdown Menu</h1>
-            <form action="{{ url_for('fetch_members' , council =council)}}" method="POST">
-                <label for="dropdown">Select an option:</label>
-                <select id="dropdown" name="option">
-                    <option value="All member">All member</option>
-                    <option value="General Members only">General Members only</option>
-                    <option value="Secretary">Secretary</option>
-                    <option value="Coordinators">Coordinators</option>
-                </select>
-                <button type="submit">Submit</button>
-            </form>
-        <br>
-        <br>
-        <p></p>
-
-        <form action="{{ url_for('add_council_members')}}" method="POST">
-            <label for="dropdown2">Update</label>
-            <select id="dropdown2" name="Update council member">
-                <option value="Add Member">Add Member</option>
-                <option value="Remove Member">Remove Member</option>
-                <option value="Add Coordinator">Add Coordinator</option>
-                <option value="Remove Coordinators">Remove Coordinators</option>
-            </select>
-            <button type="submit">Update</button>
-        </form>
-            <h1>Results</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Roll Number</th>
-                        <th>Email</th>
-                        <th>Contact Number</th>
-                        <th>Name</th>
-                        <th>Position</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            
-
-            <!-- Council Image -->
-             <!-- <div class="w-full md:w-1/2 flex justify-center items-center">
-                <img src="16-pixels_small.jpg" alt="Council" class="rounded-md shadow-lg">
-            </div> -->
-        </div> 
-
-    </div>
-    <footer class="bg-gray-800 text-white p-5 text-center">Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat</footer>
-    <!-- Place the footer HTML code from rough.html here -->
-    <!-- Bootstrap and JQuery scripts for functionality -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                // AJAX request to fetch data based on dropdown selection
+                $.ajax({
+                    type: 'POST',
+                    url: '/get_data_for_dropdown',
+                    data: { selected_value: selectedValue },
+                    success: function(response) {
+                        // Update the second dropdown with fetched data
+                        $('#dropdown2').empty();
+                        $('#dropdown3').empty();
+                        response.forEach(function(item) {
+                            $('#dropdown2').append($('<option>', {
+                                value: item.id,
+                                text: item.name || item.description || item.value
+                            }));
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

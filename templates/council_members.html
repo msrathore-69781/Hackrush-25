@@ -83,6 +83,21 @@
                     {% endfor %}
                 </tbody>
             </table>
+    
+            <form action="{{ url_for('update_council_member')}}" method="POST">
+                <label for="dropdown">Update:</label>
+                <select id="dropdown" name="option2">
+                    <option value="Add member">Add member</option>
+                    <option value="Remove Member">Remove Member</option>
+                    <option value="Add coordinator">Add coordinator</option>
+                    <option value="Remove coordinator">Remove coordinator</option>
+                </select>
+                <div class="form-group">
+                <label for="r">Enter Roll Number</label>
+                <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
+            </div>   
+                <button type="submit">Submit</button>
+            </form>
 
             <!-- Council Image -->
              <!-- <div class="w-full md:w-1/2 flex justify-center items-center">
