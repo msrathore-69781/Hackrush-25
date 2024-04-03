@@ -20,18 +20,18 @@
 <body class="font-sans bg-white">
 
     <!-- Navigation -->
-    <nav class="bg-gray-800 text-white p-4 fixed w-full z-10">
+    <nav class="bg-gray-800 text-white fixed w-full z-10">
         <div class="container mx-auto flex justify-between items-center">
-            <img src="path/to/your/logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
+            <img src="logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
             <div class="flex-grow">
                 <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a>
             </div>
             <div>
-                <a href="anshul2" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a>
-                <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Councils</a>
-                <a href="events" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
-                <a href="equipment" class="px-4 py-2 hover:bg-gray-700 transition-colors">Equipment</a>
-                <a href="event" class="px-4 py-2 hover:bg-gray-700 transition-colors">Login</a>
+                <!-- <a href="anshul2" class="px-4 py-2 hover:bg-gray-800 transition-colors">Clubs</a> -->
+                <a href="councils" class="px-4 py-2 hover:bg-gray-800 transition-colors">Clubs and Councils</a>
+                <a href="events" class="px-4 py-2 hover:bg-gray-800 transition-colors">Events</a>
+                <a href="equipment" class="px-4 py-2 hover:bg-gray-800 transition-colors">Equipment</a>
+                <a href="event" class="px-4 py-2 hover:bg-gray-800 transition-colors">Logout</a>
             </div>
         </div>
     </nav>
@@ -77,10 +77,10 @@
     </div>
 
     <!-- Hero Section -->
-    <section id="hero" class="h-screen flex flex-col justify-center items-center text-center">
+    <!-- <section id="hero" class="h-screen flex flex-col justify-center items-center text-center">
         <h1 class="text-5xl font-bold text-white shadow-lg">Welcome to Clubs Management</h1>
         <h2 class="text-2xl text-white shadow-lg">IIT Gandhinagar</h2>
-    </section>
+    </section> -->
     <title>Student Information</title>
     <style>
         body {
@@ -90,6 +90,14 @@
             background-color: #f2f2f2;
         }
         .container {
+            /* max-width: 800px; */
+            /* margin: 50px auto; */
+            padding: 20px;
+            /* background-color: #fff; */
+            /* border-radius: 8px; */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+        }
+        .container_info {
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
@@ -100,6 +108,7 @@
         h1 {
             text-align: center;
             color: #333;
+            padding-top: 50px;
         }
         .info {
             margin-bottom: 20px;
@@ -114,7 +123,7 @@
 </head>
 <!-- The below code displays the information of the student from students table after successful login -->
 <body>
-    <div class="container">
+    <div class="container_info">
         <h1>Student Information</h1>
         <div class="info">
             <label for="name">Name:</label>
@@ -133,18 +142,6 @@
             <p>{{ studentInfo.CONTACT_NO }}</p>
         </div>
         <div class="info">
-            <label for="firstName">First Name:</label>
-            <p>{{studentInfo.FIRST_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="middleName">Middle Name:</label>
-            <p>{{studentInfo.MIDDLE_NAME}}</p>
-        </div>
-        <div class="info">
-            <label for="lastName">Last Name:</label>
-            <p>{{studentInfo.LAST_NAME}}</p>
-        </div>
-        <div class="info">
             <label for="address">Address:</label>
             <p>{{ studentInfo.STREET}}, {{ studentInfo.CITY}}, {{studentInfo.STATE}}</p>
         </div>
@@ -158,7 +155,7 @@
         </div>
         <div class="info">
             <label for="program">Programme:</label>
-            <p>{{studentInfo.PROGRAMME}}({{studentInfo.DISCIPLINE}})</p>
+            <p>{{studentInfo.PROGRAMME}} {{studentInfo.DISCIPLINE}} '{{studentInfo.YEAR}}</p>
         </div>
     </div>
 
@@ -166,7 +163,7 @@
 
     <!-- Your remaining HTML content goes here -->
 
-    <footer class="bg-gray-800 text-white p-5 text-center">Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat</footer>
+    <footer class="bg-gray-800 text-white p-2 text-center">Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat</footer>
 
     <!-- JavaScript for Carousel functionality (Bootstrap required) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
