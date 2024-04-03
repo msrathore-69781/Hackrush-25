@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'MyNewPass',    #Enter ur password for root
+    'password': 'DBMS_mysql@0204',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -76,44 +76,45 @@ def login():
     if request.method == 'POST' and 'email_employee' in request.form and 'password_employee' in request.form:
         email = request.form['email_employee']
         employee_id = request.form['password_employee']
+        # print(type(request.form['password_employee']))
         print("Received email:", email)              # Debugging print statement
         print("Received employee id:", employee_id)  # Debugging print statement
         cursor = conn.cursor(dictionary=True)
         try:
             # cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s AND EMPLOYEE_ID = %s', (email, employee_id))
-            cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s', (email))
+            cursor.execute('SELECT * FROM EMPLOYEE WHERE EMAIL = %s', (email,))
             user = cursor.fetchone()
             print("User:", user)                     # Debugging print statement
             if user:
                 # password-check
-                if employee_id != user['EMPLOYEE_ID']:
+                if int(employee_id) != user['EMPLOYEE_ID']:
                     print("Incorrect Employee Password")
                     message = "Incorrect Employee Password"
+                else:
+                    session['loggedin'] = True
+                    session['userid'] = user['EMPLOYEE_ID']
+                    session['name'] = user['FIRST_NAME']
+                    session['email'] = user['EMAIL']
+                    message = 'Logged in successfully !'
 
-                session['loggedin'] = True
-                session['userid'] = user['EMPLOYEE_ID']
-                session['name'] = user['FIRST_NAME']
-                session['email'] = user['EMAIL']
-                message = 'Logged in successfully !'
+                    cursor.execute('SELECT COUNT(*) FROM VENUE WHERE EMPLOYEE_ID = %s', (employee_id,))
+                    result = cursor.fetchone()
+                    exists_in_venue = result['COUNT(*)'] > 0
+                    if exists_in_venue:
+                        session["Venue-in-charge"] = True
 
-                cursor.execute('SELECT COUNT(*) FROM VENUE WHERE EMPLOYEE_ID = %s', (employee_id,))
-                result = cursor.fetchone()
-                exists_in_venue = result[0] > 0
-                if exists_in_venue:
-                    session["Venue-in-charge"] = True
+                    cursor.execute('SELECT COUNCIL_NAME FROM COUNCIL WHERE EMPLOYEE_ID = %s', (employee_id,))
+                    result = cursor.fetchone()
+                    if result:
+                        session["council_advisor"] = result['COUNCIL_NAME']
 
-                cursor.execute('SELECT COUNCIL_NAME FROM COUNCILS WHERE EMPLOYEE_ID = %s', (employee_id,))
-                result = cursor.fetchone()
-                if exists_in_venue:
-                    session["council_advisor"] = result['COUNCIL_NAME']
+                    cursor.execute('SELECT CLUB_NAME FROM OVERSEER WHERE EMPLOYEE_ID = %s', (employee_id,))
+                    result = cursor.fetchone()
+                    if result:
+                        session["club_overseer"] = result['CLUB_NAME']
 
-                cursor.execute('SELECT CLUB_NAME FROM CLUBS WHERE EMPLOYEE_ID = %s', (employee_id,))
-                result = cursor.fetchone()
-                if exists_in_venue:
-                    session["club_overseer"] = result['CLUB_NAME']
-
-                # Page you want to navigate to if logged in successfully
-                # return render_template('studentInfo.html', studentInfo = user)
+                    # Page you want to navigate to if logged in successfully
+                    return render_template('employeeInfo.html', employeeInfo = user)
             else:
                 print('User not found (incorrect email)')  # Debugging print statement
                 message = 'User not found (incorrect email)'
@@ -137,15 +138,15 @@ def login():
                 if pw != "manudb":
                     print("Incorrect Password")
                     message = "Incorrect Password"
+                else:
+                    session['loggedin'] = True
+                    session['userid'] = 0
+                    session['name'] = "admin"
+                    session['email'] = "admin@iitgn.ac.in"
+                    message = 'Logged in successfully !'
 
-                session['loggedin'] = True
-                session['userid'] = 0
-                session['name'] = "admin"
-                session['email'] = "admin@iitgn.ac.in"
-                message = 'Logged in successfully !'
-
-                # Page you want to navigate to if logged in successfully
-                return render_template('admin.html')
+                    # Page you want to navigate to if logged in successfully
+                    return render_template('admin.html')
             else:
                 print('User not found (incorrect email)')  # Debugging print statement
                 message = 'User not found (incorrect email)'
