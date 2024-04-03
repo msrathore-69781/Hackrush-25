@@ -32,59 +32,78 @@
     
 
     <!-- Main Content -->
-    <div class="container mx-auto mt-24 p-8">
-        <div class="flex flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
-    
-            <!-- Council Image -->
-            <div class="w-25 h-25 md:w-1/2 flex justify-center md:justify-start items-start md:pr-8">
-                <img src="16-pixels_small.jpg" alt="16 Pixels" class="rounded-md shadow-lg">
-            </div>
-    
-            <!-- Council Text Information -->
-            <div class="w-full md:w-1/4 md:pl-12">
-                <h1 class="text-4xl font-bold mb-5">16 Pixels</h1>
-                <p class="text-lg mb-9">16 Pixels, the photography club at IITGN, captures every precious moment and shares it with the IITGN community. IITGN folks are also allowed to pursue their interest in photography. Numerous events, workshops, and competitions are conducted to encourage students to learn and build professional photography skills.
-                Club Secretary:</p>
-
-            </div>
-            <h1>Dropdown Menu</h1>
+ <!-- Main Content -->
+<div class="container mx-auto mt-24 p-8">
+    <div class="md:flex md:flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
+        <!-- Content Section -->
+        <div class="md:w-1/4 p-4">
+            <!-- <h1>Dropdown Menu</h1> -->
             <form action="{{ url_for('fetch_members')}}" method="POST">
-                <label for="dropdown">Select an option:</label>
-                <select id="dropdown" name="option">
-                    <option value="All member">All member</option>
-                    <option value="General Members only">General Members only</option>
-                    <option value="Secretary">Secretary</option>
-                    <option value="Coordinators">Coordinators</option>
-                </select>
-                <button type="submit">Submit</button>
+                <div class="mb-4">
+                    <label for="dropdown" class="block">Select an option:</label>
+                    <select id="dropdown" name="option" class="form-select block w-full mt-1">
+                        <option value="All member">All member</option>
+                        <option value="General Members only">General Members only</option>
+                        <option value="Secretary">Secretary</option>
+                        <option value="Coordinators">Coordinators</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>   
             </form>
-        <br>
-
-            <h1>Results</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Roll Number</th>
-                        <th>Email</th>
-                        <th>Contact Number</th>
-                        <th>Name</th>
-                        <th>Position</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-    
+            <p>   </p>
+            <div>
             <form action="{{ url_for('update_council_member')}}" method="POST">
+                <label for="dropdown">Update:</label>
+                <select id="dropdown" name="option2" class="form-select block w-full mt-1">
+                    <option value="Add member">Add member</option>
+                    <option value="Remove Member">Remove Member</option>
+                    <option value="Add coordinator">Add coordinator</option>
+                    <option value="Remove coordinator">Remove coordinator</option>
+                </select>
+                <p>   </p>
+                <div class="form-group">
+                <label for="r">Enter Roll Number</label>
+                <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
+            </div>   
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        </div>
+
+        <!-- Table Section -->
+        
+        <div class="md:flex-1 md:p-4 mt-4 md:mt-0">
+            <!-- <h1 class = "md:flex-wrap">Results</h1> -->
+            <div>
+                <table class="table-fixed w-full">
+                    <thead>
+                        <tr>
+                            <th class="w-1/5">Roll Number</th>
+                            <th class="w-1/5">Email</th>
+                            <th class="w-1/5">Contact Number</th>
+                            <th class="w-1/5">Name</th>
+                            <th class="w-1/5">Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr>
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+            <!-- <form action="{{ url_for('update_council_member')}}" method="POST">
                 <label for="dropdown">Update:</label>
                 <select id="dropdown" name="option2">
                     <option value="Add member">Add member</option>
@@ -97,7 +116,7 @@
                 <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
             </div>   
                 <button type="submit">Submit</button>
-            </form>
+            </form> -->
 
             <!-- Council Image -->
              <!-- <div class="w-full md:w-1/2 flex justify-center items-center">

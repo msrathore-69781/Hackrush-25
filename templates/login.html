@@ -6,37 +6,35 @@
     <title>Clubs Management IIT Gandhinagar</title>
     <!-- Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
+    <!-- <style>
         /* Custom styles */
         #hero {
             background-image: url('C:\Users\SHRIJAN SAHU\Desktop\DBMS website\iitgn campus.jpeg.jpg');
             background-size: cover;
             background-position: center;
         }
-    </style>
+    </style> -->
 </head>
-<body class="font-sans bg-white">
+<body class="font-sans bg-blue-100">
     <!-- Navigation -->
     <nav class="bg-gray-800 text-white p-4 fixed w-full z-10">
         <div class="container mx-auto flex justify-between items-center">
             <!-- Include the local path for the logo -->
-            <img src="C:\Users\SHRIJAN SAHU\Desktop\DBMS website\iitgn logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
-            <div class="flex-grow">
-                <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a>
-            </div>
-            <div>
+            <img src="logo.jpg" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
+            <span class="text-xl font-bold mx-auto">Clubs Management IIT Gandhinagar</span>
+            <!-- <div>
                 <a href="anshul2" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a>
                 <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Councils</a>
                 <a href="events" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
                 <a href="#login" class="px-4 py-2 hover:bg-gray-700 transition-colors">Login</a>
-            </div>
+            </div> -->
         </div>
     </nav>
     <!-- Hero Section -->
-    <section id="hero" class="h-screen flex flex-col justify-center items-center text-center">
+    <!-- <section id="hero" class="h-screen flex flex-col justify-center items-center text-center">
         <h1 class="text-5xl font-bold text-white shadow-lg">Welcome to Clubs Management</h1>
         <h2 class="text-2xl text-white shadow-lg">IIT Gandhinagar</h2>
-    </section>
+    </section> -->
     <!-- Placeholder for Clubs, Councils, and Events Sections -->
     <!-- <section id="clubs" class="container mx-auto text-center py-20">
         <h3 class="text-3xl font-bold mb-10">Clubs</h3>
@@ -97,11 +95,11 @@
     </section> --> 
     
 
-    <section id="login" class="container mx-auto text-center py-20">
-        <div class="flex justify-center space-x-10">
+    <section id="login" class="container mx-auto h-screen flex justify-center items-center">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 w-full max-w-4xl">
             <!-- Student Login -->
             <div class="w-full max-w-xs">
-                <h3 class="text-3xl font-bold mb-10">Student Login</h3>
+                <h3 class="text-3xl font-bold mb-10 text-center">Student Login</h3>
                 <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <!-- <form action ='/' method="POST">
                         <input type="text" id="email" name="email" placeholder="Student ID" class="px-4 py-2 mb-4 border rounded w-full" required>
@@ -121,11 +119,63 @@
                             <label for="pwd">Password:</label>
                             <input type="password" class="form-control" id="password" placeholder="Enter password" name="password_student">
                         </div>    
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full">Login</button>
+                        <!-- class="btn btn-primary" -->
                     </form>
+                </div>
+            </div>
 
+            <!-- Employee Login -->
+            <div class="w-full max-w-xs">
+                <h3 class="text-3xl font-bold mb-10 text-center">Employee Login</h3>
+                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <!-- <form action ='/' method="POST">
+                        <input type="text" id="email" name="email" placeholder="Student ID" class="px-4 py-2 mb-4 border rounded w-full" required>
+                        <input type="password" id="password" name="password" placeholder="Password" class="px-4 py-2 mb-4 border rounded w-full" required>
+                        <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full">Submit</button>
+                    </form> -->
 
+                    <form action="{{ url_for('login') }}" method="post">
+                        {% if message is defined and message %}
+                            <div class="alert alert-warning">{{ message }}</div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Password:</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" name="password">
+                        </div>    
+                        <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full">Login</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Admin Login -->
+            <div class="w-full max-w-xs">
+                <h3 class="text-3xl font-bold mb-10 text-center">Admin Login</h3>
+                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <!-- <form action ='/' method="POST">
+                        <input type="text" id="email" name="email" placeholder="Student ID" class="px-4 py-2 mb-4 border rounded w-full" required>
+                        <input type="password" id="password" name="password" placeholder="Password" class="px-4 py-2 mb-4 border rounded w-full" required>
+                        <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full">Submit</button>
+                    </form> -->
 
+                    <form action="{{ url_for('login') }}" method="post">
+                        {% if message is defined and message %}
+                            <div class="alert alert-warning">{{ message }}</div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Password:</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" name="password">
+                        </div>    
+                        <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full">Login</button>
+                    </form>
                 </div>
             </div>
     
@@ -139,11 +189,13 @@
                         <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full">Submit</button>
                     </form>
                 </div>
+            </div> -->
+
             </div>
-        </div> -->
+        </div>
     </section>
 
-    <footer class="bg-gray-800 text-white p-5 text-center">
+    <footer class="bg-gray-800 text-white p-5 text-center fixed bottom-0 w-full">
         Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat
     </footer>
 
@@ -178,8 +230,3 @@
      -->
 </body>
 </html>
-
-
-
-
-
