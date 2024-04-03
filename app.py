@@ -124,6 +124,38 @@ def login():
         finally:
             cursor.close()  # Always close the cursor
 
+    ''' Log-in for Admin '''
+    if request.method == 'POST' and 'email_admin' in request.form and 'password_admin' in request.form:
+        email = request.form['email_admin']
+        pw = request.form['password_admin']
+        print("Received email:", email)              # Debugging print statement
+        print("Received password:", pw)  # Debugging print statement
+        
+        try:
+            if email == "admin@iitgn.ac.in":
+                # password-check
+                if employee_id != user['EMPLOYEE_ID']:
+                    print("Incorrect Employee Password")
+                    message = "Incorrect Employee Password"
+
+                session['loggedin'] = True
+                session['userid'] = 0
+                session['name'] = "admin"
+                session['email'] = "admin@iitgn.ac.in"
+                message = 'Logged in successfully !'
+
+                # Page you want to navigate to if logged in successfully
+                return render_template('admin.html', studentInfo = user)
+            else:
+                print('User not found (incorrect email)')  # Debugging print statement
+                message = 'User not found (incorrect email)'
+                
+        except Exception as e:
+            print('Error:', e)  # Debugging print statement
+            message = 'An error occurred during login.'
+        finally:
+            cursor.close()  # Always close the cursor
+
     # we want to show the login page by default
     return render_template('login.html', message=message)
 
@@ -278,6 +310,7 @@ def view_table(table_name):
 
     # Render the HTML template with table name and column names
     return render_template('view_table.html', table_name=table_name, columns=columns,data=data)
+
 @app.route('/addEvent', methods=['GET','POST'])
 def submit():
     if request.method == 'POST' and 'event_name' in request.form and 'edition' in request.form and 'mode_of_conduct' in request.form and 'description' in request.form and 'participation_form' in request.form and 'rulebook_link' in request.form and 'budget' in request.form and 'team_name' in request.form and 'team_captain' in request.form and 'filler_roll_no' in request.form and 'organizer_roll_no' in request.form and 'responsibility' in request.form and 'club_name' in request.form:
@@ -308,7 +341,6 @@ def submit():
         end_time = request.form['end_time']
         print(type(start_time))
         print(end_time)
-
 
 
         try:
