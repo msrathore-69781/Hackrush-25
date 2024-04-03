@@ -21,14 +21,14 @@ except mysql.connector.Error as e:
     print(f"Error connecting to MySQL database: {e}")
 conn = mysql.connector.connect(**mysql_config)
 
-
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    message = ""
+    message = None
+
     ''' Log-in for Students '''
-    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
-        email = request.form['email']
-        roll_no = request.form['password']
+    if request.method == 'POST' and 'email_student' in request.form and 'password_student' in request.form:
+        email = request.form['email_student']
+        roll_no = request.form['password_student']
         print("Received email:", email)          # Debugging print statement
         print("Received roll number:", roll_no)  # Debugging print statement
         cursor = conn.cursor(dictionary=True)
@@ -41,28 +41,92 @@ def login():
                 # Password check
                 if roll_no != email.split("@")[0]:
                     print("Incorrect Student Password")
-                    flash("Incorrect Student Password", 'error')         # Flash error message
+                    # flash("Incorrect Student Password", 'error')         # Flash error message
+                    message = "Incorrect Student Password"
                 else:
                     session['loggedin'] = True
                     session['userid'] = user['ROLL_NO']
                     session['name'] = user['FIRST_NAME']
                     session['email'] = user['EMAIL']
+
+                    cursor.execute('SELECT COUNCIL_NAME FROM COUNCIL_MEMBERS WHERE ROLLS_NO = %s AND POSITION = "Secretary"', (roll_no,))
+                    council_secy = cursor.fetchone()
+                    if council_secy:
+                        session["council_secretary"] = council_secy[0]
+                    else:
+                        cursor.execute('SELECT CLUBS_NAME FROM CLUB_MEMBERS WHERE ROLLS_NO = %s AND POSITION = "Secretary"', (roll_no,))
+                        club_secy = cursor.fetchone()
+                        if club_secy:
+                            session["club_secretary"] = club_secy[0]
+
                     return render_template('studentInfo.html', studentInfo=user)
             else:
                 print('User not found (incorrect email)')  # Debugging print statement
-                flash("User not found (incorrect email)", 'error')
+                # flash("User not found (incorrect email)", 'error')
+                message = 'User not found (incorrect email)'
 
         except Exception as e:
             flash("An error occurred. Please try again later.", 'error')  # Flash error message
             print('Error:', e)                                            # Debugging print statement
+            message = "An error occurred. Please try again later."
+        finally:
+            cursor.close()  # Always close the cursor
+
+    ''' Log-in for Employees '''
+    if request.method == 'POST' and 'email_employee' in request.form and 'password_employee' in request.form:
+        email = request.form['email_employee']
+        employee_id = request.form['password_employee']
+        print("Received email:", email)              # Debugging print statement
+        print("Received employee id:", employee_id)  # Debugging print statement
+        cursor = conn.cursor(dictionary=True)
+        try:
+            # cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s AND EMPLOYEE_ID = %s', (email, employee_id))
+            cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s', (email))
+            user = cursor.fetchone()
+            print("User:", user)                     # Debugging print statement
+            if user:
+                # password-check
+                if employee_id != user['EMPLOYEE_ID']:
+                    print("Incorrect Employee Password")
+                    message = "Incorrect Employee Password"
+
+                session['loggedin'] = True
+                session['userid'] = user['EMPLOYEE_ID']
+                session['name'] = user['FIRST_NAME']
+                session['email'] = user['EMAIL']
+                message = 'Logged in successfully !'
+
+                cursor.execute('SELECT COUNT(*) FROM VENUE WHERE EMPLOYEE_ID = %s', (employee_id,))
+                result = cursor.fetchone()
+                exists_in_venue = result[0] > 0
+                if exists_in_venue:
+                    session["Venue-in-charge"] = True
+
+                cursor.execute('SELECT COUNCIL_NAME FROM COUNCILS WHERE EMPLOYEE_ID = %s', (employee_id,))
+                result = cursor.fetchone()
+                if exists_in_venue:
+                    session["council_advisor"] = result['COUNCIL_NAME']
+
+                cursor.execute('SELECT CLUB_NAME FROM CLUBS WHERE EMPLOYEE_ID = %s', (employee_id,))
+                result = cursor.fetchone()
+                if exists_in_venue:
+                    session["club_overseer"] = result['CLUB_NAME']
+
+                # Page you want to navigate to if logged in successfully
+                # return render_template('studentInfo.html', studentInfo = user)
+            else:
+                print('User not found (incorrect email)')  # Debugging print statement
+                message = 'User not found (incorrect email)'
+                
+        except Exception as e:
+            print('Error:', e)  # Debugging print statement
             message = 'An error occurred during login.'
         finally:
             cursor.close()  # Always close the cursor
 
-
-
-# we want to show the login page by default
+    # we want to show the login page by default
     return render_template('login.html', message=message)
+
 
 @app.route('/logout')
 def logout():
@@ -309,7 +373,7 @@ def action():
         query = f"select * from ISSUE where ROLL_NO = {session['userid']}"
         a=4
     else:
-        query = f"select * from ISSUE where ROLL_NO = {session['userid']} and RETURN_TIME = {None}"
+        query = f"select ISSUE.EQUIPMENT_ID, EQUIPMENT.NAME from ISSUE left join EQUIPMENT on ISSUE.EQUIPMENT_ID = EQUIPMENT.EQUIPMENT_ID where ROLL_NO = {session['userid']} and isnull(RETURN_TIME)"
         a=5
     cursor.execute(query)
     data = cursor.fetchall()
@@ -358,6 +422,7 @@ def issueequipment():
         if eq[0]==count:
             query = f"update EQUIPMENT set AVAILABILITY = 0 where EQUIPMENT_ID = {id}"
             cursor.execute(query)
+        conn.commit()
         conn.close()
         flash("Equipment Issued")
         return render_template('equipments.html', a=0)
@@ -367,8 +432,14 @@ def returnequipment():
     option = request.form.get('option')
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
-    query = f"update ISSUE set RETURN_TIME = '{datetime.now()}' where ROLL_NO = {session['userid']} and EQUIPMENT_ID = {option} and RETURN_TIME = {None}"
+    print(option)
+    query = f"update ISSUE set RETURN_TIME = '{datetime.now()}' where ROLL_NO = {session['userid']} and EQUIPMENT_ID = {option} and isnull(RETURN_TIME)"
+    cursor.execute(query)
+    query = f"update EQUIPMENT set AVAILABILITY = 1 where EQUIPMENT_ID = {option}"
+    cursor.execute(query)
     flash("Equipment Returned")
+    conn.commit()
+    conn.close()
     return render_template('equipments.html', a=0)
 
 if __name__ == "__main__":

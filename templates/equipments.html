@@ -79,9 +79,9 @@
         <form id="returning" action="/returnequipment" method="POST"><select name="option" class="form-select block w-full mt-1">
             <option value="" disabled selected>Select Equipment</option>
             {% for equip in data %}
-            <option value="{{equip[0]}}">{{equip[0]}}</option>
+            <option value="{{equip[0]}}">{{equip[1]}}</option>
             {% endfor %}
-            <button type="submit" class="btn btn-primary">RETURN</button>
+            <input type="submit" value="Submit" placeholder="Enter Purpose">
         </select></form>
     {% endif %}
                 <!-- `;
