@@ -145,7 +145,7 @@ def login():
                 message = 'Logged in successfully !'
 
                 # Page you want to navigate to if logged in successfully
-                return render_template('admin.html', studentInfo = user)
+                return render_template('admin.html')
             else:
                 print('User not found (incorrect email)')  # Debugging print statement
                 message = 'User not found (incorrect email)'
@@ -153,8 +153,6 @@ def login():
         except Exception as e:
             print('Error:', e)  # Debugging print statement
             message = 'An error occurred during login.'
-        finally:
-            cursor.close()  # Always close the cursor
 
     # we want to show the login page by default
     return render_template('login.html', message=message)
