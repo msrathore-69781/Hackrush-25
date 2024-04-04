@@ -52,9 +52,12 @@
                         <td class="border px-4 py-2">{{ council.DESCRIPTION }}</td>
                         <td class="border px-4 py-2">{{ council.TOTAL_MEMBERS }}</td>
                         <td class="border px-4 py-2">
-                            <a href="{{ url_for('council_members', council_name=council.COUNCIL_NAME) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Know More about {{council.COUNCIL_NAME}}
+                            <a href="{{ url_for('council_members', council_name=council.COUNCIL_NAME) }}" style="color: rgb(71, 129, 199);">
+                              <i><u>Know More about {{ council.COUNCIL_NAME }}</u> </i> 
                             </a>
+                            
+                            
+
                         </td>
                     </tr>
                 {% endfor %}
@@ -66,6 +69,7 @@
     <!-- Hobby Groups Section -->
     <section id="Hobby Groups" class="container mx-auto text-center py-20">
         <div class="overflow-x-auto">
+            <h1>Hobby Clubs</h1>
             <table class="table-auto border-collapse w-full">
                 <thead>
                     <tr class="text-lg font-semibold bg-gray-100">
@@ -84,8 +88,8 @@
                         <td class="border px-4 py-2">{{ club.DESCRIPTION }}</td>
                         <td class="border px-4 py-2">{{ club.TOTAL_MEMBERS }}</td>
                         <td class="border px-4 py-2">
-                            <a href="{{ url_for('clubs', club_name=club.CLUB_NAME) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Know More about {{club.CLUB_NAME}}
+                            <a href="{{ url_for('clubs', club_name=club.CLUB_NAME) }}" style="color: rgb(71, 129, 199);" >
+                              <i> <u>  Know More about {{club.CLUB_NAME}}</u> </i>
                             </a>
                         </td>
                     </tr>

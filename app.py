@@ -175,6 +175,7 @@ def login():
 
 
 @app.route('/logout')
+@app.route('/council_members/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
