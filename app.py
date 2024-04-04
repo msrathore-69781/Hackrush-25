@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'MyNewPass',    #Enter ur password for root
+    'password': 'DBMS_mysql@0204',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -350,7 +350,7 @@ def admin_panel():
     print(tables)
     return render_template('admin.html', tables=tables)
 
-@app.route('/view_table/<table_name>')
+@app.route('/view_table/<table_name>', methods=['GET', 'POST'])
 def view_table(table_name):
     # Establish a connection to MySQL
     conn = mysql.connector.connect(**mysql_config)
@@ -363,12 +363,31 @@ def view_table(table_name):
     cursor.execute(f"select * from {table_name}")
     data = cursor.fetchall()
 
+    if request.method == 'POST':
+        # Extract data from the form
+        new_entry_values = [request.form[column] for column in columns]
+        
+        # Construct the SQL query to insert new entry
+        placeholders = ', '.join(['%s'] * len(columns))
+        insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})"
+        
+        # Execute the insert query
+        cursor = conn.cursor()
+        cursor.execute(insert_query, new_entry_values)
+        conn.commit()  # Commit the transaction
+        
+        cursor = conn.cursor()
+        # Fetch data again after insertion
+        cursor.execute(f"select * from {table_name}")
+        data = cursor.fetchall()
+        conn.commit()
+
     # Close the cursor and connection
     cursor.close()
     conn.close()
 
-    # Render the HTML template with table name and column names
-    return render_template('view_table.html', table_name=table_name, columns=columns,data=data)
+    # Render the HTML template with table name, column names, and data
+    return render_template('view_table.html', table_name=table_name, columns=columns, data=data)
 
 @app.route('/addEvent', methods=['GET','POST'])
 def submit():

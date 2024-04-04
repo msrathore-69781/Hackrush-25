@@ -1,37 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel</title>
     <style>
-        /* CSS for button styling */
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
+      /* CSS for button styling */
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f8f9fa;
+          margin: 0;
+          padding: 0;
+          background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMFtJPdILAAkL4frf6X13ydmNFZscVrYmAkQ&s'); /* Specify the path to your background image */
+            background-size:cover;
+            background-attachment: fixed
+      }
+      h1 {
+          color: #333;
+          text-align: center;
+          margin-top: 30px;
+      }
+      .container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-wrap: wrap;
+      }
+      .box {
+          width: 200px;
+          height: 200px;
+          margin: 20px;
+          color: #fff;
+          text-align: center;
+          border-radius: 10px;
+          transition: background-color 0.3s ease;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-decoration: none;
+          text-transform: uppercase;
+          font-size: 20px; /* Adjust font size as needed */
+          font-weight: bold;
+      }
+      /* Function to generate random unique colors */
+      {% set colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6610f2', '#20c997'] %}
+      {% set index = 0 %}
+      {% macro random_color() %}
+          {{ colors[index] }}
+          {% set index = (index + 1) % colors|length %}
+      {% endmacro %}
+      /* Applying random colors to boxes */
+      {% for table in tables %}
+          .{{ table }} {
+              background-color: {{ random_color() }};
+          }
+      {% endfor %}
+      .box:hover {
+          filter: brightness(85%);
+      }
+      .box a {
+          color: inherit;
+          text-decoration: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>All Tables</h1>
-    <ul>
-        {% for table in tables %}
-            <li><a href="{{ url_for('view_table', table_name=table) }}" class="button">{{ table }}</a></li>
-        {% endfor %}
-    </ul>
-</body>
+    <div class="container">
+      {% for table in tables %}
+      <div class="box {{ table }}">
+        <a href="{{ url_for('view_table', table_name=table) }}">{{ table }}</a>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
 </html>
