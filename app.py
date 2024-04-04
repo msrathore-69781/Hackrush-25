@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash , jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash , jsonify, redirect
 import mysql.connector
 import re
 from datetime import datetime
@@ -23,7 +23,12 @@ conn = mysql.connector.connect(**mysql_config)
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    message = None
+    # message = None
+    if "message" in session:
+        message = session["message"]
+    else:
+        message = None
+    session["message"] = None
 
     ''' Log-in for Students '''
     if request.method == 'POST' and 'email_student' in request.form and 'password_student' in request.form:
@@ -44,10 +49,11 @@ def login():
                     # flash("Incorrect Student Password", 'error')         # Flash error message
                     message = "Incorrect Student Password"
                 else:
-                    session['loggedin'] = True
+                    session['loggedin'] = "Student"
                     session['userid'] = user['ROLL_NO']
                     session['name'] = user['FIRST_NAME']
                     session['email'] = user['EMAIL']
+                    session['user_info'] = user
 
                     cursor.execute('SELECT COUNCIL_NAME FROM COUNCIL_MEMBERS WHERE ROLLS_NO = %s AND POSITION = "Secretary"', (roll_no,))
                     council_secy = cursor.fetchone()
@@ -61,7 +67,8 @@ def login():
                         if club_secy:
                             session["club_secretary"] = club_secy['CLUBS_NAME']
 
-                    return render_template('studentInfo.html', studentInfo=user)
+                    # return render_template('studentInfo.html', studentInfo=user)
+                    return redirect(url_for('student_info'))
             else:
                 print('User not found (incorrect email)')  # Debugging print statement
                 # flash("User not found (incorrect email)", 'error')
@@ -93,10 +100,11 @@ def login():
                     print("Incorrect Employee Password")
                     message = "Incorrect Employee Password"
                 else:
-                    session['loggedin'] = True
+                    session['loggedin'] = "Employee"
                     session['userid'] = user['EMPLOYEE_ID']
                     session['name'] = user['FIRST_NAME']
                     session['email'] = user['EMAIL']
+                    session['user_info'] = user
                     message = 'Logged in successfully !'
 
                     cursor.execute('SELECT COUNT(*) FROM VENUE WHERE EMPLOYEE_ID = %s', (employee_id,))
@@ -119,7 +127,8 @@ def login():
                         session["club_overseer"] = result['CLUB_NAME']
 
                     # Page you want to navigate to if logged in successfully
-                    return render_template('employeeInfo.html', employeeInfo = user)
+                    # return render_template('employeeInfo.html', employeeInfo = user)
+                    return redirect(url_for('employee_info'))
             else:
                 print('User not found (incorrect email)')  # Debugging print statement
                 message = 'User not found (incorrect email)'
@@ -135,7 +144,7 @@ def login():
         email = request.form['email_admin']
         pw = request.form['password_admin']
         print("Received email:", email)              # Debugging print statement
-        print("Received password:", pw)  # Debugging print statement
+        print("Received password:", pw)              # Debugging print statement
         
         try:
             if email == "admin@iitgn.ac.in":
@@ -144,14 +153,15 @@ def login():
                     print("Incorrect Password")
                     message = "Incorrect Password"
                 else:
-                    session['loggedin'] = True
+                    session['loggedin'] = "Admin"
                     session['userid'] = 0
                     session['name'] = "admin"
                     session['email'] = "admin@iitgn.ac.in"
                     message = 'Logged in successfully !'
 
                     # Page you want to navigate to if logged in successfully
-                    return render_template('admin.html')
+                    # return render_template('admin.html')
+                    return redirect(url_for('admin_panel'))
             else:
                 print('User not found (incorrect email)')  # Debugging print statement
                 message = 'User not found (incorrect email)'
@@ -168,6 +178,36 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+@app.route('/studentInfo')
+def student_info():
+    # Check if the user is logged in, if not redirect to login page
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student to access Student-Info page."
+        return redirect(url_for('login')) 
+
+    return render_template('studentInfo.html', studentInfo = session['user_info'])
+
+@app.route('/employeeInfo')
+def employee_info():
+    # Check if the user is logged in, if not redirect to login page
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Student":
+        session["message"] = "Log-in as employee to access Employee-Info page."
+        return redirect(url_for('login')) 
+
+    return render_template('employeeInfo.html', employeeInfo = session['user_info'])
 
 #this is used to display council details 
 @app.route('/councils')
@@ -233,7 +273,6 @@ def event(ev,ed):
         # Close database connection
         
         
-
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
         show_form = session.get("council_secretary") == council_name
@@ -346,6 +385,16 @@ def get_table_names():
 
 @app.route('/admin')
 def admin_panel():
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Employee" or session["loggedin"] == "Student":
+        session["message"] = "Only admins can access Admin page."
+        return redirect(url_for('login')) 
+
     tables = get_table_names()
     print(tables)
     return render_template('admin.html', tables=tables)
@@ -519,8 +568,8 @@ def issueequipment():
     eq = cursor.fetchone()
     if (eq[0]==0):
         conn.close()
-        message="Not available at the moment"
-        return render_template('equipments.html', message=message, a=0)
+        flash("Not available at the moment")
+        return render_template('equipments.html', a=0)
     
     else:
         id = eq[2]
@@ -537,8 +586,8 @@ def issueequipment():
             cursor.execute(query)
         conn.commit()
         conn.close()
-        message="Equipment Issued"
-        return render_template('equipments.html', message=message, a=0)
+        flash("Equipment Issued")
+        return render_template('equipments.html', a=0)
 
 @app.route('/returnequipment', methods=['POST'])
 def returnequipment():
@@ -550,10 +599,10 @@ def returnequipment():
     cursor.execute(query)
     query = f"update EQUIPMENT set AVAILABILITY = 1 where EQUIPMENT_ID = {option}"
     cursor.execute(query)
-    message="Equipment Returned"
+    flash("Equipment Returned")
     conn.commit()
     conn.close()
-    return render_template('equipments.html', message=message, a=0)
+    return render_template('equipments.html', a=0)
 
 if __name__ == "__main__":
     app.run(debug=True)
