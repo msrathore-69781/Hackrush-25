@@ -266,13 +266,23 @@ def event(ev,ed):
     # Query to retrieve club information
     # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
     cursor.execute(f"select * from EVENT left join PLACE_AND_TIME on EVENTS_NAME = EVENT_NAME and EDITIONS = EDITION where EVENT_NAME= '{ev}' and EDITION= {ed};")
-    event = cursor.fetchone()
+    event = cursor.fetchall()
         # Render the template with club information
     cursor.close()
-    return render_template('event.html',event=event)
+    return render_template('event.html',event=event[0])
         # Close database connection
         
-# @app.route('')    
+@app.route('/participate/<ev>/<ed>', methods = ['GET'])
+def participate(ev,ed):
+    return render_template('participation.html',ev=ev,ed=ed)
+
+@app.route('/participation/<ev>/<ed>/<n>', methods = ['POST'])
+def participation(ev,ed,n):
+    name = request.form['team name']
+    captain = request.form.get('options')
+    for i in range(1,n+1):
+        roll = request.form[i]
+        query = f"insert into PARTICIPATION values ('{ev}',{ed},{roll},'{name}',{captain==i});"
 
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
