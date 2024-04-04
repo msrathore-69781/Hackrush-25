@@ -7,8 +7,48 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f2f2f2;
+        background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMFtJPdILAAkL4frf6X13ydmNFZscVrYmAkQ&s'); /* Specify the path to your background image */
+            background-size:cover;
+            background-attachment: fixed
+    }
+    .container_info {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .container_info h1 {
+    font-weight: 600;
+    font-size: xx-large;
+    background-color: #ebf8ff;
+    color: #2b6cb0;
+    padding: 0.5rem 1rem;
+    border: 1px solid #a0aec0;
+    border-radius: 0.25rem;
+}
+    h1 {
+        text-align: center;
+        color: #333;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    .info {
+        margin-bottom: 20px;
+    }
+    .info label {
+        font-weight: bold;
+    }
+</style>
 <body>
-    <div class="container">
+    <div class="container_info">
         <h1>Event Details for {{event.EVENT_NAME, event.EDITION}}</h1>
         <div class="info">
             <label for="description">Description:</label>
@@ -30,13 +70,16 @@
             <label for="timings">Timings:</label>
             <p>{{event.START_TIME}} to {{event.END_TIME}}</p>
         </div>
-        <div class="info">
+        <!-- <div class="info">
             <label for="part link">Participation Link</label>
             <p>{{event.PARTICIPATION_FORM}}</p>
-        </div>
+        </div> -->
         <div class="info">
             <label for="rule link">Rulebook Link:</label>
             <p>{{event.RULEBOOK_LINK}}</p>
+        </div>
+        <div class="button" style="display: flex; justify-content: center;">
+            <button type="Register" class="btn btn-primary">Register</button>
         </div>
     </div>
 
