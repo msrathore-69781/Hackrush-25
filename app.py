@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'DBMS_mysql@0204',    #Enter ur password for root
+    'password': 'MyNewPass',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -271,6 +271,7 @@ def council():
 @app.route('/events', methods = ['GET'])
 def events():
     try:
+        conn = mysql.connector.connect(**mysql_config)
         cursor = conn.cursor(dictionary=True)
         # Query to retrieve club information
         # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
@@ -300,7 +301,11 @@ def event(ev,ed):
         
 @app.route('/participate/<ev>/<ed>', methods = ['GET'])
 def participate(ev,ed):
-    return render_template('participation.html',ev=ev,ed=ed)
+    if (ed[0].isdigit()):
+        return render_template('participation.html',ev=ev,ed=ed)
+    else:
+        return redirect(url_for(ed))
+    
 
 @app.route('/participation/<ev>/<ed>', methods = ['POST'])
 def participation(ev,ed):
