@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club Page - Clubs Management IIT Gandhinagar</title>
+    <title>Council Page - Clubs Management IIT Gandhinagar</title>
     <!-- Tailwind CSS and Bootstrap CDN links -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -38,7 +38,7 @@
         <!-- Content Section -->
         <div class="md:w-1/4 p-4">
             <!-- <h1>Dropdown Menu</h1> -->
-            <form action="{{ url_for('fetch_members')}}" method="POST">
+            <form action="{{ url_for('fetch_club_members', club_name=club_name)}}" method="POST">
                 <div class="mb-4">
                     <label for="dropdown" class="block">Select an option:</label>
                     <select id="dropdown" name="option" class="form-select block w-full mt-1">
@@ -52,7 +52,7 @@
             </form>
             <p>   </p>
             <div>
-            <form action="{{ url_for('update_council_member')}}" method="POST">
+            <form action="{{ url_for('update_club_members', club_name=club_name)}}" method="POST">
                 <label for="dropdown">Update:</label>
                 <select id="dropdown" name="option2" class="form-select block w-full mt-1">
                     <option value="Add member">Add member</option>
@@ -102,26 +102,6 @@
     </div>
 </div>
 
-    
-            <!-- <form action="{{ url_for('update_council_member')}}" method="POST">
-                <label for="dropdown">Update:</label>
-                <select id="dropdown" name="option2">
-                    <option value="Add member">Add member</option>
-                    <option value="Remove Member">Remove Member</option>
-                    <option value="Add coordinator">Add coordinator</option>
-                    <option value="Remove coordinator">Remove coordinator</option>
-                </select>
-                <div class="form-group">
-                <label for="r">Enter Roll Number</label>
-                <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
-            </div>   
-                <button type="submit">Submit</button>
-            </form> -->
-
-            <!-- Council Image -->
-             <!-- <div class="w-full md:w-1/2 flex justify-center items-center">
-                <img src="16-pixels_small.jpg" alt="Council" class="rounded-md shadow-lg">
-            </div> -->
         </div> 
 
     </div>

@@ -239,57 +239,104 @@ def event():
         cursor.close()
         conn.close()
         
-        
-@app.route('/council_members')
-def council_members():
-        return render_template('council_members.html')
 
-@app.route('/clubs')
-def clubs():
-        return render_template('clubs.html')
+@app.route('/council_members/<council_name>')
+def council_members(council_name):
+        return render_template('council_members.html', council_name=council_name)
 
-@app.route('/fetch_member', methods=['POST'])
-def fetch_members():
+@app.route('/clubs/<club_name>')
+def clubs(club_name):
+        return render_template('clubs.html', club_name=club_name)
+
+@app.route('/fetch_council_member/<council_name>', methods=['POST'])
+def fetch_council_members(council_name):
     option = request.form['option']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
-    c= session['councilName']
-    # Query to fetch data based on the selected option
+    
+    # Query to fetch data based on the selected option and council name
     if option == 'All member':
-        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO and COUNCIL_MEMBERS.COUNCIL_NAME = '{c}';"
+        query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION FROM STUDENTS, COUNCIL_MEMBERS WHERE COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council_name}';"
     elif option == 'General Members only':
-        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'GENERAL MEMBER' and COUNCIL_MEMBERS.COUNCIL_NAME = '{c}';"
+        query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION FROM STUDENTS, COUNCIL_MEMBERS WHERE COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'GENERAL MEMBER' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council_name}';"
     elif option =='Coordinators':
-        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'COORDINATOR' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{c}';"
+        query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION FROM STUDENTS, COUNCIL_MEMBERS WHERE COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'COORDINATOR' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council_name}';"
     elif option == 'Secretary':
-        query = f"select STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION from STUDENTS, COUNCIL_MEMBERS where COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'SECRETARY' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{c}';"
+        query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION FROM STUDENTS, COUNCIL_MEMBERS WHERE COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'SECRETARY' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council_name}';"
+    
     cursor.execute(query)
     data = cursor.fetchall()
     print(data)
     conn.close()
-    return render_template('council_members.html', data=data)
+    return render_template('council_members.html', data=data, council_name=council_name)
 
-@app.route('/update_council_member', methods=['POST'])
-def update_council_member():
+
+@app.route('/update_council_members/<council_name>', methods=['POST'])
+def update_council_members(council_name):
     option = request.form['option2']
-    r= request.form['r']
+    r = request.form['r']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
-    c= session['councilName']
-    # Query to fetch data based on the selected option
+    
+    # Query to perform operations based on the selected option and council name
     if option == 'Add member':
-        query = f"insert into COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) values('{c}',{r},'General Member');"
+        query = f"INSERT INTO COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) VALUES ('{council_name}', {r}, 'General Member');"
     elif option == 'Remove Member':
-        query = f"delete from COUNCIL_MEMBERS where ROLLS_NO = {r} and POSITION = 'General Member';"
+        query = f"DELETE FROM COUNCIL_MEMBERS WHERE ROLLS_NO = {r} AND POSITION = 'General Member' AND COUNCIL_NAME = '{council_name}';"
     elif option =='Add coordinator':
-        query = f"insert into COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) values('{c}',{r},'Coordinator');"
+        query = f"INSERT INTO COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) VALUES ('{council_name}', {r}, 'Coordinator');"
     elif option == 'Remove coordinator':
-        query = f"delete from COUNCIL_MEMBERS where ROLLS_NO = {r} and POSITION = 'Coordinator';"
+        query = f"DELETE FROM COUNCIL_MEMBERS WHERE ROLLS_NO = {r} AND POSITION = 'Coordinator' AND COUNCIL_NAME = '{council_name}';"
+    
     cursor.execute(query)
     conn.commit()
     conn.close()
-    return render_template('council_members.html')
+    return render_template('council_members.html', council_name=council_name)
 
+@app.route('/fetch_club_member/<club_name>', methods=['POST'])
+def fetch_club_members(club_name):
+    option = request.form['option']
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    
+    # Query to fetch data based on the selected option and club name
+    if option == 'All member':
+        query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, CLUB_MEMBERS.POSITION FROM STUDENTS, CLUB_MEMBERS WHERE CLUB_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND CLUB_MEMBERS.CLUBS_NAME = '{club_name}';"
+    elif option == 'General Members only':
+        query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, CLUB_MEMBERS.POSITION FROM STUDENTS, CLUB_MEMBERS WHERE CLUB_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND CLUB_MEMBERS.POSITION = 'GENERAL MEMBER' AND CLUB_MEMBERS.CLUBS_NAME = '{club_name}';"
+    elif option =='Coordinators':
+        query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, CLUB_MEMBERS.POSITION FROM STUDENTS, CLUB_MEMBERS WHERE CLUB_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND CLUB_MEMBERS.POSITION = 'COORDINATOR' AND CLUB_MEMBERS.CLUBS_NAME = '{club_name}';"
+    elif option == 'Secretary':
+        query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, CLUB_MEMBERS.POSITION FROM STUDENTS, CLUB_MEMBERS WHERE CLUB_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND CLUB_MEMBERS.POSITION = 'SECRETARY' AND CLUB_MEMBERS.CLUBS_NAME = '{club_name}';"
+    
+    cursor.execute(query)
+    data = cursor.fetchall()
+    print(data)
+    conn.close()
+    return render_template('clubs.html', data=data, club_name=club_name)
+
+
+@app.route('/update_club_members/<club_name>', methods=['POST'])
+def update_club_members(club_name):
+    option = request.form['option2']
+    r = request.form['r']
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    
+    # Query to perform operations based on the selected option and club name
+    if option == 'Add member':
+        query = f"INSERT INTO CLUB_MEMBERS (CLUBS_NAME, ROLLS_NO, POSITION) VALUES ('{club_name}', {r}, 'General Member');"
+    elif option == 'Remove Member':
+        query = f"DELETE FROM CLUB_MEMBERS WHERE ROLLS_NO = {r} AND POSITION = 'General Member' AND CLUBS_NAME = '{club_name}';"
+    elif option =='Add coordinator':
+        query = f"INSERT INTO CLUB_MEMBERS (CLUBS_NAME, ROLLS_NO, POSITION) VALUES ('{club_name}', {r}, 'Coordinator');"
+    elif option == 'Remove coordinator':
+        query = f"DELETE FROM CLUB_MEMBERS WHERE ROLLS_NO = {r} AND POSITION = 'Coordinator' AND CLUBS_NAME = '{club_name}';"
+    
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+    return render_template('clubs.html', club_name=club_name)
 
 # Function to fetch all table names from MySQL
 def get_table_names():
