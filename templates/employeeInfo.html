@@ -148,11 +148,71 @@
         </div>
     </div>
 
-    {% if venues %}
-    {% endif %}
+    <!-- {% if venues %} -->
+    <!-- Display Venues -->
+    <h3>Venues Managed:</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>EVENT_NAME</th>
+                <th>EDITION</th>
+                <th>DATE</th>
+                <th>START_TIME</th>
+                <th>END_TIME</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if venues %}
+                {% for venue in venues %}
+                    <tr>
+                        <td>{{ venue.NAME }}</td>
+                        <td>{{ venue.EVENTS_NAME }}</td>
+                        <td>{{ venue.EDITIONS }}</td>
+                        <td>{{ venue.DATE }}</td>
+                        <td>{{ venue.START_TIME }}</td>
+                        <td>{{ venue.END_TIME }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No venues managed.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <!-- {% endif %} -->
 
-    {% if events %}
-    {% endif %}
+    <!-- {% if events %} -->
+    <!-- Display Events -->
+    <h3>Events Approved:</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Event Name</th>
+                <th>Edition</th>
+                <th>Budget</th>
+                <th>Approval Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if events %}
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.EVENT_NAME }}</td>
+                        <td>{{ event.EDITION }}</td>
+                        <td>{{ event.BUDGET }}</td>
+                        <td>{{ event.APPROVAL_STATUS }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">No events approved.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <!-- {% endif %} -->
 
     <!-- Your remaining HTML content goes here -->
 
