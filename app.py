@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'MyNewPass',    #Enter ur password for root
+    'password': 'DBMS_mysql@0204',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -206,8 +206,34 @@ def employee_info():
     if session["loggedin"] == "Admin" or session["loggedin"] == "Student":
         session["message"] = "Log-in as employee to access Employee-Info page."
         return redirect(url_for('login')) 
+    
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor(dictionary=True)
+    employee_id = session['userid']
+    
+    records_v = None
+    if session["Venue-in-charge"]:
+        query = """
+            SELECT pt.*
+            FROM PLACE_AND_TIME pt
+            JOIN VENUE v ON pt.name = v.address
+            WHERE v.employee_id = %s
+        """
+        cursor.execute(query, (employee_id,))
+        records_v = cursor.fetchall()
+        print(records_v)
 
-    return render_template('employeeInfo.html', employeeInfo = session['user_info'])
+    query = """
+            SELECT a.EVENT_NAME, a.EDITION, e.BUDGET, a.APPROVAL_STATUS
+            FROM Approval a
+            JOIN Event e ON a.EVENT_NAME = e.EVENT_NAME AND a.EDITION = e.EDITION
+            WHERE a.EMPLOYEE_ID = %s
+        """
+    cursor.execute(query, (employee_id,))
+    records_b = cursor.fetchall()
+    print(records_b)
+
+    return render_template('employeeInfo.html', employeeInfo = session['user_info'], venues=records_v, events=records_b)
 
 #this is used to display council details 
 @app.route('/councils')
