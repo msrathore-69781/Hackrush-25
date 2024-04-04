@@ -12,7 +12,7 @@
     pip install flask
     pip install flask-mysql
     pip install flask-session
-    pip install mysql.connector
+    pip install mysql-connector-python
     ```
 
 4. Create the database `CLUB_MS`.
@@ -34,7 +34,7 @@
 After setting up the database and configuration, we can run our webapp. To do that:
 1. Open your terminal window in the folder 'Database-Project/' and run the following:
     ```bash
-    python web_app.py
+    python app.py
     ```
 2. Open your browser and go to the URL that is displayed in the terminal, like this:
     ```bash
