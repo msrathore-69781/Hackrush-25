@@ -519,8 +519,8 @@ def issueequipment():
     eq = cursor.fetchone()
     if (eq[0]==0):
         conn.close()
-        flash("Not available at the moment")
-        return render_template('equipments.html', a=0)
+        message="Not available at the moment"
+        return render_template('equipments.html', message=message, a=0)
     
     else:
         id = eq[2]
@@ -537,8 +537,8 @@ def issueequipment():
             cursor.execute(query)
         conn.commit()
         conn.close()
-        flash("Equipment Issued")
-        return render_template('equipments.html', a=0)
+        message="Equipment Issued"
+        return render_template('equipments.html', message=message, a=0)
 
 @app.route('/returnequipment', methods=['POST'])
 def returnequipment():
@@ -550,10 +550,10 @@ def returnequipment():
     cursor.execute(query)
     query = f"update EQUIPMENT set AVAILABILITY = 1 where EQUIPMENT_ID = {option}"
     cursor.execute(query)
-    flash("Equipment Returned")
+    message="Equipment Returned"
     conn.commit()
     conn.close()
-    return render_template('equipments.html', a=0)
+    return render_template('equipments.html', message=message, a=0)
 
 if __name__ == "__main__":
     app.run(debug=True)

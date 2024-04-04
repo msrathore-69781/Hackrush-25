@@ -109,13 +109,13 @@
     {% endif %}
 </div>
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <p class="text-red font-thin">{{ message }}</p>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+{% if message is defined and message %}
+<div class="col-span-3 mb-4">
+    <div class="bg-gray-300 shadow-md rounded p-3 text-center">
+        <div class="alert alert-warning">{{ message }}</div>
+    </div>
+</div>
+{% endif %}
 
 <footer class="bg-gray-800 text-white text-center p-4 mt-auto">
     © 2024 Clubs and Councils Management - IIT Gandhinagar. All Rights Reserved.
