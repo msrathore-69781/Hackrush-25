@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'MyNewPass',    #Enter ur password for root
+    'password': 'Manvendra@04012002',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
