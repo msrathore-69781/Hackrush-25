@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'DBMS_mysql@0204',    #Enter ur password for root
+    'password': 'MyNewPass',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -232,7 +232,7 @@ def event(ev,ed):
     return render_template('event.html',event=event)
         # Close database connection
         
-        
+# @app.route('')    
 
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
@@ -543,16 +543,18 @@ def issueequipment():
 @app.route('/returnequipment', methods=['POST'])
 def returnequipment():
     option = request.form.get('option')
-    conn = mysql.connector.connect(**mysql_config)
-    cursor = conn.cursor()
-    print(option)
-    query = f"update ISSUE set RETURN_TIME = '{datetime.now()}' where ROLL_NO = {session['userid']} and EQUIPMENT_ID = {option} and isnull(RETURN_TIME)"
-    cursor.execute(query)
-    query = f"update EQUIPMENT set AVAILABILITY = 1 where EQUIPMENT_ID = {option}"
-    cursor.execute(query)
-    message="Equipment Returned"
-    conn.commit()
-    conn.close()
+    if (option is not None):
+        conn = mysql.connector.connect(**mysql_config)
+        cursor = conn.cursor()
+        query = f"update ISSUE set RETURN_TIME = '{datetime.now()}' where ROLL_NO = {session['userid']} and EQUIPMENT_ID = {option} and isnull(RETURN_TIME)"
+        cursor.execute(query)
+        query = f"update EQUIPMENT set AVAILABILITY = 1 where EQUIPMENT_ID = {option}"
+        cursor.execute(query)
+        message="Equipment Returned"
+        conn.commit()
+        conn.close()
+    else:
+        message="Select a valid Equipment to return"
     return render_template('equipments.html', message=message, a=0)
 
 if __name__ == "__main__":
