@@ -51,11 +51,13 @@ def login():
 
                     cursor.execute('SELECT COUNCIL_NAME FROM COUNCIL_MEMBERS WHERE ROLLS_NO = %s AND POSITION = "Secretary"', (roll_no,))
                     council_secy = cursor.fetchone()
+                    session["council_secretary"] = None
                     if council_secy:
                         session["council_secretary"] = council_secy[0]
                     else:
                         cursor.execute('SELECT CLUBS_NAME FROM CLUB_MEMBERS WHERE ROLLS_NO = %s AND POSITION = "Secretary"', (roll_no,))
                         club_secy = cursor.fetchone()
+                        session["club_secretary"] = None
                         if club_secy:
                             session["club_secretary"] = club_secy[0]
 
@@ -100,16 +102,19 @@ def login():
                     cursor.execute('SELECT COUNT(*) FROM VENUE WHERE EMPLOYEE_ID = %s', (employee_id,))
                     result = cursor.fetchone()
                     exists_in_venue = result['COUNT(*)'] > 0
+                    session["Venue-in-charge"] = None
                     if exists_in_venue:
                         session["Venue-in-charge"] = True
 
                     cursor.execute('SELECT COUNCIL_NAME FROM COUNCIL WHERE EMPLOYEE_ID = %s', (employee_id,))
                     result = cursor.fetchone()
+                    session["council_advisor"] = None
                     if result:
                         session["council_advisor"] = result['COUNCIL_NAME']
 
                     cursor.execute('SELECT CLUB_NAME FROM OVERSEER WHERE EMPLOYEE_ID = %s', (employee_id,))
                     result = cursor.fetchone()
+                    session["club_overseer"] = None
                     if result:
                         session["club_overseer"] = result['CLUB_NAME']
 
@@ -161,10 +166,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('loggedin', None)
-    session.pop('userid', None)
-    session.pop('email', None)
-    session.pop('name',None)
+    session.clear()
     return redirect(url_for('login'))
 
 #this is used to display council details 
@@ -174,13 +176,24 @@ def council():
         cursor = conn.cursor(dictionary=True)
         # Query to retrieve club information
         # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
-        cursor.execute(' Select council.COUNCIL_NAME ,council.DESCRIPTION, count(COUNCIL_MEMBERS.ROLLS_NO) as "TOTAL_MEMBERS" from council ,  COUNCIL_MEMBERS where council.COUNCIL_NAME = COUNCIL_MEMBERS.COUNCIL_NAME group by COUNCIL_MEMBERS.COUNCIL_NAME ')
+        cursor.execute(' Select council.COUNCIL_NAME ,council.DESCRIPTION, count(COUNCIL_MEMBERS.ROLLS_NO) as "TOTAL_MEMBERS" from council , COUNCIL_MEMBERS where council.COUNCIL_NAME = COUNCIL_MEMBERS.COUNCIL_NAME group by COUNCIL_MEMBERS.COUNCIL_NAME ')
         councils = cursor.fetchall()
         print(councils)
-        session['councilName']= councils[0]['COUNCIL_NAME']
-        print(session['councilName'])
+        # session['councilName']= councils[0]['COUNCIL_NAME']
+        # print(session['councilName'])
+
+        cursor.execute('''
+            SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
+            FROM clubs
+            JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
+            WHERE clubs.COUNCIL_NAME IS NULL
+            GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION
+        ''')
+        hobby_groups = cursor.fetchall()
+        print(hobby_groups)
+
         # Render the template with club information
-        return render_template('councils.html', councils=councils)
+        return render_template('councils.html', councils=councils, clubs=hobby_groups)
     except mysql.connector.Error as e:
         return f"Error retrieving club information: {e}"
     finally:
@@ -231,6 +244,10 @@ def event():
 def council_members():
         return render_template('council_members.html')
 
+@app.route('/clubs')
+def clubs():
+        return render_template('clubs.html')
+
 @app.route('/fetch_member', methods=['POST'])
 def fetch_members():
     option = request.form['option']
@@ -261,13 +278,13 @@ def update_council_member():
     c= session['councilName']
     # Query to fetch data based on the selected option
     if option == 'Add member':
-        query = f"insert into COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) values('{c}',{r},'GENERAL MEMBER');"
+        query = f"insert into COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) values('{c}',{r},'General Member');"
     elif option == 'Remove Member':
-        query = f"delete from COUNCIL_MEMBERS where ROLLS_NO = {r} and POSITION = 'GENERAL MEMBER';"
+        query = f"delete from COUNCIL_MEMBERS where ROLLS_NO = {r} and POSITION = 'General Member';"
     elif option =='Add coordinator':
-        query = f"insert into COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) values('{c}',{r},'COORDINATOR');"
+        query = f"insert into COUNCIL_MEMBERS (COUNCIL_NAME, ROLLS_NO, POSITION) values('{c}',{r},'Coordinator');"
     elif option == 'Remove coordinator':
-        query = f"delete from COUNCIL_MEMBERS where ROLLS_NO = {r} and POSITION = 'COORDINATOR';"
+        query = f"delete from COUNCIL_MEMBERS where ROLLS_NO = {r} and POSITION = 'Coordinator';"
     cursor.execute(query)
     conn.commit()
     conn.close()
