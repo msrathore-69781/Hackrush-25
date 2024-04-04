@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Handling</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="font-sans bg-gray-50">
+<body class="font-sans bg-gray-50 flex flex-col min-h-screen">
 
 <!-- Navigation Bar -->
 <nav class="bg-gray-800">
@@ -19,9 +19,8 @@
             </div>
             <div class="hidden md:flex items-center space-x-1">
                 <a href="#" class="py-4 px-2 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300">Home</a>
-                <a href="equipment" class="py-4 px-2 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300">Equipment</a>
-                <a href="events" class="py-4 px-2 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300">Events</a>
-                <a href="logout" class="py-4 px-2 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300">logout</a>
+                <a href="#" class="py-4 px-2 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300">Equipment</a>
+                <a href="#" class="py-4 px-2 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300">Events</a>
             </div>
         </div>
     </div>
@@ -110,7 +109,15 @@
     {% endif %}
 </div>
 
-<footer class="bg-gray-800 text-white text-center p-4">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <p class="text-red font-thin">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+<footer class="bg-gray-800 text-white text-center p-4 mt-auto">
     © 2024 Clubs and Councils Management - IIT Gandhinagar. All Rights Reserved.
 </footer>
 
