@@ -274,15 +274,22 @@ def event(ev,ed):
         
 @app.route('/participate/<ev>/<ed>', methods = ['GET'])
 def participate(ev,ed):
-    return render_template('participation.html',ev=ev,ed=ed)
+    return render_template('participation.html',ev=ev,ed=ed,n=1)
 
 @app.route('/participation/<ev>/<ed>/<n>', methods = ['POST'])
 def participation(ev,ed,n):
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor(dictionary=True)
     name = request.form['team name']
-    captain = request.form.get('options')
+    captain = request.form.get('captain')
     for i in range(1,n+1):
         roll = request.form[i]
         query = f"insert into PARTICIPATION values ('{ev}',{ed},{roll},'{name}',{captain==i});"
+        cursor.execute(query)
+    message = "Participation added"
+    cursor.close()
+    conn.close()
+    return render_template('participation.html',message=message)
 
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
