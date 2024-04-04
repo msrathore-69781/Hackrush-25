@@ -7,9 +7,20 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+    body {
+          font-family: Arial, sans-serif;
+          background-color: #f8f9fa;
+          margin: 0;
+          padding: 0;
+          background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMFtJPdILAAkL4frf6X13ydmNFZscVrYmAkQ&s'); /* Specify the path to your background image */
+            background-size:cover;
+            background-attachment: fixed
+      }
+</style>
 <body>
     <div class="container">
-        <h1 class="mt-5 mb-3">Upcoming Events</h1>
+        <h1 class="mt-5 mb-3 text-center">Upcoming Events</h1>
         <div class="row">
             {% for event in e %}
             <div class="col-md-4">
