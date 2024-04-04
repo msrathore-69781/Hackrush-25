@@ -274,22 +274,26 @@ def event(ev,ed):
         
 @app.route('/participate/<ev>/<ed>', methods = ['GET'])
 def participate(ev,ed):
-    return render_template('participation.html',ev=ev,ed=ed,n=1)
+    return render_template('participation.html',ev=ev,ed=ed)
 
-@app.route('/participation/<ev>/<ed>/<n>', methods = ['POST'])
-def participation(ev,ed,n):
+@app.route('/participation/<ev>/<ed>', methods = ['POST'])
+def participation(ev,ed):
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor(dictionary=True)
-    name = request.form['team name']
-    captain = request.form.get('captain')
-    for i in range(1,n+1):
-        roll = request.form[i]
-        query = f"insert into PARTICIPATION values ('{ev}',{ed},{roll},'{name}',{captain==i});"
+    name = request.form['teamname']
+    a=0
+    if 'captain' in request.form.keys():
+        a=1
+    roll = request.form['roll']
+    query = f"insert into PARTICIPATION values ('{ev}',{ed},{roll},'{name}',{a});"
+    try:
         cursor.execute(query)
-    message = "Participation added"
+        message = "Participation added"
+    except mysql.connector.errors.IntegrityError as e:
+        message = e
     cursor.close()
     conn.close()
-    return render_template('participation.html',message=message)
+    return render_template('participation.html',ev=ev,ed=ed,message=message)
 
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
