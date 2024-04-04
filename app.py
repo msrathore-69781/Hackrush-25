@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'DBMS_mysql@0204',    #Enter ur password for root
+    'password': 'MyNewPass',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -201,13 +201,14 @@ def council():
         cursor.close()
         conn.close()
 
-@app.route('/events', methods = ['POST','GET'])
+
+@app.route('/events', methods = ['GET'])
 def events():
     try:
         cursor = conn.cursor(dictionary=True)
         # Query to retrieve club information
         # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
-        cursor.execute('select PLACE_AND_TIME.EVENTS_NAME, PLACE_AND_TIME.DATE, EVENT.DESCRIPTION from PLACE_AND_TIME , EVENT where PLACE_AND_TIME.EVENTS_NAME = EVENT.EVENT_NAME order by PLACE_AND_TIME.DATE DESC;')
+        cursor.execute('select PLACE_AND_TIME.EVENTS_NAME, PLACE_AND_TIME.EDITIONS, PLACE_AND_TIME.DATE, EVENT.DESCRIPTION from PLACE_AND_TIME , EVENT where PLACE_AND_TIME.EVENTS_NAME = EVENT.EVENT_NAME and PLACE_AND_TIME.EDITIONS = EVENT.EDITION order by PLACE_AND_TIME.DATE DESC;')
         events = cursor.fetchall()
         # Render the template with club information
         return render_template('events.html',e=events)
@@ -218,26 +219,19 @@ def events():
         cursor.close()
         conn.close()
 
-@app.route('/event', methods = ['POST','GET'])
-def event():
-    # event_name = request.args.get('event_name')
-    # print(event_name)
+@app.route('/event/<ev>/<ed>', methods = ['POST','GET'])
+def event(ev,ed):
     conn = mysql.connector.connect(**mysql_config)
-    try: 
-        cursor = conn.cursor(dictionary=True)
-        # Query to retrieve club information
-        # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
-        cursor.execute('select * from EVENT where EVENT_NAME= %s', ('{event}'))
-        event = cursor.fetchall()
-        print(event)
-            # Render the template with club information
-        return render_template('event.html')
-    except mysql.connector.Error as e:
-        return f"Error retrieving event information: {e}"
-    finally:
+    cursor = conn.cursor(dictionary=True)
+    # Query to retrieve club information
+    # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
+    cursor.execute(f"select * from EVENT left join PLACE_AND_TIME on EVENTS_NAME = EVENT_NAME and EDITIONS = EDITION where EVENT_NAME= '{ev}' and EDITION= {ed};")
+    event = cursor.fetchone()
+        # Render the template with club information
+    cursor.close()
+    return render_template('event.html',event=event)
         # Close database connection
-        cursor.close()
-        conn.close()
+        
         
 
 @app.route('/council_members/<council_name>')

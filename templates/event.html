@@ -9,21 +9,34 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5 mb-3">Upcoming Events</h1>
-        <div class="row">
-            {% for e in event %}
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <img src="Palette.jpg" class="card-img-top" alt="{{ event.title }}">
-                    <div class="card-body">
-                        <h2 class="card-title">{{ e.EVENTS_NAME }}</h5>
-                        <p class="card-text-large" style="font-size: 22px;">{{ e.DESCRIPTION }}</p>
-                        <i><h6>{{e.DATE}}</h4></i>
-                       
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+        <h1>Event Details for {{event.EVENT_NAME, event.EDITION}}</h1>
+        <div class="info">
+            <label for="description">Description:</label>
+            <p>{{event.DESCRIPTION}}</p>
+        </div>
+        <div class="info">
+        <label for="venue">Venue:</label>
+        {% if event.MODE_OF_CONDUCT == 'ONLINE' %}
+            <p>Online</p>
+        {% else %}
+            <p>{{event.NAME}}</p>
+        {% endif %}
+        </div>
+        <div class="info">
+            <label for="date">Date:</label>
+            <p>{{ event.DATE }}</p>
+        </div>
+        <div class="info">
+            <label for="timings">Timings:</label>
+            <p>{{event.START_TIME}} to {{event.END_TIME}}</p>
+        </div>
+        <div class="info">
+            <label for="part link">Participation Link</label>
+            <p>{{event.PARTICIPATION_FORM}}</p>
+        </div>
+        <div class="info">
+            <label for="rule link">Rulebook Link:</label>
+            <p>{{event.RULEBOOK_LINK}}</p>
         </div>
     </div>
 

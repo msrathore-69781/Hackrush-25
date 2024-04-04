@@ -18,9 +18,7 @@
                     <div class="card-body">
                         <h2 class="card-title">{{ event.EVENTS_NAME }}</h5>
                         <i><h6>Date Of the Event: {{event.DATE}}</h4></i>
-                        <a href="{{ url_for('event',event = event.EVENTS_NAME)}}" >Read More</a>
-                        <!-- <a href="{{ url_for('event'), event.EVENTS_NAME}}" >Read More</a> -->
-
+                        <a href="{{ url_for('event', ev = event.EVENTS_NAME, ed = event.EDITIONS)}}" >Read More</a>
 
                         
                     </div>
