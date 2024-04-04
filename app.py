@@ -53,13 +53,13 @@ def login():
                     council_secy = cursor.fetchone()
                     session["council_secretary"] = None
                     if council_secy:
-                        session["council_secretary"] = council_secy[0]
+                        session["council_secretary"] = council_secy['COUNCIL_NAME']
                     else:
                         cursor.execute('SELECT CLUBS_NAME FROM CLUB_MEMBERS WHERE ROLLS_NO = %s AND POSITION = "Secretary"', (roll_no,))
                         club_secy = cursor.fetchone()
                         session["club_secretary"] = None
                         if club_secy:
-                            session["club_secretary"] = club_secy[0]
+                            session["club_secretary"] = club_secy['CLUBS_NAME']
 
                     return render_template('studentInfo.html', studentInfo=user)
             else:
@@ -242,11 +242,13 @@ def event():
 
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
-        return render_template('council_members.html', council_name=council_name)
+        show_form = session.get("council_secretary") == council_name
+        return render_template('council_members.html', council_name=council_name, show_form=show_form)
 
 @app.route('/clubs/<club_name>')
 def clubs(club_name):
-        return render_template('clubs.html', club_name=club_name)
+        show_form = session.get("club_secretary") == club_name
+        return render_template('clubs.html', club_name=club_name, show_form=show_form)
 
 @app.route('/fetch_council_member/<council_name>', methods=['POST'])
 def fetch_council_members(council_name):

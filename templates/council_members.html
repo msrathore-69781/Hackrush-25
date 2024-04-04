@@ -50,6 +50,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>   
             </form>
+            {% if show_form %}
             <p>   </p>
             <div>
             <form action="{{ url_for('update_council_members', council_name=council_name)}}" method="POST">
@@ -64,10 +65,11 @@
                 <div class="form-group">
                 <label for="r">Enter Roll Number</label>
                 <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
-            </div>   
-            <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
+                </div>   
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            {% endif %}
         </div>
 
         <!-- Table Section -->
