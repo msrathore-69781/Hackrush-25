@@ -413,27 +413,52 @@ def view_table(table_name):
     data = cursor.fetchall()
 
     if request.method == 'POST':
+        action = request.form['action']
+        if action == 'insert':
         # Extract data from the form
-        new_entry_values = [request.form[column] for column in columns]
-        
-        # Construct the SQL query to insert new entry
-        placeholders = ', '.join(['%s'] * len(columns))
-        insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})"
-        
-        # Execute the insert query
-        cursor = conn.cursor()
-        cursor.execute(insert_query, new_entry_values)
-        conn.commit()  # Commit the transaction
-        
-        cursor = conn.cursor()
-        # Fetch data again after insertion
-        cursor.execute(f"select * from {table_name}")
-        data = cursor.fetchall()
-        conn.commit()
+            new_entry_values = [request.form[column] for column in columns]
+            
+            # Construct the SQL query to insert new entry
+            placeholders = ', '.join(['%s'] * len(columns))
+            insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})"
+            
+            # Execute the insert query
+            cursor = conn.cursor()
+            cursor.execute(insert_query, new_entry_values)
+            conn.commit()  # Commit the transaction
+            
+            cursor = conn.cursor()
+            # Fetch data again after insertion
+            cursor.execute(f"select * from {table_name}")
+            data = cursor.fetchall()
+            conn.commit()
+    
+        elif action =='delete':
+            to_delete_values = [request.form[column] for column in columns]
+            query=f"DELETE FROM {table_name} WHERE "
+            print(query)
 
-    # Close the cursor and connection
-    cursor.close()
-    conn.close()
+            for i in range(len(columns)):
+                    if i==len(columns)-1:
+                        if columns[i].isnumeric():
+                            query+= f"{columns[i]} = {to_delete_values[i]}"
+                        else:
+                            query+= f"{columns[i]} = '{to_delete_values[i]}'"
+                    else :
+                        if columns[i].isnumeric():
+                            query+= f"{columns[i]} = {to_delete_values[i]} and "
+                        else:
+                            query+= f"{columns[i]} = '{to_delete_values[i]}' and "
+            query+=";"
+            print(query)
+            cursor.execute(query)  
+            conn.commit()  
+            cursor.execute(f"SELECT * FROM {table_name}")
+            data = cursor.fetchall()
+            conn.commit()
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
 
     # Render the HTML template with table name, column names, and data
     return render_template('view_table.html', table_name=table_name, columns=columns, data=data)
