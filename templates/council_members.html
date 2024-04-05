@@ -35,12 +35,10 @@
  <!-- Main Content -->
 <div class="container mx-auto mt-24 p-8">
     <p>{{council_name}}: </p>
-    <p>{{council_info.DESCRIPTION}}</p>
-
+    <p></p>
     <div class="md:flex md:flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
         <!-- Content Section -->
         <div class="md:w-1/4 p-4">
-            <!-- <h1>Dropdown Menu</h1> -->
             <form action="{{ url_for('fetch_council_members', council_name=council_name)}}" method="POST">
                 <div class="mb-4">
                     <label for="dropdown" class="block">Select an option:</label>
@@ -55,59 +53,50 @@
                 <button type="submit" class="btn btn-primary">Submit</button>   
             </form>
             {% if show_form %}
-            <p>   </p>
             <div>
-            <form action="{{ url_for('update_council_members', council_name=council_name)}}" method="POST">
-                <label for="dropdown">Update:</label>
-                <select id="dropdown" name="option2" class="form-select block w-full mt-1">
-                    <option value="Add member">Add member</option>
-                    <option value="Remove Member">Remove Member</option>
-                    <option value="Add coordinator">Add coordinator</option>
-                    <option value="Remove coordinator">Remove coordinator</option>
-                </select>
-                <input type="hidden" name="control" value={{show_form}}>
-                <p>   </p>
-                <div class="form-group">
-                <label for="r">Enter Roll Number</label>
-                <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
-                </div>   
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-            
+                <form action="{{ url_for('update_council_members', council_name=council_name)}}" method="POST">
+                    <label for="dropdown">Update:</label>
+                    <select id="dropdown" name="option2" class="form-select block w-full mt-1">
+                        <option value="Add member">Add member</option>
+                        <option value="Remove Member">Remove Member</option>
+                        <option value="Add coordinator">Add coordinator</option>
+                        <option value="Remove coordinator">Remove coordinator</option>
+                    </select>
+                    <input type="hidden" name="control" value={{show_form}}>
+                    <div class="form-group">
+                        <label for="r">Enter Roll Number</label>
+                        <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
+                    </div>   
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
             {% endif %}
         </div>
-        
-        <!-- Table Section -->
-        
-        <div class="md:flex-1 md:p-4 mt-4 md:mt-0">
-            <!-- <h1 class = "md:flex-wrap">Results</h1> -->
-            <div>
-                <table class="table-fixed w-full">
-                    <thead>
-                        <tr>
-                            <th class="w-1/5">Roll Number</th>
-                            <th class="w-1/5">Email</th>
-                            <th class="w-1/5">Contact Number</th>
-                            <th class="w-1/5">Name</th>
-                            <th class="w-1/5">Position</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in data %}
-                        <tr>
-                            <td>{{ row[0] }}</td>
-                            <td>{{ row[1] }}</td>
-                            <td>{{ row[2] }}</td>
-                            <td>{{ row[3] }}</td>
-                            <td>{{ row[4] }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="md:w-3/4 p-4">
+            <table class="table-fixed w-full">
+                <thead>
+                    <tr>
+                        <th class="w-1/5">Roll Number</th>
+                        <th class="w-1/5">Email</th>
+                        <th class="w-1/5">Contact Number</th>
+                        <th class="w-1/5">Name</th>
+                        <th class="w-1/5">Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
 <section id="clubs" class="container mx-auto text-center py-20">
     <div class="overflow-x-auto">
         <table class="table-auto border-collapse w-full">

@@ -374,9 +374,6 @@ def participation(ev,ed):
 def council_members(council_name):
         show_form = session.get("council_secretary") == council_name
         cursor = conn.cursor(dictionary=True)
-        query = f"select * from council where council_name= '{council_name}';"
-        cursor.execute(query)
-        council_info = cursor.fetchone()
         cursor.execute('''
             SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
             FROM clubs
@@ -384,16 +381,12 @@ def council_members(council_name):
             WHERE clubs.COUNCIL_NAME = %s
             GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
         clubs = cursor.fetchall()
-        return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs, council_info=council_info)
+        return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
 
 @app.route('/clubs/<club_name>')
 def clubs(club_name):
         show_form = session.get("club_secretary") == club_name
-        cursor = conn.cursor(dictionary=True)
-        query = f"select * from clubs where club_name= '{club_name}';"
-        cursor.execute(query)
-        club_info = cursor.fetchone()
-        return render_template('clubs.html', club_name=club_name, show_form=show_form, club_info=club_info)
+        return render_template('clubs.html', club_name=club_name, show_form=show_form)
 
 @app.route('/fetch_council_member/<council_name>', methods=['POST'])
 def fetch_council_members(council_name):
