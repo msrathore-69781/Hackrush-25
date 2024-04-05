@@ -97,6 +97,28 @@ After setting up the database and configuration, we can run our webapp. To do th
 
 Now your home page is opened which is a login page for our Club Management System where you can login as a student, employee or admin (person with all permissions).
 
+### Login view
+
+<img width="1440" alt="Screenshot 2024-04-05 at 5 44 03 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/fcb723c1-260b-49ba-8394-e4060fcce318">
+
+<img width="1440" alt="Screenshot 2024-04-05 at 5 43 06 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/79a9e359-d3bc-4575-a5ad-3ad27723451d">
+
+<img width="1440" alt="Screenshot 2024-04-05 at 5 44 20 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/29852eda-e02d-4e99-b081-ef34fde44956">
+
+<img width="1440" alt="Screenshot 2024-04-05 at 5 44 31 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/1f3a9ec7-da8a-43c5-b776-1519066b7463">
+
+
+### Equipment view
+
+<img width="1440" alt="Screenshot 2024-04-05 at 5 48 08 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/d354de73-b912-40fa-831d-ffeb26f41924">
+
+<img width="1440" alt="Screenshot 2024-04-05 at 5 48 14 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/58c975e3-eb5d-4c1b-80b1-19ecbd5f08c6">
+
+<img width="1440" alt="Screenshot 2024-04-05 at 5 48 27 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/5530957e-508d-48c9-8054-5a5d8b503e7d">
+
+<img width="1440" alt="Screenshot 2024-04-05 at 5 48 48 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/ed012e03-d971-4fd8-91ec-71c50cc26f1d">
+
+
 ### Operations on ADMIN view
  Admin can perform INSERT, DELETE and RENAME queries on the tables of the database.
  BEFORE : </br>
