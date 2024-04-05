@@ -136,64 +136,46 @@ Now your home page is opened which is a login page for our Club Management Syste
 ### G1
 
 1. #### Anshul Choudhary
-   - 
-   - 
-   - 
-   - 
-   -
-   -
-   -
+   - Worked on ideating the initial design of the website.
+   - Made sketches and illustrated the flow of the website and different requirements
+   - Made front-end for couple of website including css styling
    
 
 2. #### Shrijan Sahu
-   -
-   - 
-   -
-   -
-   -
-   -
-   -
-   -
+   - Made front-end for many pages and beautified their looks
+   - Ideated on various possible design themes for the website.
+   - Added javascript and accomplished dynamic changes obtained from running backend
 
 3. #### Amey Rangari
+   - Participated in initial design ideation for the website to discuss flow and execution.
+   - Made beautification and visual changes to various components of project.
+   - Assisted in debugging of various issues arrived during linking.
 
-4. 
-<h2>1. Shubh Singhal</h2>
-   - 
+### G2
 
-   
-
-<h2>2. Yashraj Deshmukh</h2>
-   -
-   - 
-   - 
-   -
-   - 
-   - 
-   - 
-   
-
-<h2>3. Pratham Sagar</h2>
-   - 
-   - 
-   - 
-   - 
-   - 
-   - 
-   - 
-   
+1. #### Shubh Singhal
+   - Ideated and wrote various backend queries required for smooth functioning of webapp.
+   - Added and tested various views and dynamic operations. 
+   - Led in debugging various inconsistences and bugs accumulated in running the webapp.
 
    
 
-<h2>6. Manvendra Singh </h2>
-   -
-   -
-   -
-   -
-   -
-   -
-   -
-   -
+2. #### Yashraj Deshmukh
+   - Led in writing back-end code for various pages and setting routing protocols.
+   - Ideated on what routing protocols to follow and work-flow of app.
+   - Worked on combining various elements of database system.
+   
+
+3. #### Pratham Sagar
+   - Ideated on what permissions to be alloted to different users and implemented that.
+   - Documented the screenshots of the execution in the ReadMe.MD file.
+   - Collaborated with Front-end team and contributed to html structure of pages.
+   
+
+4. #### Manvendra Singh
+   - Setup the inital required connections for flask and mysql integration with the webapp.
+   - Documented the testing output with snapshots in the ReadMe.MD file.
+   - Made backend-routing protocols for many pages and fit them in the front-end.
    
 
 
