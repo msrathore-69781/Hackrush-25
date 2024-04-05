@@ -43,10 +43,44 @@
       
 <img width="1440" alt="Screenshot 2024-04-04 at 4 32 20 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/e1d45c6a-da12-41a3-aac6-3584d4a50cd6">
 
-- Click on 'Administrative Roles' and then click on 'Revoke All Privileges'.
-    
+   - Click on 'Administrative Roles' and then click on 'Revoke All Privileges'.
+   <img width="1440" alt="Screenshot 2024-04-04 at 4 33 23 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/65b4f338-152d-42a9-b252-2655136641cc">
 
-   
+   - Click on 'Schmema Privileges' and then click on 'Revoke All Privileges'.
+    
+   <img width="1440" alt="Screenshot 2024-04-04 at 4 33 43 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/183a31ce-71ba-408c-bd31-20c00185a12c">
+
+   - Go to your home tab in Workbench and then add a new connection by clicking 
+     here:
+     <img width="1440" alt="Screenshot 2024-04-04 at 4 34 03 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/f1cd9d7f-43d0-4263-846b-e3b27146defb">
+     
+   -  Here Enter the following:
+            - Connection Name: student
+            - Username: student
+
+   - Click on 'Test Connection' and then enter the password mannudb when 
+     prompted. Then click on 'OK'.
+
+
+7. Repeat the entire above point for a new user 'employee' in your MYSQL 
+     Workbench with the following details:
+      - Login Name: employee
+      - Connection Name: employee
+      - Username: employee
+      - Password: mannudb
+
+
+8. Grant Permissions to the 'student' role.
+     In order to do this, run the 'student_role_permissions' file in the 'Dump 
+     Files' directory in your SQL Workbench. This will grant the required 
+     permissions to the 'student' role.
+
+
+9. Grant Permissions to the 'employee' role.
+    In order to do this, run the 'employee_role_permissions' file in the 'Dump 
+    Files' directory in your SQL Workbench. This will grant the required 
+    permissions to the 'employee' role.
+
 
 
 ### Running the Webapp
