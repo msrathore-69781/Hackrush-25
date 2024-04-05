@@ -129,16 +129,37 @@ Now your home page is opened which is a login page for our Club Management Syste
 
 
 
-<h1> Work Distribution</h1>
 
 
+## Work Distribution
 
-<h2>1. Shubh Singhal</h2>
-1. emdmekmdlm
+### G1
 
-2. jnsw
-3. 
+1. #### Anshul Choudhary
+   - 
+   - 
+   - 
+   - 
+   -
+   -
+   -
+   
+
+2. #### Shrijan Sahu
+   -
+   - 
+   -
+   -
+   -
+   -
+   -
+   -
+
+3. #### Amey Rangari
+
 4. 
+<h2>1. Shubh Singhal</h2>
+   - 
 
    
 
@@ -162,25 +183,6 @@ Now your home page is opened which is a login page for our Club Management Syste
    - 
    
 
-<h2>4. Anshul Choudhary</h2>
-   - 
-   - 
-   - 
-   - 
-   -
-   -
-   -
-   
-
-<h2>5. Shrijan Sahu</h2>
-   -
-   - 
-   -
-   -
-   -
-   -
-   -
-   -
    
 
 <h2>6. Manvendra Singh </h2>
