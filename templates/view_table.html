@@ -5,106 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>View Table</title>
 
-        <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        h1, h2 {
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button[type="submit"]:hover {
-            background-color: #45a049;
-        }
+    <style>
+      /* CSS for button styling */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
+      h1,
+      h2 {
+        color: #333;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button[type="submit"],
+      #rename-btn {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      button[type="submit"]:hover,
+      #rename-btn:hover {
+        background-color: #45a049;
+      }
+      #rename-div {
+        display: none;
+      }
     </style>
-
-
-
   </head>
-  <body>
-    <h1>Viewing Table: {{ table_name }}</h1>
-
-    <form action="/view_table/{{table_name}}" method="post">
-      <h2>Enter New Data</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Column Name</th>
-            <th>Data Entry</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for column in columns %}
-          <tr>
-            <td>{{ column }}</td>
-            <td><input type="text" name="{{ column }}" /></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <button type="submit" name="action" value="insert">INSERT</button>
-      <button type="submit" name="action" value="delete">DELETE</button>
-    </form>
-
-    <!-- Container to display existing data -->
-    <div>
-      <h2>Existing Data</h2>
-      <table>
-        <thead>
-          <tr>
+    <body>
+      <h1>Viewing Table: {{ table_name }}</h1>
+    
+      <!-- Container to display existing data -->
+      <div>
+        <h2>Existing Data</h2>
+        <table>
+          <thead>
+            <tr>
+              {% for column in columns %}
+              <th>{{ column }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in data %}
+            <tr>
+              {% for value in row %}
+              <td>{{ value }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    
+      <form action="/view_table/{{table_name}}" method="post">
+        <h2>Enter New Data</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Column Name</th>
+              <th>Data Entry</th>
+            </tr>
+          </thead>
+          <tbody>
             {% for column in columns %}
-            <th>{{ column }}</th>
+            <tr>
+              <td>{{ column }}</td>
+              <td><input type="text" name="{{ column }}" /></td>
+            </tr>
             {% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-          {% for row in data %}
-          <tr>
-            {% for value in row %}
-            <td>{{ value }}</td>
-            {% endfor %}
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
-  </body>
+          </tbody>
+        </table>
+        <button type="submit" name="action" value="insert">INSERT</button>
+        <button type="submit" name="action" value="delete">DELETE</button>
+        <button type="button" id="rename-btn">RENAME</button>
+        <div id="rename-div">
+          <input
+            type="text"
+            name="new_table_name"
+            placeholder="Enter new table name"
+          />
+          <button type="submit" name="action" value="rename">Submit</button>
+        </div>
+      </form>
+    
+      <script>
+        document
+          .getElementById("rename-btn")
+          .addEventListener("click", function () {
+            document.getElementById("rename-div").style.display = "block";
+          });
+      </script>
+    </body>
 </html>

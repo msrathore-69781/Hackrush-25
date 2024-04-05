@@ -136,8 +136,6 @@ def login():
         except Exception as e:
             print('Error:', e)  # Debugging print statement
             message = 'An error occurred during login.'
-        finally:
-            cursor.close()  # Always close the cursor
 
     ''' Log-in for Admin '''
     if request.method == 'POST' and 'email_admin' in request.form and 'password_admin' in request.form:
@@ -238,7 +236,7 @@ def employee_info():
             JOIN Event e ON a.EVENT_NAME = e.EVENT_NAME AND a.EDITION = e.EDITION
             WHERE a.EMPLOYEE_ID = %s
         """
-    cursor.execute(query, s(employee_id,))
+    cursor.execute(query, (employee_id,))
     records_b = cursor.fetchall()
     print(records_b)
 
@@ -576,6 +574,13 @@ def view_table(table_name):
             cursor.execute(f"SELECT * FROM {table_name}")
             data = cursor.fetchall()
             conn.commit()
+
+        elif action == 'rename':
+            new_table_name = request.form['new_table_name']
+            cursor=conn.cursor()
+            cursor.execute(f"RENAME TABLE {table_name} TO {new_table_name}")
+            conn.commit()
+            return redirect('/view_table/' + new_table_name)
         # Close the cursor and connection
         cursor.close()
         conn.close()
