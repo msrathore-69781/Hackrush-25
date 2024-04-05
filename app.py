@@ -543,59 +543,63 @@ def addEvents():
 
 @app.route('/addEvent', methods=['GET','POST'])
 def submit():
-    if request.method == 'POST' and 'event_name' in request.form and 'edition' in request.form and 'mode_of_conduct' in request.form and 'description' in request.form and 'participation_form' in request.form and 'rulebook_link' in request.form and 'budget' in request.form and 'team_name' in request.form and 'team_captain' in request.form and 'filler_roll_no' in request.form and 'organizer_roll_no' in request.form and 'responsibility' in request.form and 'club_name' in request.form:
+    if request.method == 'POST' and 'event_name' in request.form and 'edition' in request.form and 'mode_of_conduct' in request.form and 'description' in request.form and 'rulebook_link' in request.form and 'budget' in request.form and 'club_name' in request.form and 'event_lead_roll_no' in request.form and 'venue' in request.form and  'team_member' in request.form:
         event_name = request.form['event_name']
         edition = int(request.form['edition'])
+        employee_id = int(request.form['employee_id'])
         mode_of_conduct = request.form['mode_of_conduct']
         description = request.form['description']
-        participation_form = request.form['participation_form']
         rulebook_link = request.form['rulebook_link']
         budget = float(request.form['budget'])
 
-        team_name = request.form['team_name']
-        team_captain = 1 if request.form['team_captain'] =='Yes' else 0
-        filler_roll_no = int(request.form['filler_roll_no'])
-
-
-        organizer_roll_no = int(request.form['organizer_roll_no'])
-        responsibility= request.form['responsibility']
+        event_lead_roll_no = int(request.form['event_lead_roll_no'])
+        team_members = request.form.getlist('team_member')
 
         club_name = request.form['club_name']
 
-        venue = request.form['venue']
-        date = request.form['date']
-        print(type(date))
-        
+        if mode_of_conduct == 'Offline':
+            venue = request.form['venue']
+            date = request.form['date']
+            print(type(date))
+            
 
-        start_time = request.form['start_time']
-        end_time = request.form['end_time']
-        print(type(start_time))
-        print(end_time)
+            start_time = request.form['start_time']
+            end_time = request.form['end_time']
+            print(type(start_time))
+            print(end_time)
+        else:
+            venue = None
+            date=None
+            start_time = None
+            end_time = None 
+
 
 
         try:
             cursor = conn.cursor()
+            print(1)
             cursor.execute('''
                 INSERT INTO event 
-                (event_name, edition, mode_of_conduct, description, participation_form, rulebook_link, budget) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            ''', (event_name, edition, mode_of_conduct, description, participation_form, rulebook_link, budget))
+                (event_name, edition, mode_of_conduct, description, rulebook_link, budget) 
+                VALUES (%s, %s, %s, %s, %s, %s)
+            ''', (event_name, edition, mode_of_conduct, description, rulebook_link, budget))
             conn.commit()
-            cursor = conn.cursor()
+            print(2)
 
-            cursor.execute('''
-                INSERT INTO participation
-                           (EVENTS_NAME,EDITIONS,ROLL_NO,TEAM_NAME,TEAM_CAPTAIN)
-                           VALUES (%s, %s, %s,%s,%s)''',
-                           (event_name,edition,filler_roll_no,team_name,team_captain))
-            conn.commit()
             cursor = conn.cursor()
-
             cursor.execute('''
                 INSERT INTO ORGANIZERS
                            VALUES (%s, %s, %s,%s)
-                           ''',(event_name,edition,organizer_roll_no,responsibility))
+                           ''',(event_name,edition,event_lead_roll_no,'Event Lead'))
             conn.commit()
+            cursor = conn.cursor()
+            for team_member in team_members:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO ORGANIZERS
+                            VALUES (%s, %s, %s,%s)
+                            ''',(event_name,edition,int(team_member),'Team Member'))
+                conn.commit()
             cursor = conn.cursor()
 
             cursor.execute('''
@@ -608,7 +612,13 @@ def submit():
                 INSERT INTO PLACE_AND_TIME 
                             VALUES (%s, %s,%s,%s,%s,%s)
                             ''',(venue,event_name,edition,date,start_time,end_time))    
-            conn.commit()                       
+            conn.commit()   
+            cursor=conn.cursor()
+            cursor.execute('''
+                INSERT INTO approval 
+                            VALUES (%s, %s,%s,%s)
+                            ''',(event_name,edition,employee_id,'pending'))    
+            conn.commit()                     
             
             cursor.close()
             conn.close()
@@ -619,7 +629,6 @@ def submit():
         message = "Missing form fields"
    
     return render_template('addEvent.html', message=message)
-
 
 @app.route('/equipment', methods=['GET'])
 def equipment():

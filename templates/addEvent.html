@@ -70,7 +70,35 @@
         background-color: #45a049;
       }
     </style>
+
+    <script>
+      // Function to add a new Team Member field
+      function addTeamMemberField() {
+        var container = document.getElementById("team-members-container");
+        var input = document.createElement("input");
+        input.type = "text";
+        input.name = "team_member";
+        input.placeholder = "Team Member";
+        container.appendChild(input);
+      }
+    </script>
+
+    <script>
+      function togglePlaceAndTime() {
+        var modeOfConduct = document.getElementById("mode_of_conduct").value;
+        var placeAndTimeFields = document.getElementById(
+          "place_and_time_fields"
+        );
+
+        if (modeOfConduct === "Offline") {
+          placeAndTimeFields.style.display = "block";
+        } else {
+          placeAndTimeFields.style.display = "none";
+        }
+      }
+    </script>
   </head>
+
   <body>
     <div class="header">
       <h1>Add Event</h1>
@@ -83,7 +111,11 @@
       <label for="edition">Edition:</label><br />
       <input type="text" id="edition" name="edition" /><br />
       <label for="mode_of_conduct">Mode of Conduct:</label><br />
-      <select id="mode_of_conduct" name="mode_of_conduct">
+      <select
+        id="mode_of_conduct"
+        name="mode_of_conduct"
+        onchange="togglePlaceAndTime()"
+      >
         <option value="Online">Online</option>
         <option value="Offline">Offline</option></select
       ><br />
@@ -97,10 +129,13 @@
       /><br />
       <label for="rulebook_link">Rulebook Link:</label><br />
       <input type="text" id="rulebook_link" name="rulebook_link" /><br />
+      <label for="employee_id">Employee id</label><br />
+      <input type="number" id="employee_id" name="employee_id" /><br />
       <label for="budget">Budget:</label><br />
       <input type="number" id="budget" name="budget" /><br /><br />
       <br />
 
+      <div id="place_and_time_fields" style="display: none;">
       <h2>Place and Time Details</h2>
       <label for="venue">Venue Name:</label><br />
       <input type="text" id="venue" name="venue" /><br />
@@ -108,40 +143,34 @@
       <label for="date">Date:</label><br />
       <input type="date" id="date" name="date" /><br />
 
-    <label for="start_time">Start Time:</label><br />
-    <input type="time" id="start_time" name="start_time" step="1" /><br />
+      <label for="start_time">Start Time:</label><br />
+      <input type="time" id="start_time" name="start_time" step="1" /><br />
 
-    <label for="end_time">End Time:</label><br />
-    <input type="time" id="end_time" name="end_time" step="1" /><br />
-
-      <br />
-      <h2>For Participation</h2>
-      <label for="team_name">Team name:</label><br />
-      <input type="text" id="team_name" name="team_name" /><br />
-
-      <label for="team_captain">Team Captain:</label>
-      <select id="team_captain" name="team_captain">
-        <br />
-        <option value="Yes">Yes</option>
-        <option value="No">No</option></select
-      ><br />
-
-      <label for="filler_roll_no">Participant's Roll No</label>
-      <input type="text" id="filler_roll_no" name="filler_roll_no" /><br />
+      <label for="end_time">End Time:</label><br />
+      <input type="time" id="end_time" name="end_time" step="1" /><br />
+      </div>
 
       <br />
       <h2>For Organizers</h2>
-      <label for="organizer_roll_no">Organizer Roll_No:</label><br />
+      <label for="event_lead_roll_no">Event Lead:</label><br />
       <input
         type="text"
-        id="organizer_roll_no"
-        name="organizer_roll_no"
+        id="event_lead_roll_no"
+        name="event_lead_roll_no"
+        placeholder="Event Lead Roll No"
       /><br />
-      <label for="responsibility">Responsibility:</label><br />
-      <select id="responsibility" name="responsibility">
-        <option value="Event Lead">Event Lead</option>
-        <option value="Team Member">Team Member</option></select
-      ><br />
+
+      <div id="team-members-container">
+        <label for="team_member">Team Member:</label><br />
+        <input
+          type="text"
+          name="team_member"
+          placeholder="Team Member Roll No"
+        /><br />
+      </div>
+      <button type="button" onclick="addTeamMemberField()">
+        Add Team Member</button
+      ><br /><br />
 
       <br />
       <h2>Conducting Club</h2>
