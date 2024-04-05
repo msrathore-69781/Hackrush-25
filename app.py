@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'DBMS_mysql@0204',    #Enter ur password for root
+    'password': 'MyNewPass',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -370,6 +370,7 @@ def participation(ev,ed):
     query = f"insert into PARTICIPATION values ('{ev}',{ed},{roll},'{name}',{a});"
     try:
         cursor.execute(query)
+        conn.commit()
         message = "Participation added"
     except mysql.connector.errors.IntegrityError as e:
         message = e
@@ -733,8 +734,8 @@ def issueequipment():
     eq = cursor.fetchone()
     if (eq[0]==0):
         conn.close()
-        flash("Not available at the moment")
-        return render_template('equipments.html', a=0)
+        message = "Not available at the moment"
+        return render_template('equipments.html', message=message, a=0)
     
     else:
         id = eq[2]
@@ -751,8 +752,8 @@ def issueequipment():
             cursor.execute(query)
         conn.commit()
         conn.close()
-        flash("Equipment Issued")
-        return render_template('equipments.html', a=0)
+        message = "Equipment Issued"
+        return render_template('equipments.html', message=message, a=0)
 
 @app.route('/returnequipment', methods=['POST'])
 def returnequipment():
