@@ -28,6 +28,16 @@
     'database': 'CLUB_MS'
     }
     ```
+6. Login in to MYSQL Workbench using your root user.
+
+   - Click on the 'Administration' tab.
+   <img width="1440" alt="Screenshot 2024-04-04 at 4 31 17 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/ee5c9d35-38aa-4b1d-aa04-3507ab9d7377">
+   - Click on the 'Users and Privileges' option.
+   - Click on the 'Add Account' button.
+   -Enter the following details keeping the rest of the fields as default:
+
+   
+
 
 ### Running the Webapp
 
