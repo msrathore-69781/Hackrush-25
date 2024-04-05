@@ -340,6 +340,7 @@ def clubs(club_name):
 @app.route('/fetch_council_member/<council_name>', methods=['POST'])
 def fetch_council_members(council_name):
     option = request.form['option']
+    show_form = request.form['control']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
     
@@ -357,13 +358,14 @@ def fetch_council_members(council_name):
     data = cursor.fetchall()
     print(data)
     conn.close()
-    return render_template('council_members.html', data=data, council_name=council_name)
+    return render_template('council_members.html', data=data, council_name=council_name, show_form=show_form)
 
 
 @app.route('/update_council_members/<council_name>', methods=['POST'])
 def update_council_members(council_name):
     option = request.form['option2']
     r = request.form['r']
+    show_form = request.form['control']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
     
@@ -380,7 +382,7 @@ def update_council_members(council_name):
     cursor.execute(query)
     conn.commit()
     conn.close()
-    return render_template('council_members.html', council_name=council_name)
+    return render_template('council_members.html', council_name=council_name, show_form=show_form)
 
 @app.route('/fetch_club_member/<club_name>', methods=['POST'])
 def fetch_club_members(club_name):
