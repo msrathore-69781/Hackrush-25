@@ -67,11 +67,15 @@
                 <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
                 </div>   
                 <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+            </form>
+            <form action="{{ url_for('addEvents')}}" method="GET">
+                <button type="submit" class="btn btn-primary">Add Event</button>
+            </form>
             </div>
+            
             {% endif %}
         </div>
-
+        
         <!-- Table Section -->
         
         <div class="md:flex-1 md:p-4 mt-4 md:mt-0">

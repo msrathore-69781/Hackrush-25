@@ -517,6 +517,10 @@ def view_table(table_name):
     # Render the HTML template with table name, column names, and data
     return render_template('view_table.html', table_name=table_name, columns=columns, data=data)
 
+@app.route('/addEvents', methods=['GET'])
+def addEvents():
+    return render_template('addEvent.html')
+
 @app.route('/addEvent', methods=['GET','POST'])
 def submit():
     if request.method == 'POST' and 'event_name' in request.form and 'edition' in request.form and 'mode_of_conduct' in request.form and 'description' in request.form and 'participation_form' in request.form and 'rulebook_link' in request.form and 'budget' in request.form and 'team_name' in request.form and 'team_captain' in request.form and 'filler_roll_no' in request.form and 'organizer_roll_no' in request.form and 'responsibility' in request.form and 'club_name' in request.form:
