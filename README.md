@@ -51,7 +51,7 @@
    <img width="1440" alt="Screenshot 2024-04-04 at 4 33 43 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/183a31ce-71ba-408c-bd31-20c00185a12c">
 
    - Go to your home tab in Workbench and then add a new connection by clicking 
-     here:
+     on the '+' button:
      <img width="1440" alt="Screenshot 2024-04-04 at 4 34 03 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/f1cd9d7f-43d0-4263-846b-e3b27146defb">
      
    -  Here Enter the following:
