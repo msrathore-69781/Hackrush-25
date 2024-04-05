@@ -98,37 +98,59 @@ After setting up the database and configuration, we can run our webapp. To do th
 Now your home page is opened which is a login page for our Club Management System where you can login as a student, employee or admin (person with all permissions).
 
 ### Login view
-
+We have 3 different kinds of logins for which navigate each to seperate views of the webapp with different capabilities and facilities. </br>
 <img width="1440" alt="Screenshot 2024-04-05 at 5 44 03 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/fcb723c1-260b-49ba-8394-e4060fcce318">
 
 <img width="1440" alt="Screenshot 2024-04-05 at 5 43 06 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/79a9e359-d3bc-4575-a5ad-3ad27723451d">
 
 <img width="1440" alt="Screenshot 2024-04-05 at 5 44 20 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/29852eda-e02d-4e99-b081-ef34fde44956">
 
-<img width="1440" alt="Screenshot 2024-04-05 at 5 44 31 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/1f3a9ec7-da8a-43c5-b776-1519066b7463">
+### STUDENT View
+On performing student login we start with student details. </br>
+![Image](https://github.com/msrathore-69781/Database-project/assets/102377764/f833c7df-c8ab-4e33-b62d-62723ea853fa)
+There are many features for students from issueing different equipment, to viewing or registering for an upcoming event and even adding an event (permissions alloted if secretary of a club/council). Below are some features: </br>
 
-
-### Equipment view
-
+#### Equipments Section
 <img width="1440" alt="Screenshot 2024-04-05 at 5 48 08 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/d354de73-b912-40fa-831d-ffeb26f41924">
-
+This is the equipment page
 <img width="1440" alt="Screenshot 2024-04-05 at 5 48 14 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/58c975e3-eb5d-4c1b-80b1-19ecbd5f08c6">
-
+You can perform either of the 3 actions on this page from issuing new equipment which is followed in the below images or returning any unreturned equipment or viewing your own issuing history.
 <img width="1440" alt="Screenshot 2024-04-05 at 5 48 27 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/5530957e-508d-48c9-8054-5a5d8b503e7d">
 
-<img width="1440" alt="Screenshot 2024-04-05 at 5 48 48 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/ed012e03-d971-4fd8-91ec-71c50cc26f1d">
+![image](https://github.com/msrathore-69781/Database-project/assets/102377764/c9357585-5c58-45dd-88e2-c98e7563d96f)
+![image](https://github.com/msrathore-69781/Database-project/assets/102377764/a34c0a59-037a-4cf6-a3bc-b1bfcbf983b0)
+As you can see a entry with loudspeakers have been made with purpose practice.
+This includes INSERT query into the ISSUE table. For returning, we use UPDATE query. Moreover, for viewing queries with WHERE clause used.
 
-
-### Council and Clubs
+#### Events
+We can register for various upcoming events through following procedure:
+![Screenshot 2024-04-05 223352](https://github.com/msrathore-69781/Database-project/assets/102377764/5c858fb9-b959-4f0a-a40a-cbdb36c84268)
+![Screenshot 2024-04-05 223407](https://github.com/msrathore-69781/Database-project/assets/102377764/305ee6c9-fa08-4f2c-90d9-859edc50c1e5)
 ![PHOTO-2024-04-05-18-11-29](https://github.com/msrathore-69781/Database-project/assets/103460353/93794ba5-7d40-4980-8425-c5b5ad6ec920)
-
 ![PHOTO-2024-04-05-18-11-41](https://github.com/msrathore-69781/Database-project/assets/103460353/be41e870-6293-4496-8542-0acd2aeb3df6)
-
 ![PHOTO-2024-04-05-18-11-55](https://github.com/msrathore-69781/Database-project/assets/103460353/135fcae1-3462-42c0-a9ad-53a5dc4402df)
 
-### Operations on ADMIN view
- Admin can perform INSERT, DELETE and RENAME queries on the tables of the database.
- BEFORE : </br>
+#### Council and Clubs
+Council and Clubs page can be used for various purposes, ranging from seeing information about various councils and clubs listed under them. Moreover, if we are secretary for a club/ council we can add or delete member/ coordinator entries in our own council/ club. Secretary for a club can also add event listing which are listed with a pending approval. Checkout yourself by logging in as a secretary.
+![Screenshot 2024-04-05 223518](https://github.com/msrathore-69781/Database-project/assets/102377764/c99f7096-3dc9-4206-a6c8-3a87c06b9c98)
+
+### EMPLOYEE view
+Employee view in general is very similar to student view except if you have any special responsibilities.
+![Screenshot 2024-04-05 214750](https://github.com/msrathore-69781/Database-project/assets/102377764/f9588e27-cdd8-4560-acee-99c02f61846e)
+
+Below employee has the responsibilty to manage below venues. You can verify this from the database.
+![Screenshot 2024-04-05 215409](https://github.com/msrathore-69781/Database-project/assets/102377764/95ea92d4-9739-4d53-8ce5-54a98cd6d06c)
+Below emloyee has the responsibilty for approvals on below event. BEFORE query:
+![Screenshot 2024-04-05 224647](https://github.com/msrathore-69781/Database-project/assets/102377764/897758f7-6f71-449a-a76e-7521856a2cb9)
+Below you can see that after hitting the update button, the approval was changed to accept for selected event. AFTER:
+![Screenshot 2024-04-05 224709](https://github.com/msrathore-69781/Database-project/assets/102377764/6be83b7c-504a-4ba4-8bac-f5f5cbd9cbb7)
+
+### ADMIN view
+On performing we start with this page displaying all the tables and we can select one to view or make changes to.
+![Screenshot 2024-04-05 215621](https://github.com/msrathore-69781/Database-project/assets/102377764/8f305c2a-fb9b-4866-9633-8b350f1644b0)
+
+ Admin can perform INSERT, DELETE and RENAME queries on all the tables of the database.
+ BEFORE performing operations: </br>
  ![image](https://github.com/msrathore-69781/Database-project/assets/102381105/f9cd98f7-48ce-4889-b64d-24a143fcd1b7) </br>
  ![image](https://github.com/msrathore-69781/Database-project/assets/102381105/6e0391af-5ff9-477f-955a-b787fe864437) </br>
 
@@ -142,8 +164,8 @@ Now your home page is opened which is a login page for our Club Management Syste
     ![image](https://github.com/msrathore-69781/Database-project/assets/102381105/7425238f-1b80-4d57-ac3f-998d83729a59) </br>
 3. Performing RENAME </br>
     Admin can rename a table and it will reflect over the database and the webapp. </br>
-    On pressing the RENAME button the following fields appears asking fora new name. Fill in the field and press enter.</br>
-    ![image](https://github.com/msrathore-69781/Database-project/assets/102381105/ff82ea9c-a551-4784-9573-d541b7ea030d) </br>
+    On pressing the RENAME button the following fields appears asking for a new name. Fill in the field and press enter.</br>
+    ![image](https://github.com/msrathore-69781/Database-project/assets/102377764/371bd07a-b364-454f-866f-d990fea9d098) </br>
 
    Renaming clubs to clubs_of_iitgn.</br>
    ![image](https://github.com/msrathore-69781/Database-project/assets/102381105/e7c00069-bf10-4bf8-baad-de0f8c2eb5ee)</br>
