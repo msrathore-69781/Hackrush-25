@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'MyNewPass',    #Enter ur password for root
+    'password': 'DBMS_mysql@0204',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -222,6 +222,12 @@ def employee_info():
         """
         cursor.execute(query, (employee_id,))
         records_v = cursor.fetchall()
+
+        # Convert datetime.timedelta objects to strings
+        for record in records_v:
+            record['START_TIME'] = str(record['START_TIME'])
+            record['END_TIME'] = str(record['END_TIME'])
+
         print(records_v)
 
     query = """
@@ -230,10 +236,11 @@ def employee_info():
             JOIN Event e ON a.EVENT_NAME = e.EVENT_NAME AND a.EDITION = e.EDITION
             WHERE a.EMPLOYEE_ID = %s
         """
-    cursor.execute(query, (employee_id,))
+    cursor.execute(query, s(employee_id,))
     records_b = cursor.fetchall()
     print(records_b)
 
+    # Store the modified records in the session
     session["venues"] = records_v
 
     return render_template('employeeInfo.html', employeeInfo = session['user_info'], venues=session["venues"], events=records_b)

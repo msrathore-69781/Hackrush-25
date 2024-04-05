@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="font-sans bg-white">
+<body class="font-sans bg-blue-100">
 
     <!-- Same Navigation as rough.html -->
     <!-- Place the header HTML code from rough.html here -->
@@ -17,24 +17,22 @@
         <!-- Navigation -->
         <nav class="bg-gray-800 text-white p-4 fixed top-0 w-full z-10">
             <div class="container mx-auto flex justify-between items-center">
-                <img src="iitgn logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
+                <!-- <img src="iitgn logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3"> -->
                 <div class="flex-grow">
                     <h3>Clubs Management IIT Gandhinagar<h3>
                 </div>
                 <div>
                     <!-- <a href="council" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a> -->
-                    <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs and Councils</a>
+                    <!-- <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs and Councils</a> -->
                     <a href="events" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
                     <a href="logout" class="px-4 py-2 hover:bg-gray-700 transition-colors">Logout</a>
                 </div>
             </div>
         </nav>
     
-
-    <!-- Main Content -->
  <!-- Main Content -->
 <div class="container mx-auto mt-24 p-8">
-    <p>{{council_name}}: </p>
+    <h1>{{council_name}}: </h1>
     <p></p>
     <div class="md:flex md:flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
         <!-- Content Section -->
@@ -72,34 +70,44 @@
             </div>
             {% endif %}
         </div>
-        <div class="md:w-3/4 p-4">
-            <table class="table-fixed w-full">
-                <thead>
-                    <tr>
-                        <th class="w-1/5">Roll Number</th>
-                        <th class="w-1/5">Email</th>
-                        <th class="w-1/5">Contact Number</th>
-                        <th class="w-1/5">Name</th>
-                        <th class="w-1/5">Position</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        
+        <!-- Table Section -->
+        
+        <div class="md:flex-1 md:p-4 mt-4 md:mt-0">
+            <!-- <h1 class = "md:flex-wrap">Results</h1> -->
+            <div>
+                <table class="table-fixed w-full">
+                    <thead>
+                        <tr>
+                            <th class="w-1/5">Roll Number</th>
+                            <th class="w-1/5">Email</th>
+                            <th class="w-1/5">Contact Number</th>
+                            <th class="w-1/5">Name</th>
+                            <th class="w-1/5">Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr>
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
+
+
 <section id="clubs" class="container mx-auto text-center py-20">
+    <h3>Clubs in {{council_name}}: </h3>
     <div class="overflow-x-auto">
-        <table class="table-auto border-collapse w-full">
+        <table class="table-auto border-collapse w-full bg-gray-50">
             <thead>
                 <tr class="text-lg font-semibold bg-gray-100">
                     <th class="px-4 py-2 border">Club Name</th>

@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="font-sans bg-white">
+<body class="font-sans bg-blue-100">
 
     <!-- Same Navigation as rough.html -->
     <!-- Place the header HTML code from rough.html here -->
@@ -17,15 +17,16 @@
         <!-- Navigation -->
         <nav class="bg-gray-800 text-white p-4 fixed top-0 w-full z-10">
             <div class="container mx-auto flex justify-between items-center">
-                <img src="iitgn logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
+                <!-- <img src="iitgn logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3"> -->
                 <div class="flex-grow">
-                    <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a>
+                    <!-- <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a> -->
+                    <h3>Clubs Management IIT Gandhinagar</h3>
                 </div>
                 <div>
                     <!-- <a href="council" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a> -->
-                    <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs and Councils</a>
+                    <!-- <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs and Councils</a> -->
                     <a href="events" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
-                    <a href="login" class="px-4 py-2 hover:bg-gray-700 transition-colors">Login</a>
+                    <a href="logout" class="px-4 py-2 hover:bg-gray-700 transition-colors">Logout</a>
                 </div>
             </div>
         </nav>
@@ -34,7 +35,7 @@
     <!-- Main Content -->
  <!-- Main Content -->
 <div class="container mx-auto mt-24 p-8">
-    <p>{{club_name}}: </p>
+    <h1>{{club_name}}: </h1>
     <p></p>
     <div class="md:flex md:flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
         <!-- Content Section -->
@@ -113,7 +114,9 @@
         </div> 
 
     </div>
-    <footer class="bg-gray-800 text-white p-5 text-center">Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat</footer>
+    <footer class="bg-gray-800 text-white p-2 text-center fixed bottom-0 w-full">
+        Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat
+    </footer>
     <!-- Place the footer HTML code from rough.html here -->
     <!-- Bootstrap and JQuery scripts for functionality -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

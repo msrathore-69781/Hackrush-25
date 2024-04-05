@@ -17,14 +17,15 @@
         }
     </style>
 </head>
-<body class="font-sans bg-white">
+<body class="font-sans bg-blue-100">
 
     <!-- Navigation -->
     <nav class="bg-gray-800 text-white fixed w-full z-10">
         <div class="container mx-auto flex justify-between items-center">
-            <img src="logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
+            <!-- <img src="logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3"> -->
             <div class="flex-grow">
-                <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a>
+                <!-- <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a> -->
+                <h3>Clubs Management IIT Gandhinagar</h3>
             </div>
             <div>
                 <!-- <a href="anshul2" class="px-4 py-2 hover:bg-gray-800 transition-colors">Clubs</a> -->
@@ -82,13 +83,14 @@
         <h1 class="text-5xl font-bold text-white shadow-lg">Welcome to Clubs Management</h1>
         <h2 class="text-2xl text-white shadow-lg">IIT Gandhinagar</h2>
     </section> -->
-    <title>Student Information</title>
+    <title>Employee Information</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f2f2f2;
+            padding-bottom: 60px;
         }
         .container {
             /* max-width: 800px; */
@@ -101,7 +103,7 @@
         .container_info {
             max-width: 800px;
             margin: 50px auto;
-            padding: 20px;
+            padding: 10px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -150,8 +152,9 @@
 
     <!-- {% if venues %} -->
     <!-- Display Venues -->
-    <h3>Venues Managed:</h3>
-    <table class="table table-bordered">
+    <h3 style="text-align:center">Venues Managed:</h3>
+    <div class="container_info">
+    <table class="table-auto border-collapse w-full bg-gray-50" style="padding-bottom: 40px;">
         <thead>
             <tr>
                 <th>Name</th>
@@ -181,14 +184,16 @@
             {% endif %}
         </tbody>
     </table>
+    </div>
     <!-- {% endif %} -->
 
     {% if events %}
     <!-- Display Approved Events -->
-    <h3>Events for Approval:</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
+    <h3 style="text-align:center">Events for Approval:</h3>
+    <div class="container_info">
+    <table class="w-full text-m text-left bg-gray-50 border-gray-800">
+        <thead>
+            <tr class="text-lg font-semibold bg-gray-100" style="padding: 2px">
                     <th>Event Name</th>
                     <th>Edition</th>
                     <th>Budget</th>
@@ -197,7 +202,7 @@
             </thead>
             <tbody>
                 {% for event in events %}
-                    <tr>
+                    <tr class="text-lg font-semibold bg-gray-100">
                         <td>{{ event.EVENT_NAME }}</td>
                         <td>{{ event.EDITION }}</td>
                         <td>{{ event.BUDGET }}</td>
@@ -206,8 +211,6 @@
                 {% endfor %}
             </tbody>
         </table>
-    {% else %}
-        <p>No events approved.</p>
     {% endif %}
 
     {% if events %}
@@ -216,7 +219,7 @@
                 <tr>
                     <td colspan="5">
                         <form action="/approval_update" method="post">
-                            <h2>Update Status</h2>
+                            <h3>Update Status</h3>
                             <table>
                                 <tbody>
                                     <tr>
@@ -246,7 +249,7 @@
             </tbody>
         </table>
     {% endif %}
-
+    </div>
     <!-- Your remaining HTML content goes here -->
 
     <footer class="bg-gray-800 text-white p-2 text-center fixed bottom-0 w-full">
