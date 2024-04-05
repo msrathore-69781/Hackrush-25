@@ -373,6 +373,7 @@ def participation(ev,ed):
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
         show_form = session.get("council_secretary") == council_name
+        print(show_form)
         cursor = conn.cursor(dictionary=True)
         cursor.execute('''
             SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
@@ -386,12 +387,13 @@ def council_members(council_name):
 @app.route('/clubs/<club_name>')
 def clubs(club_name):
         show_form = session.get("club_secretary") == club_name
+        print(show_form)
         return render_template('clubs.html', club_name=club_name, show_form=show_form)
 
 @app.route('/fetch_council_member/<council_name>', methods=['POST'])
 def fetch_council_members(council_name):
     option = request.form['option']
-    show_form = request.form['control']
+    show_form = session.get("council_secretary") == council_name
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
     
@@ -407,7 +409,6 @@ def fetch_council_members(council_name):
     
     cursor.execute(query)
     data = cursor.fetchall()
-    print(data)
     conn.close()
     return render_template('council_members.html', data=data, council_name=council_name, show_form=show_form)
 
@@ -416,7 +417,7 @@ def fetch_council_members(council_name):
 def update_council_members(council_name):
     option = request.form['option2']
     r = request.form['r']
-    show_form = request.form['control']
+    show_form = session.get("council_secretary") == council_name
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
     
