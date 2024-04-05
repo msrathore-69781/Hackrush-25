@@ -134,12 +134,10 @@ Now your home page is opened which is a login page for our Club Management Syste
 
 
 <h2>1. Shubh Singhal</h2>
-- ndjfdsnfn
-- jndjfndkjsnf
--
-   - 
-   - 
-   - 
+1. 
+2. 
+3. 
+
    
 
 <h2>2. Yashraj Deshmukh</h2>
