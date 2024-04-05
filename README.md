@@ -125,6 +125,29 @@ Now your home page is opened which is a login page for our Club Management Syste
 
 
 
+
+
+
+
+<h3> Work Distribution</h3>
+---
+
+
+<h1>1. Shubh Singhal</h1>
+
+<h1>2. Yashraj Deshmukh</h1>
+
+<h1>3. Pratham Sagar</h1>
+
+<h1>4. Anshul Choudhary</h1>
+
+<h1>5. Shrijan Sahu</h1>
+
+<h1>6. Manvendra Singh </h1>
+
+
+
+
    
 
 
