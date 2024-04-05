@@ -37,6 +37,15 @@
    - Click on the 'Add Account' button.
    -Enter the following details keeping the rest of the fields as default:
 
+       - Login Name: newuser
+       - Password: mannudb
+   - Click on the apply button.
+      
+<img width="1440" alt="Screenshot 2024-04-04 at 4 32 20 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/e1d45c6a-da12-41a3-aac6-3584d4a50cd6">
+
+- Click on 'Administrative Roles' and then click on 'Revoke All Privileges'.
+    
+
    
 
 
