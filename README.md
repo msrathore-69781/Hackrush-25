@@ -51,7 +51,7 @@
    <img width="1440" alt="Screenshot 2024-04-04 at 4 33 43 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/183a31ce-71ba-408c-bd31-20c00185a12c">
 
    - Go to your home tab in Workbench and then add a new connection by clicking 
-     here:
+     on the '+' button:
      <img width="1440" alt="Screenshot 2024-04-04 at 4 34 03 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/f1cd9d7f-43d0-4263-846b-e3b27146defb">
      
    -  Here Enter the following:
@@ -122,6 +122,76 @@ Now your home page is opened which is a login page for our Club Management Syste
    ![image](https://github.com/msrathore-69781/Database-project/assets/102381105/f765f449-dbdc-457e-9546-f766a90ed031) </br>
    Also the main admin page has now changed </br>
    ![image](https://github.com/msrathore-69781/Database-project/assets/102381105/2c05286d-8ab7-49c8-a8e5-e425ed326222)
+
+
+
+
+
+
+
+<h1> Work Distribution</h1>
+
+
+
+<h2>1. Shubh Singhal</h2>
+1. 
+2. 
+3. 
+
+   
+
+<h2>2. Yashraj Deshmukh</h2>
+   -
+   - 
+   - 
+   -
+   - 
+   - 
+   - 
+   
+
+<h2>3. Pratham Sagar</h2>
+   - 
+   - 
+   - 
+   - 
+   - 
+   - 
+   - 
+   
+
+<h2>4. Anshul Choudhary</h2>
+   - 
+   - 
+   - 
+   - 
+   -
+   -
+   -
+   
+
+<h2>5. Shrijan Sahu</h2>
+   -
+   - 
+   -
+   -
+   -
+   -
+   -
+   -
+   
+
+<h2>6. Manvendra Singh </h2>
+   -
+   -
+   -
+   -
+   -
+   -
+   -
+   -
+   
+
 
 
 
