@@ -34,7 +34,7 @@
 <div class="container mx-auto mt-24 p-8">
     <h1>{{council_name}}: </h1>
     <p></p>
-    <div class="md:flex md:flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
+    <div class="md:flex md:flex-wrap bg-gray-100 p-4 rounded-lg shadow-md">
         <!-- Content Section -->
         <div class="md:w-1/4 p-4">
             <form action="{{ url_for('fetch_council_members', council_name=council_name)}}" method="POST">
@@ -127,10 +127,7 @@
                     <td class="border px-4 py-2">
                         <a href="{{ url_for('clubs', club_name=club.CLUB_NAME) }}" style="color: rgb(71, 129, 199);">
                           <i><u>Know More about {{ club.CLUB_NAME }}</u> </i> 
-                        </a>
-                        
-                        
-
+                        </a> 
                     </td>
                 </tr>
             {% endfor %}

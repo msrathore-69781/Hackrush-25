@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="font-sans bg-blue-100">
+<body class="font-sans bg-blue-100" style="padding-bottom: 40px;">
 
     <!-- Same Navigation as rough.html -->
     <!-- Place the header HTML code from rough.html here -->
@@ -31,87 +31,82 @@
             </div>
         </nav>
     
-
     <!-- Main Content -->
- <!-- Main Content -->
-<div class="container mx-auto mt-24 p-8">
-    <h1>{{club_name}}: </h1>
-    <p></p>
-    <div class="md:flex md:flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
-        <!-- Content Section -->
-        <div class="md:w-1/4 p-4">
-            <!-- <h1>Dropdown Menu</h1> -->
-            <form action="{{ url_for('fetch_club_members', club_name=club_name)}}" method="POST">
-                <div class="mb-4">
-                    <label for="dropdown" class="block">Select an option:</label>
-                    <select id="dropdown" name="option" class="form-select block w-full mt-1">
-                        <option value="All member">All member</option>
-                        <option value="General Members only">General Members only</option>
-                        <option value="Secretary">Secretary</option>
-                        <option value="Coordinators">Coordinators</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>   
-            </form>
-            {% if show_form %}
-            <p>   </p>
-            <div>
-            <form action="{{ url_for('update_club_members', club_name=club_name)}}" method="POST">
-                <label for="dropdown">Update:</label>
-                <select id="dropdown" name="option2" class="form-select block w-full mt-1">
-                    <option value="Add member">Add member</option>
-                    <option value="Remove Member">Remove Member</option>
-                    <option value="Add coordinator">Add coordinator</option>
-                    <option value="Remove coordinator">Remove coordinator</option>
-                </select>
-                <p>   </p>
-                <div class="form-group">
-                <label for="r">Enter Roll Number</label>
-                <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
-                </div>   
-                <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="container mx-auto mt-24 p-8">
+        <h1>{{club_name}}: </h1>
+        <p></p>
+        <div class="md:flex md:flex-wrap bg-gray-100 p-4 rounded-lg shadow-md">
+            <!-- Content Section -->
+            <div class="md:w-1/4 p-4">
+                <!-- <h1>Dropdown Menu</h1> -->
+                <form action="{{ url_for('fetch_club_members', club_name=club_name)}}" method="POST">
+                    <div class="mb-4">
+                        <label for="dropdown" class="block">Select an option:</label>
+                        <select id="dropdown" name="option" class="form-select block w-full mt-1">
+                            <option value="All member">All member</option>
+                            <option value="General Members only">General Members only</option>
+                            <option value="Secretary">Secretary</option>
+                            <option value="Coordinators">Coordinators</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>   
                 </form>
+                {% if show_form %}
+                <div class="flex mb-4 mt-2"> <!-- Added margin-bottom for vertical space -->
+                    <form action="{{ url_for('update_club_members', club_name=club_name)}}" method="POST">
+                        <label for="dropdown">Update:</label>
+                        <select id="dropdown" name="option2" class="form-select block w-full mt-1">
+                            <option value="Add member">Add member</option>
+                            <option value="Remove Member">Remove Member</option>
+                            <option value="Add coordinator">Add coordinator</option>
+                            <option value="Remove coordinator">Remove coordinator</option>
+                        </select>
+                        <div class="mt-3">
+                        <label for="r">Enter Roll Number</label>
+                        <input type="r" class="form-control" id="r" name="r" placeholder="Enter roll no" name="r">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Submit</button> <!-- Added margin-top for spacing -->
+                    </form>
+                </div>
+                <div>
+                    <form action="{{ url_for('addEvents')}}" method="GET">
+                        <button type="submit" class="btn btn-primary">Add Event</button>
+                    </form>
+                </div>
+                {% endif %}
             </div>
-            <p> </p>
-            <form action="{{ url_for('addEvents')}}" method="GET">
-                <button type="submit" class="btn btn-primary">Add Event</button>
-            </form>
-            </div>
-            {% endif %}
 
-        <!-- Table Section -->
-        
-        <div class="md:flex-1 md:p-4 mt-4 md:mt-0">
-            <!-- <h1 class = "md:flex-wrap">Results</h1> -->
-            <div>
-                <table class="table-fixed w-full">
-                    <thead>
-                        <tr>
-                            <th class="w-1/5">Roll Number</th>
-                            <th class="w-1/5">Email</th>
-                            <th class="w-1/5">Contact Number</th>
-                            <th class="w-1/5">Name</th>
-                            <th class="w-1/5">Position</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in data %}
-                        <tr>
-                            <td>{{ row[0] }}</td>
-                            <td>{{ row[1] }}</td>
-                            <td>{{ row[2] }}</td>
-                            <td>{{ row[3] }}</td>
-                            <td>{{ row[4] }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <!-- Table Section -->
+            
+            <div class="md:flex-1 md:p-4 mt-4 md:mt-0">
+                <!-- <h1 class = "md:flex-wrap">Results</h1> -->
+                <div>
+                    <table class="table-fixed w-full">
+                        <thead>
+                            <tr>
+                                <th class="w-1/5">Roll Number</th>
+                                <th class="w-1/5">Email</th>
+                                <th class="w-1/5">Contact Number</th>
+                                <th class="w-1/5">Name</th>
+                                <th class="w-1/5">Position</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                            <tr>
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-        </div> 
 
     </div>
     <footer class="bg-gray-800 text-white p-2 text-center fixed bottom-0 w-full">
