@@ -581,9 +581,19 @@ def view_table(table_name):
 
 @app.route('/addEvents', methods=['GET'])
 def addEvents():
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Employee" or session["club_secretary"] == None:
+        session["message"] = "Only Club Secretary can add an event."
+        return redirect(url_for('login'))
+    
     return render_template('addEvent.html')
 
-@app.route('/addEvent', methods=['GET','POST'])
+@app.route('/addEvent', methods=['POST'])
 def submit():
     if request.method == 'POST' and 'event_name' in request.form and 'edition' in request.form and 'mode_of_conduct' in request.form and 'description' in request.form and 'participation_form' in request.form and 'rulebook_link' in request.form and 'budget' in request.form and 'team_name' in request.form and 'team_captain' in request.form and 'filler_roll_no' in request.form and 'organizer_roll_no' in request.form and 'responsibility' in request.form and 'club_name' in request.form:
         event_name = request.form['event_name']
