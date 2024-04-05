@@ -595,7 +595,7 @@ def addEvents():
 
 @app.route('/addEvent', methods=['POST'])
 def submit():
-    if request.method == 'POST' and 'event_name' in request.form and 'edition' in request.form and 'mode_of_conduct' in request.form and 'description' in request.form and 'rulebook_link' in request.form and 'budget' in request.form and 'club_name' in request.form and 'event_lead_roll_no' in request.form and 'venue' in request.form and  'team_member' in request.form:
+    if request.method == 'POST' and request.form['event_name'] and request.form['edition'] and request.form['mode_of_conduct'] and request.form['description'] and request.form['rulebook_link'] and request.form['budget'] and request.form['club_name'] and request.form['event_lead_roll_no'] and request.form['venue'] and request.form['team_member']:
         event_name = request.form['event_name']
         edition = int(request.form['edition'])
         employee_id = int(request.form['employee_id'])

@@ -178,5 +178,13 @@
       <input type="text" id="club_name" name="club_name" /><br />
       <input type="submit" value="Submit" />
     </form>
+
+    {% if message is defined and message %}
+    <div class="col-span-3 mb-4">
+        <div class="bg-gray-300 shadow-md rounded p-3 text-center">
+            <div class="alert alert-warning">{{ message }}</div>
+        </div>
+    </div>
+    {% endif %}
   </body>
 </html>
