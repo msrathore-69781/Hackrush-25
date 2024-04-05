@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'Manvendra@04012002',    #Enter ur password for root
+    'password': 'MyNewPass',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -240,6 +240,7 @@ def employee_info():
 @app.route('/councils')
 def council():
     try:
+        conn = mysql.connector.connect(**mysql_config)
         cursor = conn.cursor(dictionary=True)
         # Query to retrieve club information
         # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
@@ -330,12 +331,27 @@ def participation(ev,ed):
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
         show_form = session.get("council_secretary") == council_name
-        return render_template('council_members.html', council_name=council_name, show_form=show_form)
+        cursor = conn.cursor(dictionary=True)
+        query = f"select * from council where council_name= '{council_name}';"
+        cursor.execute(query)
+        council_info = cursor.fetchone()
+        cursor.execute('''
+            SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
+            FROM clubs
+            JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
+            WHERE clubs.COUNCIL_NAME = %s
+            GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
+        clubs = cursor.fetchall()
+        return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs, council_info=council_info)
 
 @app.route('/clubs/<club_name>')
 def clubs(club_name):
         show_form = session.get("club_secretary") == club_name
-        return render_template('clubs.html', club_name=club_name, show_form=show_form)
+        cursor = conn.cursor(dictionary=True)
+        query = f"select * from clubs where club_name= '{club_name}';"
+        cursor.execute(query)
+        club_info = cursor.fetchone()
+        return render_template('clubs.html', club_name=club_name, show_form=show_form, club_info=club_info)
 
 @app.route('/fetch_council_member/<council_name>', methods=['POST'])
 def fetch_council_members(council_name):
@@ -386,6 +402,7 @@ def update_council_members(council_name):
 
 @app.route('/fetch_club_member/<club_name>', methods=['POST'])
 def fetch_club_members(club_name):
+    show_form = session.get("club_secretary") == club_name
     option = request.form['option']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
@@ -404,11 +421,12 @@ def fetch_club_members(club_name):
     data = cursor.fetchall()
     print(data)
     conn.close()
-    return render_template('clubs.html', data=data, club_name=club_name)
+    return render_template('clubs.html', data=data, club_name=club_name, show_form=show_form)
 
 
 @app.route('/update_club_members/<club_name>', methods=['POST'])
 def update_club_members(club_name):
+    show_form = session.get("club_secretary") == club_name
     option = request.form['option2']
     r = request.form['r']
     conn = mysql.connector.connect(**mysql_config)
@@ -427,7 +445,7 @@ def update_club_members(club_name):
     cursor.execute(query)
     conn.commit()
     conn.close()
-    return render_template('clubs.html', club_name=club_name)
+    return render_template('clubs.html', club_name=club_name, show_form=show_form)
 
 # Function to fetch all table names from MySQL
 def get_table_names():

@@ -34,6 +34,9 @@
     <!-- Main Content -->
  <!-- Main Content -->
 <div class="container mx-auto mt-24 p-8">
+    <p>{{council_name}}: </p>
+    <p>{{council_info.DESCRIPTION}}</p>
+
     <div class="md:flex md:flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
         <!-- Content Section -->
         <div class="md:w-1/4 p-4">
@@ -70,11 +73,6 @@
                 </div>   
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-            <p> </p>
-            <form action="{{ url_for('addEvents')}}" method="GET">
-                <button type="submit" class="btn btn-primary">Add Event</button>
-            </form>
-            </div>
             
             {% endif %}
         </div>
@@ -110,7 +108,39 @@
         </div>
     </div>
 </div>
+<section id="clubs" class="container mx-auto text-center py-20">
+    <div class="overflow-x-auto">
+        <table class="table-auto border-collapse w-full">
+            <thead>
+                <tr class="text-lg font-semibold bg-gray-100">
+                    <th class="px-4 py-2 border">Club Name</th>
+                    <th class="px-4 py-2 border">Description</th>
+                    <th class="px-4 py-2 border">Total Members</th>
+                    <th class="px-4 py-2 border">Actions</th> <!-- New column for "Know More" button -->
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+            {% for club in clubs %}   
+                <tr>
+                    <td class="border px-4 py-2">
+                        {{ club.CLUB_NAME }}
+                </td>
+                    <td class="border px-4 py-2">{{ club.DESCRIPTION }}</td>
+                    <td class="border px-4 py-2">{{ club.TOTAL_MEMBERS }}</td>
+                    <td class="border px-4 py-2">
+                        <a href="{{ url_for('clubs', club_name=club.CLUB_NAME) }}" style="color: rgb(71, 129, 199);">
+                          <i><u>Know More about {{ club.CLUB_NAME }}</u> </i> 
+                        </a>
+                        
+                        
 
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
         </div> 
 
     </div>

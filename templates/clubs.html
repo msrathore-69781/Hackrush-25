@@ -34,6 +34,8 @@
     <!-- Main Content -->
  <!-- Main Content -->
 <div class="container mx-auto mt-24 p-8">
+    <p>{{club_name}}: </p>
+    <p>{{club_info.DESCRIPTION}}</p>
     <div class="md:flex md:flex-wrap bg-blue-100 p-4 rounded-lg shadow-md">
         <!-- Content Section -->
         <div class="md:w-1/4 p-4">
@@ -68,6 +70,11 @@
                 </div>   
                 <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+            </div>
+            <p> </p>
+            <form action="{{ url_for('addEvents')}}" method="GET">
+                <button type="submit" class="btn btn-primary">Add Event</button>
+            </form>
             </div>
             {% endif %}
         </div>
