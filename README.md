@@ -119,6 +119,13 @@ Now your home page is opened which is a login page for our Club Management Syste
 <img width="1440" alt="Screenshot 2024-04-05 at 5 48 48 PM" src="https://github.com/msrathore-69781/Database-project/assets/103460353/ed012e03-d971-4fd8-91ec-71c50cc26f1d">
 
 
+### Council and Clubs
+![PHOTO-2024-04-05-18-11-29](https://github.com/msrathore-69781/Database-project/assets/103460353/93794ba5-7d40-4980-8425-c5b5ad6ec920)
+
+![PHOTO-2024-04-05-18-11-41](https://github.com/msrathore-69781/Database-project/assets/103460353/be41e870-6293-4496-8542-0acd2aeb3df6)
+
+![PHOTO-2024-04-05-18-11-55](https://github.com/msrathore-69781/Database-project/assets/103460353/135fcae1-3462-42c0-a9ad-53a5dc4402df)
+
 ### Operations on ADMIN view
  Admin can perform INSERT, DELETE and RENAME queries on the tables of the database.
  BEFORE : </br>
