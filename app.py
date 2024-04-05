@@ -234,7 +234,49 @@ def employee_info():
     records_b = cursor.fetchall()
     print(records_b)
 
-    return render_template('employeeInfo.html', employeeInfo = session['user_info'], venues=records_v, events=records_b)
+    session["venues"] = records_v
+
+    return render_template('employeeInfo.html', employeeInfo = session['user_info'], venues=session["venues"], events=records_b)
+
+@app.route('/approval_update', methods=['POST'])
+def approval_update():
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+
+    # Get the selected event status and approval status from the form
+    event_status = request.form.get('event_status')
+    status = request.form.get('status')
+
+    # Split the event status into event name and edition
+    event_name, edition = event_status.split(',')
+
+    # Update the approval status in the database
+    conn = mysql.connector.connect(**mysql_config)
+    cursor = conn.cursor()
+    
+    query = """
+        UPDATE Approval
+        SET APPROVAL_STATUS = %s
+        WHERE EVENT_NAME = %s AND EDITION = %s
+    """
+    cursor.execute(query, (status, event_name, edition))
+    conn.commit()
+
+    query = """
+            SELECT a.EVENT_NAME, a.EDITION, e.BUDGET, a.APPROVAL_STATUS
+            FROM Approval a
+            JOIN Event e ON a.EVENT_NAME = e.EVENT_NAME AND a.EDITION = e.EDITION
+            WHERE a.EMPLOYEE_ID = %s
+        """
+    cursor.execute(query, (session['userid'],))
+    records_b = cursor.fetchall()
+    print(records_b)
+    
+    conn.close()
+
+    # Redirect back to the employee info page
+    return redirect(url_for('employee_info', employeeInfo = session['user_info'], venues=session["venues"], events=records_b))
 
 #this is used to display council details 
 @app.route('/councils')

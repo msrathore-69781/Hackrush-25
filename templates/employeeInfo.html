@@ -183,20 +183,19 @@
     </table>
     <!-- {% endif %} -->
 
-    <!-- {% if events %} -->
-    <!-- Display Events -->
-    <h3>Events Approved:</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Event Name</th>
-                <th>Edition</th>
-                <th>Budget</th>
-                <th>Approval Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if events %}
+    {% if events %}
+    <!-- Display Approved Events -->
+    <h3>Events for Approval:</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Edition</th>
+                    <th>Budget</th>
+                    <th>Approval Status</th>
+                </tr>
+            </thead>
+            <tbody>
                 {% for event in events %}
                     <tr>
                         <td>{{ event.EVENT_NAME }}</td>
@@ -205,14 +204,48 @@
                         <td>{{ event.APPROVAL_STATUS }}</td>
                     </tr>
                 {% endfor %}
-            {% else %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No events approved.</p>
+    {% endif %}
+
+    {% if events %}
+        <table class="table table-bordered">
+            <tbody>
                 <tr>
-                    <td colspan="4">No events approved.</td>
+                    <td colspan="5">
+                        <form action="/approval_update" method="post">
+                            <h2>Update Status</h2>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select name="event_status">
+                                                {% for event in events %}
+                                                    <option value="{{ event.EVENT_NAME }},{{ event.EDITION }}">{{ event.EVENT_NAME }}, {{ event.EDITION }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="status">
+                                                <option value="accepted">Accepted</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="rejected">Rejected</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-success">Submit</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </td>
                 </tr>
-            {% endif %}
-        </tbody>
-    </table>
-    <!-- {% endif %} -->
+            </tbody>
+        </table>
+    {% endif %}
 
     <!-- Your remaining HTML content goes here -->
 
