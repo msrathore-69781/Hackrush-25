@@ -46,23 +46,33 @@
     .info label {
         font-weight: bold;
     }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff; /* Blue color */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+    }
 </style>
 <body>
-    <nav class="bg-gray-800 text-white fixed w-full z-10">
+    <!-- <nav class="bg-gray-800 text-white fixed w-full z-10">
         <div class="container mx-auto flex justify-between items-center">
             <img src="logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3">
             <div class="flex-grow">
                 <a href="#hero" class="text-xl font-bold">Clubs Management IIT Gandhinagar</a>
             </div>
-            <div>
+            <div> -->
                 <!-- <a href="anshul2" class="px-4 py-2 hover:bg-gray-800 transition-colors">Clubs</a> -->
-                <a href="councils" class="px-4 py-2 hover:bg-gray-800 transition-colors">Clubs and Councils</a>
+                <!-- <a href="councils" class="px-4 py-2 hover:bg-gray-800 transition-colors">Clubs and Councils</a>
                 <a href="events" class="px-4 py-2 hover:bg-gray-800 transition-colors">Events</a>
                 <a href="equipment" class="px-4 py-2 hover:bg-gray-800 transition-colors">Equipment</a>
                 <a href="logout" class="px-4 py-2 hover:bg-gray-800 transition-colors">Logout</a>
             </div>
         </div>
-    </nav>
+    </nav> -->
     <div class="container_info">
         <h1>Event Particpation for {{ev, ed}}</h1>
 
@@ -73,7 +83,13 @@
             <input type="number" id="roll" name="roll"><br>
             <label for="isCaptain1">Captain:</label>
             <input type="checkbox" id="isCaptain1" name="captain" value=1><br>
-            <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full mb-4">Submit</button>
+            <!-- <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full mb-4">Submit</button> -->
+            <!-- <div class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full mb-4" style="display: flex; justify-content: center;">
+                <button type="submit"> Submit </a>
+            </div> -->
+            <div style="display: flex; justify-content: center;">
+                <a class="button">Submit</a>
+            </div>
         </form>
 
     </div>

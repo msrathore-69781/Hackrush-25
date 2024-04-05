@@ -33,7 +33,7 @@
     padding: 0.5rem 1rem;
     border: 1px solid #a0aec0;
     border-radius: 0.25rem;
-}
+    }
     h1 {
         text-align: center;
         color: #333;
@@ -45,6 +45,16 @@
     }
     .info label {
         font-weight: bold;
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff; /* Blue color */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
     }
 </style>
 <body>
@@ -78,8 +88,8 @@
             <label for="rule link">Rulebook Link:</label>
             <p>{{event.RULEBOOK_LINK}}</p>
         </div>
-        <div class="button" style="display: flex; justify-content: center;">
-            <a href="{{ url_for('participate', ev = event.EVENT_NAME, ed = event.EDITION)}}" > Partcipate </a>
+        <div style="display: flex; justify-content: center;">
+            <a class="button" href="{{ url_for('participate', ev=event.EVENT_NAME, ed=event.EDITION)}}">Participate</a>
         </div>
     </div>
 
