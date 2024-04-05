@@ -129,21 +129,21 @@ Now your home page is opened which is a login page for our Club Management Syste
 
 
 
-<h3> Work Distribution</h3>
+<h1> Work Distribution</h1>
 ---
 
 
-<h1>1. Shubh Singhal</h1>
+<h2>1. Shubh Singhal</h2>
 
-<h1>2. Yashraj Deshmukh</h1>
+<h2>2. Yashraj Deshmukh</h2>
 
-<h1>3. Pratham Sagar</h1>
+<h2>3. Pratham Sagar</h2>
 
-<h1>4. Anshul Choudhary</h1>
+<h2>4. Anshul Choudhary</h2>
 
-<h1>5. Shrijan Sahu</h1>
+<h2>5. Shrijan Sahu</h2>
 
-<h1>6. Manvendra Singh </h1>
+<h2>6. Manvendra Singh </h2>
 
 
 
