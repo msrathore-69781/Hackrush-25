@@ -89,11 +89,11 @@
                     <tbody>
                         {% for row in data %}
                         <tr>
-                            <td>{{ row[0] }}</td>
-                            <td>{{ row[1] }}</td>
-                            <td>{{ row[2] }}</td>
-                            <td>{{ row[3] }}</td>
-                            <td>{{ row[4] }}</td>
+                            <td>{{ row.ROLL_NO }}</td>
+                            <td>{{ row.EMAIL }}</td>
+                            <td>{{ row.CONTACT_NO }}</td>
+                            <td>{{ row.FIRST_NAME }}</td>
+                            <td>{{ row.POSITION }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

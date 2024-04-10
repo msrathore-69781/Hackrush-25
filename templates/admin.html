@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
       /* CSS for button styling */
       body {
@@ -65,6 +67,17 @@
     </style>
   </head>
   <body>
+    <nav class="bg-gray-800 text-white fixed w-full z-10">
+      <div class="container mx-auto flex justify-between items-center">
+          <!-- <img src="logo.png" alt="IIT Gandhinagar Logo" class="h-8 mr-3"> -->
+          <div class="flex-grow">
+              <h3>Clubs Management IIT Gandhinagar</h3>
+          </div>
+          <div>
+              <a href="logout" class="px-4 py-2 hover:bg-gray-800 transition-colors">Logout</a>
+          </div>
+      </div>
+  </nav>
     <h1>All Tables</h1>
     <div class="container">
       {% for table in tables %}
