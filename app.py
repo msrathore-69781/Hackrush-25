@@ -326,7 +326,7 @@ def events():
         cursor = conn.cursor(dictionary=True)
         # Query to retrieve club information
         # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
-        cursor.execute('select PLACE_AND_TIME.EVENTS_NAME, PLACE_AND_TIME.EDITIONS, PLACE_AND_TIME.DATE, EVENT.DESCRIPTION from PLACE_AND_TIME , EVENT where PLACE_AND_TIME.EVENTS_NAME = EVENT.EVENT_NAME and PLACE_AND_TIME.EDITIONS = EVENT.EDITION order by PLACE_AND_TIME.DATE DESC;')
+        cursor.execute(f"select PLACE_AND_TIME.EVENTS_NAME, PLACE_AND_TIME.EDITIONS, PLACE_AND_TIME.DATE, EVENT.DESCRIPTION from PLACE_AND_TIME , EVENT where PLACE_AND_TIME.EVENTS_NAME = EVENT.EVENT_NAME and PLACE_AND_TIME.EDITIONS = EVENT.EDITION and DATE > '{datetime.now().date()}' order by PLACE_AND_TIME.DATE DESC;")
         events = cursor.fetchall()
         # Render the template with club information
         return render_template('events.html',e=events)
@@ -380,30 +380,30 @@ def participation(ev,ed):
 
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
-        show_form = session.get("council_secretary") == council_name
-        print(show_form)
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute('''
-            SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
-            FROM clubs
-            JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
-            WHERE clubs.COUNCIL_NAME = %s
-            GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
-        clubs = cursor.fetchall()
-        return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
+    show_form = session.get("council_secretary") == council_name
+    print(show_form)
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute('''
+        SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
+        FROM clubs
+        JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
+        WHERE clubs.COUNCIL_NAME = %s
+        GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
+    clubs = cursor.fetchall()
+    return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
 
 @app.route('/clubs/<club_name>')
 def clubs(club_name):
-        show_form = session.get("club_secretary") == club_name
-        print(show_form)
-        return render_template('clubs.html', club_name=club_name, show_form=show_form)
+    show_form = session.get("club_secretary") == club_name
+    print(show_form)
+    return render_template('clubs.html', club_name=club_name, show_form=show_form)
 
 @app.route('/fetch_council_member/<council_name>', methods=['POST'])
 def fetch_council_members(council_name):
     option = request.form['option']
     show_form = session.get("council_secretary") == council_name
     conn = mysql.connector.connect(**mysql_config)
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
     
     # Query to fetch data based on the selected option and council name
     if option == 'All member':
@@ -417,8 +417,15 @@ def fetch_council_members(council_name):
     
     cursor.execute(query)
     data = cursor.fetchall()
+    cursor.execute('''
+        SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
+        FROM clubs
+        JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
+        WHERE clubs.COUNCIL_NAME = %s
+        GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
+    clubs = cursor.fetchall()
     conn.close()
-    return render_template('council_members.html', data=data, council_name=council_name, show_form=show_form)
+    return render_template('council_members.html', data=data, council_name=council_name, show_form=show_form, clubs=clubs)
 
 
 @app.route('/update_council_members/<council_name>', methods=['POST'])
@@ -427,7 +434,7 @@ def update_council_members(council_name):
     r = request.form['r']
     show_form = session.get("council_secretary") == council_name
     conn = mysql.connector.connect(**mysql_config)
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
     
     # Query to perform operations based on the selected option and council name
     if option == 'Add member':
@@ -441,8 +448,15 @@ def update_council_members(council_name):
     
     cursor.execute(query)
     conn.commit()
+    cursor.execute('''
+        SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
+        FROM clubs
+        JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
+        WHERE clubs.COUNCIL_NAME = %s
+        GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
+    clubs = cursor.fetchall()
     conn.close()
-    return render_template('council_members.html', council_name=council_name, show_form=show_form)
+    return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
 
 @app.route('/fetch_club_member/<club_name>', methods=['POST'])
 def fetch_club_members(club_name):
