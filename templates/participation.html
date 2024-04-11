@@ -25,15 +25,14 @@
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    .container_info h1 {
-    font-weight: 600;
-    font-size: xx-large;
-    background-color: #ebf8ff;
-    color: #2b6cb0;
-    padding: 0.5rem 1rem;
-    border: 1px solid #a0aec0;
-    border-radius: 0.25rem;
-}
+    .container_info {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
     h1 {
         text-align: center;
         color: #333;
@@ -56,6 +55,24 @@
         text-align: center;
         cursor: pointer;
     }
+        input[type="name"],
+    input[type="number"] {
+        width: calc(100% - 10px);
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+        button[type="submit"] {
+        background-color: #28a745;
+    }
+       .btn-container {
+        text-align: center;
+    }
+    Event Participation {
+        display: flex;
+        justify-content: center;
+    }
 </style>
 <body>
     <!-- <nav class="bg-gray-800 text-white fixed w-full z-10">
@@ -74,27 +91,44 @@
         </div>
     </nav> -->
     <div class="container_info">
-        <h1>Event Particpation for {{ev, ed}}</h1>
+        <div style="background-color: lightblue; padding: 10px;"><h1 id="Event Participation">
+            Event Particpation for {{ev, ed}}</h1>
+            </div>
 
         <form id="part" action="{{ url_for('participation', ev = ev, ed = ed)}}" method="POST">
             <label for="teamname">Team Name:</label>
             <input type="name" id="teamname" name="teamname"><br>
-            <label for="rollNumber1">Roll Number {{i}}:</label>
-            <input type="number" id="roll" name="roll"><br>
-            <label for="isCaptain1">Captain:</label>
-            <input type="checkbox" id="isCaptain1" name="captain" value=1><br>
-            <!-- <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full mb-4">Submit</button> -->
-            <!-- <div class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full mb-4" style="display: flex; justify-content: center;">
-                <button type="submit"> Submit </a>
-            </div> -->
+            <div id="participant-container">
+                <label for="Captain">Captain's Roll number:</label>
+                <input type="number" id="Captain" placeholder="Captain's Roll Number" name="Captain"><br>
+            </div>
+            <button type="button" onclick="addParticipant()">Add Participant</button>
+            <script>
+                function addParticipant() {
+                    var participantContainer = document.getElementById("participant-container");
+                    var rollNumber = participantContainer.getElementsByTagName("input").length ;
+
+                    var label = document.createElement("label");
+                    label.setAttribute("for", "rollNumber" + rollNumber);
+                    label.textContent = "Roll Number " + rollNumber + ":";
+
+                    var input = document.createElement("input");
+                    input.setAttribute("type", "number");
+                    input.setAttribute("id", "roll" + rollNumber);
+                    input.setAttribute("name", "roll");
+
+                    participantContainer.appendChild(label);
+                    participantContainer.appendChild(input);
+                    participantContainer.appendChild(document.createElement("br"));
+                }
+            </script>
+        </br>
+
             <div style="display: flex; justify-content: center;">
                 <button type="submit">Submit</button>
             </div>
         </form>
-
-    </div>
-
-    {% if message is defined and message %}
+        {% if message is defined %}
     <div class="col-span-3 mb-4">
         <div class="bg-gray-300 shadow-md rounded p-3 text-center">
             <div class="alert alert-warning">{{ message }}</div>
@@ -102,7 +136,11 @@
     </div>
     {% endif %}
 
-<footer class="bg-gray-800 text-white text-center p-4 mt-auto">
+    </div>
+
+    
+
+<footer class="bg-gray-800 text-black text-center p-4 mt-auto">
     © 2024 Clubs and Councils Management - IIT Gandhinagar. All Rights Reserved.
 </footer>
     <!-- Bootstrap JS -->

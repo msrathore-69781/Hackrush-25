@@ -355,25 +355,39 @@ def participate(ev,ed):
     if (ed[0].isdigit()):
         return render_template('participation.html',ev=ev,ed=ed)
     else:
-        return redirect(url_for(ed))
+        return redirect(url_for('event',ev=ev,ed=ed))
     
 
-@app.route('/participation/<ev>/<ed>', methods = ['POST'])
+@app.route('/participation/<ev>/<ed>', methods = ['GET','POST'])
 def participation(ev,ed):
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor(dictionary=True)
     name = request.form['teamname']
-    a=0
-    if 'captain' in request.form.keys():
-        a=1
-    roll = request.form['roll']
-    query = f"insert into PARTICIPATION values ('{ev}',{ed},{roll},'{name}',{a});"
+   
+    # Get the list of roll values from the form
+    captain = request.form['Captain']
+    message = None
     try:
-        cursor.execute(query)
+
+        cursor.execute(f"INSERT INTO PARTICIPATION VALUES ('{ev}', {ed}, {captain}, '{name}', {1});")
         conn.commit()
         message = "Participation added"
-    except mysql.connector.errors.IntegrityError as e:
+    except Exception as e:
         message = e
+   
+    if request.form.getlist('roll'):
+        rolls = request.form.getlist('roll')
+
+        # Iterate over the rolls and insert them into the PARTICIPATION table
+        for roll in rolls:
+            query = f"INSERT INTO PARTICIPATION VALUES ('{ev}', {ed}, {roll}, '{name}', {0});"
+            try:
+                cursor.execute(query)
+                conn.commit()
+                message = "Participation added"
+            except mysql.connector.errors.IntegrityError as e:
+                message = e
+
     cursor.close()
     conn.close()
     return render_template('participation.html',ev=ev,ed=ed,message=message)
