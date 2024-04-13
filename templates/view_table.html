@@ -65,6 +65,15 @@
     </style>
   </head>
     <body>
+
+    {% if message is defined and message %}
+    <div class="col-span-3 mb-4">
+        <div class="bg-gray-300 shadow-md rounded p-3 text-center">
+            <div class="alert alert-warning">{{ message }}</div>
+        </div>
+    </div>
+    {% endif %}
+    
       <h1>Viewing Table: {{ table_name }}</h1>
     
       <!-- Container to display existing data -->
