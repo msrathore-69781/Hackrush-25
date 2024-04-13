@@ -128,17 +128,16 @@
                 <button type="submit">Submit</button>
             </div>
         </form>
-        {% if message is defined %}
+
+    </div>
+
+    {% if message is defined and message %}
     <div class="col-span-3 mb-4">
         <div class="bg-gray-300 shadow-md rounded p-3 text-center">
             <div class="alert alert-warning">{{ message }}</div>
         </div>
     </div>
     {% endif %}
-
-    </div>
-
-    
 
 <footer class="bg-gray-800 text-black text-center p-4 mt-auto">
     © 2024 Clubs and Councils Management - IIT Gandhinagar. All Rights Reserved.

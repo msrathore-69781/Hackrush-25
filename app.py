@@ -320,7 +320,7 @@ def council():
         cursor.close()
         conn.close()
 
-
+@app.route('/fetch_council_member/events', methods = ['GET'])
 @app.route('/events', methods = ['GET'])
 def events():
     try:
@@ -767,6 +767,7 @@ def action():
     option = request.form.get('option')
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
+    query=''
     # Query to fetch data based on the selected option
     if option == 'issue':
         query = f"select distinct club_name as NAME from EQUIPMENT;"
@@ -847,5 +848,5 @@ def returnequipment():
     return render_template('equipments.html', message=message, a=0)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
     
