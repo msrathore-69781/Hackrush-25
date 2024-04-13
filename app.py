@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'DBMS_mysql@0204',    #Enter ur password for root
+    'password': 'MyNewPass',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -425,8 +425,8 @@ def clubs(club_name):
                 e.EDITION,
                 e.BUDGET,
                 a.APPROVAL_STATUS,
-                a.EMPLOYEE_ID  AS `Overseer`,
-                o.ROLL_NO AS `Event Lead`
+                a.EMPLOYEE_ID  AS Overseer,
+                o.ROLL_NO AS Event Lead
             FROM
                 event e
             INNER JOIN
@@ -516,6 +516,44 @@ def update_council_members(council_name):
 @app.route('/fetch_club_member/<club_name>', methods=['POST'])
 def fetch_club_members(club_name):
     show_form = session.get("club_secretary") == club_name
+    
+    if show_form:
+        try:
+            conn_ = mysql.connector.connect(**mysql_config)
+            cursor_ = conn_.cursor(dictionary=True)
+            
+            query = '''
+            SELECT
+                e.EVENT_NAME,
+                e.EDITION,
+                e.BUDGET,
+                a.APPROVAL_STATUS,
+                a.EMPLOYEE_ID  AS Overseer,
+                o.ROLL_NO AS Event Lead
+            FROM
+                event e
+            INNER JOIN
+                conducts c ON e.EVENT_NAME = c.EVENTS_NAME AND e.EDITION = c.EDITIONS
+            LEFT JOIN
+                approval a ON e.EVENT_NAME = a.EVENT_NAME AND e.EDITION = a.EDITION
+            LEFT JOIN
+                organizers o ON e.EVENT_NAME = o.EVENTS_NAME AND e.EDITION = o.EDITIONS
+            WHERE
+                c.CLUB_NAME = %s
+                AND o.RESPONSIBILITY = 'Event Lead'
+            '''
+
+            cursor_.execute(query, (club_name,))
+            event_info = cursor_.fetchall()
+            print(event_info)
+
+        except mysql.connector.Error as e:
+            return f"Error retrieving club information: {e}"
+        finally:
+            # Close database connection
+            cursor_.close()
+            conn_.close()
+    
     option = request.form['option']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
@@ -534,12 +572,50 @@ def fetch_club_members(club_name):
     data = cursor.fetchall()
     print(data)
     conn.close()
-    return render_template('clubs.html', data=data, club_name=club_name, show_form=show_form)
+    return render_template('clubs.html', data=data, club_name=club_name, show_form=show_form, event_info=event_info)
 
 
 @app.route('/update_club_members/<club_name>', methods=['POST'])
 def update_club_members(club_name):
     show_form = session.get("club_secretary") == club_name
+
+    if show_form:
+        try:
+            conn_ = mysql.connector.connect(**mysql_config)
+            cursor_ = conn_.cursor(dictionary=True)
+            
+            query = '''
+            SELECT
+                e.EVENT_NAME,
+                e.EDITION,
+                e.BUDGET,
+                a.APPROVAL_STATUS,
+                a.EMPLOYEE_ID  AS Overseer,
+                o.ROLL_NO AS Event Lead
+            FROM
+                event e
+            INNER JOIN
+                conducts c ON e.EVENT_NAME = c.EVENTS_NAME AND e.EDITION = c.EDITIONS
+            LEFT JOIN
+                approval a ON e.EVENT_NAME = a.EVENT_NAME AND e.EDITION = a.EDITION
+            LEFT JOIN
+                organizers o ON e.EVENT_NAME = o.EVENTS_NAME AND e.EDITION = o.EDITIONS
+            WHERE
+                c.CLUB_NAME = %s
+                AND o.RESPONSIBILITY = 'Event Lead'
+            '''
+
+            cursor_.execute(query, (club_name,))
+            event_info = cursor_.fetchall()
+            print(event_info)
+
+        except mysql.connector.Error as e:
+            return f"Error retrieving club information: {e}"
+        finally:
+            # Close database connection
+            cursor_.close()
+            conn_.close()
+
     option = request.form['option2']
     r = request.form['r']
     conn = mysql.connector.connect(**mysql_config)
@@ -558,7 +634,7 @@ def update_club_members(club_name):
     cursor.execute(query)
     conn.commit()
     conn.close()
-    return render_template('clubs.html', club_name=club_name, show_form=show_form)
+    return render_template('clubs.html', club_name=club_name, show_form=show_form, event_info=event_info)
 
 # Function to fetch all table names from MySQL
 def get_table_names():
@@ -846,6 +922,9 @@ def returnequipment():
         message="Select a valid Equipment to return"
     return render_template('equipments.html', message=message, a=0)
 
-if __name__ == "__main__":
+@app.route('/register', methods=['GET'])
+def register():
+    return render_template("registration.html")
+
+if __name__ == "_main_":
     app.run(debug=True)
-    
