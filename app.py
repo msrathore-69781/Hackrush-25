@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'MyNewPass',    #Enter ur password for root
+    'password': 'DBMS_mysql@0204',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -28,7 +28,9 @@ def login():
         message = session["message"]
     else:
         message = None
-    session["message"] = None
+    # session["message"] = None
+
+    session.clear()
 
     ''' Log-in for Students '''
     if request.method == 'POST' and 'email_student' in request.form and 'password_student' in request.form:
@@ -367,8 +369,8 @@ def participation(ev,ed):
     # Get the list of roll values from the form
     captain = request.form['Captain']
     message = None
-    try:
 
+    try:
         cursor.execute(f"INSERT INTO PARTICIPATION VALUES ('{ev}', {ed}, {captain}, '{name}', {1});")
         conn.commit()
         message = "Participation added"
@@ -410,7 +412,46 @@ def council_members(council_name):
 def clubs(club_name):
     show_form = session.get("club_secretary") == club_name
     print(show_form)
-    return render_template('clubs.html', club_name=club_name, show_form=show_form)
+
+    event_info = None
+    if show_form:
+        try:
+            conn = mysql.connector.connect(**mysql_config)
+            cursor = conn.cursor(dictionary=True)
+            
+            query = '''
+            SELECT
+                e.EVENT_NAME,
+                e.EDITION,
+                e.BUDGET,
+                a.APPROVAL_STATUS,
+                a.EMPLOYEE_ID  AS `Overseer`,
+                o.ROLL_NO AS `Event Lead`
+            FROM
+                event e
+            INNER JOIN
+                conducts c ON e.EVENT_NAME = c.EVENTS_NAME AND e.EDITION = c.EDITIONS
+            LEFT JOIN
+                approval a ON e.EVENT_NAME = a.EVENT_NAME AND e.EDITION = a.EDITION
+            LEFT JOIN
+                organizers o ON e.EVENT_NAME = o.EVENTS_NAME AND e.EDITION = o.EDITIONS
+            WHERE
+                c.CLUB_NAME = %s
+                AND o.RESPONSIBILITY = 'Event Lead'
+            '''
+
+            cursor.execute(query, (club_name,))
+            event_info = cursor.fetchall()
+            print(event_info)
+
+        except mysql.connector.Error as e:
+            return f"Error retrieving club information: {e}"
+        finally:
+            # Close database connection
+            cursor.close()
+            conn.close()
+
+    return render_template('clubs.html', club_name=club_name, show_form=show_form, event_info=event_info)
 
 @app.route('/fetch_council_member/<council_name>', methods=['POST'])
 def fetch_council_members(council_name):
@@ -651,7 +692,6 @@ def submit():
             date = request.form['date']
             print(type(date))
             
-
             start_time = request.form['start_time']
             end_time = request.form['end_time']
             print(type(start_time))
@@ -661,7 +701,6 @@ def submit():
             date=None
             start_time = None
             end_time = None 
-
 
 
         try:
