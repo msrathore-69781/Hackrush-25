@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clubs Management IIT Gandhinagar</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- <style>
+        /* Custom styles */
+        #hero {
+            background-image: url('C:\Users\SHRIJAN SAHU\Desktop\DBMS website\iitgn campus.jpeg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style> -->
+</head>
+<body class="font-sans bg-blue-100">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 text-white p-4 fixed w-full z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Include the local path for the logo -->
+            <!-- <img src="logo.jpg" alt="IIT Gandhinagar Logo" class="h-8 mr-3"> -->
+            <span class="text-xl font-bold mx-auto">Clubs Management IIT Gandhinagar</span>
+               <!-- <div>
+                <a href="anshul2" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a>
+                <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Councils</a>
+                <a href="events" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
+                <a href="#login" class="px-4 py-2 hover:bg-gray-700 transition-colors">Login</a>
+            </div> -->
+        </div>
+    </nav>
+    <section id="Registration" class="container mx-auto h-screen flex justify-center items-center">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-20 w-full max-w-3xl">
+
+        
+        <div class="w-full max-w-xs">
+            <h3 class="text-4xl font-bold mb-10 text-center">Student Registration</h3>
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form action="{{ url_for('register') }}" method="post">
+                    <div class="form-group mb-4">
+                        <label for="userID">UserID:</label>
+                        <input type="userID" class="form-control" id="userID" placeholder="Enter userID" name="userID_student">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email_student">
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter password" name="password_student">
+                    </div>    
+                    <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full mb-4">Register</button>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="w-full max-w-xs">
+            <h3 class="text-4xl font-bold mb-10 text-center">Employee Registration</h3>
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form action="{{ url_for('register') }}" method="post">
+                    <div class="form-group mb-4">
+                        <label for="userID">UserID:</label>
+                        <input type="userID" class="form-control" id="userID" placeholder="Enter userID" name="userID_employee">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email_employee">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter password" name="password_employee">
+                    </div>    
+                    <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full mb-4">Register</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<footer class="bg-gray-800 text-white p-2 text-center fixed bottom-0 w-full">
+    Developed by ManuDB<br>IIT Gandhinagar, Palaj, Gujarat
+</footer>
+
+</body>
+</html>

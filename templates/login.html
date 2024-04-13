@@ -21,12 +21,12 @@
         <div class="container mx-auto flex justify-between items-center">
             <!-- Include the local path for the logo -->
             <!-- <img src="logo.jpg" alt="IIT Gandhinagar Logo" class="h-8 mr-3"> -->
-            <span class="text-xl font-bold mx-auto">Clubs Management IIT Gandhinagar</span>
+            <span class="text-xl font-bold mx-auto" style="text-align: left">Clubs Management IIT Gandhinagar</span>
             <!-- <div>
                 <a href="anshul2" class="px-4 py-2 hover:bg-gray-700 transition-colors">Clubs</a>
                 <a href="councils" class="px-4 py-2 hover:bg-gray-700 transition-colors">Councils</a>
                 <a href="events" class="px-4 py-2 hover:bg-gray-700 transition-colors">Events</a>
-                <a href="#login" class="px-4 py-2 hover:bg-gray-700 transition-colors">Login</a>
+                <a href="register" class="px-4 py-2 hover:bg-gray-700 transition-colors">Register</a>
             </div> -->
         </div>
     </nav>
@@ -160,9 +160,38 @@
                     </form>
                 </div>
             </div>
+            <div class="col-span-3 text-center mt-10">
+                <h3 class="text-3xl mb-10 text-center">New User? Register Here:</h3>
+                <a href="{{ url_for('register') }}" class="px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">Register</a>
+            </div>
         </div>
     </section>
-    
+
+    <!-- <section id="registration" class="container mx-auto h-screen flex justify-center items-center">
+        <div class="w-full max-w-xs">
+            <h3 class="text-3xl font-bold mb-10 text-center">New User Registration</h3>
+            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form action="{{ url_for('register') }}" method="post">
+                    <div class="form-group mb-4">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name" name="name" required>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
+                    </div>
+                    <button type="submit" class="px-6 py-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full mb-4">Register</button>
+                </form>
+            </div>
+            <div class="col-span-3 text-center mt-10">
+                <a href="{{ url_for('register') }}" class="px-6 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">Register</a>
+            </div>
+        </div>
+    </section> -->
     
             <!-- Employee Login -->
             <!-- <div class="w-full max-w-xs">
