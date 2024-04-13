@@ -264,28 +264,33 @@ def approval_update():
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
     
-    query = """
-        UPDATE Approval
-        SET APPROVAL_STATUS = %s
-        WHERE EVENT_NAME = %s AND EDITION = %s
-    """
-    cursor.execute(query, (status, event_name, edition))
-    conn.commit()
-
-    query = """
-            SELECT a.EVENT_NAME, a.EDITION, e.BUDGET, a.APPROVAL_STATUS
-            FROM Approval a
-            JOIN Event e ON a.EVENT_NAME = e.EVENT_NAME AND a.EDITION = e.EDITION
-            WHERE a.EMPLOYEE_ID = %s
+    try:
+        query = """
+            UPDATE Approval
+            SET APPROVAL_STATUS = %s
+            WHERE EVENT_NAME = %s AND EDITION = %s
         """
-    cursor.execute(query, (session['userid'],))
-    records_b = cursor.fetchall()
-    print(records_b)
-    
-    conn.close()
+        cursor.execute(query, (status, event_name, edition))
+        conn.commit()
 
-    # Redirect back to the employee info page
-    return redirect(url_for('employee_info', employeeInfo = session['user_info'], venues=session["venues"], events=records_b))
+        query = """
+                SELECT a.EVENT_NAME, a.EDITION, e.BUDGET, a.APPROVAL_STATUS
+                FROM Approval a
+                JOIN Event e ON a.EVENT_NAME = e.EVENT_NAME AND a.EDITION = e.EDITION
+                WHERE a.EMPLOYEE_ID = %s
+            """
+        cursor.execute(query, (session['userid'],))
+        records_b = cursor.fetchall()
+        print(records_b)
+        
+        conn.close()
+
+        # Redirect back to the employee info page
+        return redirect(url_for('employee_info', employeeInfo = session['user_info'], venues=session["venues"], events=records_b))
+    except mysql.connector.Error as e:
+        message=f"Error retrieving information: {e}"
+        return render_template(url_for('employee_info', employeeInfo = session['user_info'], venues=session["venues"], events=[], message=message))
+        
 
 #this is used to display council details 
 @app.route('/councils')
@@ -314,7 +319,8 @@ def council():
         # Render the template with club information
         return render_template('councils.html', councils=councils, clubs=hobby_groups)
     except mysql.connector.Error as e:
-        return f"Error retrieving club information: {e}"
+        message=f"Error retrieving information: {e}"
+        return render_template('councils.html', councils=[], clubs=[], message=message)
     finally:
         # Close database connection
         cursor.close()
@@ -333,7 +339,8 @@ def events():
         # Render the template with club information
         return render_template('events.html',e=events)
     except mysql.connector.Error as e:
-        return f"Error retrieving club information: {e}"
+        message=f"Error retrieving information: {e}"
+        render_template('events.html',e=[],message=message)
     finally:
         # Close database connection
         cursor.close()
@@ -341,16 +348,21 @@ def events():
 
 @app.route('/event/<ev>/<ed>', methods = ['POST','GET'])
 def event(ev,ed):
-    conn = mysql.connector.connect(**mysql_config)
-    cursor = conn.cursor(dictionary=True)
-    # Query to retrieve club information
-    # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
-    cursor.execute(f"select * from EVENT left join PLACE_AND_TIME on EVENTS_NAME = EVENT_NAME and EDITIONS = EDITION where EVENT_NAME= '{ev}' and EDITION= {ed};")
-    event = cursor.fetchall()
-        # Render the template with club information
-    cursor.close()
-    return render_template('event.html',event=event[0])
-        # Close database connection
+    try:
+
+        conn = mysql.connector.connect(**mysql_config)
+        cursor = conn.cursor(dictionary=True)
+        # Query to retrieve club information
+        # this query joins the two table(council, COUNCIL_MEMBER) to find out number of member in a council
+        cursor.execute(f"select * from EVENT left join PLACE_AND_TIME on EVENTS_NAME = EVENT_NAME and EDITIONS = EDITION where EVENT_NAME= '{ev}' and EDITION= {ed};")
+        event = cursor.fetchall()
+            # Render the template with club information
+        cursor.close()
+        return render_template('event.html',event=event[0])
+    
+    except mysql.connector.Error as e:
+        message=f"Error retrieving information: {e}"
+        render_template('events.html',message=message)
         
 @app.route('/participate/<ev>/<ed>', methods = ['GET'])
 def participate(ev,ed):
@@ -374,8 +386,9 @@ def participation(ev,ed):
         cursor.execute(f"INSERT INTO PARTICIPATION VALUES ('{ev}', {ed}, {captain}, '{name}', {1});")
         conn.commit()
         message = "Participation added"
-    except Exception as e:
+    except mysql.connector.Error as e:
         message = e
+        return render_template('participation.html',ev=ev,ed=ed,message=message)
    
     if request.form.getlist('roll'):
         rolls = request.form.getlist('roll')
@@ -387,8 +400,9 @@ def participation(ev,ed):
                 cursor.execute(query)
                 conn.commit()
                 message = "Participation added"
-            except mysql.connector.errors.IntegrityError as e:
+            except mysql.connector.Error as e:
                 message = e
+                return render_template('participation.html',ev=ev,ed=ed,message=message)
 
     cursor.close()
     conn.close()
@@ -399,14 +413,21 @@ def council_members(council_name):
     show_form = session.get("council_secretary") == council_name
     print(show_form)
     cursor = conn.cursor(dictionary=True)
-    cursor.execute('''
+    try:
+        cursor.execute('''
         SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
         FROM clubs
         JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
         WHERE clubs.COUNCIL_NAME = %s
         GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
-    clubs = cursor.fetchall()
-    return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
+        clubs = cursor.fetchall()
+        return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
+
+    except mysql.connector.Error as e:
+        message=f"Error retrieving info {e}"
+        return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
+
+    
 
 @app.route('/clubs/<club_name>')
 def clubs(club_name):
@@ -426,7 +447,7 @@ def clubs(club_name):
                 e.BUDGET,
                 a.APPROVAL_STATUS,
                 a.EMPLOYEE_ID  AS Overseer,
-                o.ROLL_NO AS Event Lead
+                o.ROLL_NO AS Event_Lead
             FROM
                 event e
             INNER JOIN
@@ -445,7 +466,8 @@ def clubs(club_name):
             print(event_info)
 
         except mysql.connector.Error as e:
-            return f"Error retrieving club information: {e}"
+            message= f"Error retrieving club information: {e}"
+            return render_template('clubs.html', club_name=club_name, show_form=show_form, event_info=[],message=message)
         finally:
             # Close database connection
             cursor.close()
@@ -469,18 +491,21 @@ def fetch_council_members(council_name):
         query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION FROM STUDENTS, COUNCIL_MEMBERS WHERE COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'COORDINATOR' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council_name}';"
     elif option == 'Secretary':
         query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, COUNCIL_MEMBERS.POSITION FROM STUDENTS, COUNCIL_MEMBERS WHERE COUNCIL_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND COUNCIL_MEMBERS.POSITION = 'SECRETARY' AND COUNCIL_MEMBERS.COUNCIL_NAME = '{council_name}';"
-    
-    cursor.execute(query)
-    data = cursor.fetchall()
-    cursor.execute('''
-        SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
-        FROM clubs
-        JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
-        WHERE clubs.COUNCIL_NAME = %s
-        GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
-    clubs = cursor.fetchall()
-    conn.close()
-    return render_template('council_members.html', data=data, council_name=council_name, show_form=show_form, clubs=clubs)
+    try:
+        cursor.execute(query)
+        data = cursor.fetchall()
+        cursor.execute('''
+            SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
+            FROM clubs
+            JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
+            WHERE clubs.COUNCIL_NAME = %s
+            GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
+        clubs = cursor.fetchall()
+        conn.close()
+        return render_template('council_members.html', data=data, council_name=council_name, show_form=show_form, clubs=clubs)
+    except mysql.connector.Error as e:
+        message=f"Error retrieving information: {e}"
+        render_template('council_members.html', data=[], council_name=council_name, show_form=show_form, clubs=[])
 
 
 @app.route('/update_council_members/<council_name>', methods=['POST'])
@@ -501,17 +526,22 @@ def update_council_members(council_name):
     elif option == 'Remove coordinator':
         query = f"DELETE FROM COUNCIL_MEMBERS WHERE ROLLS_NO = {r} AND POSITION = 'Coordinator' AND COUNCIL_NAME = '{council_name}';"
     
-    cursor.execute(query)
-    conn.commit()
-    cursor.execute('''
-        SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
-        FROM clubs
-        JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
-        WHERE clubs.COUNCIL_NAME = %s
-        GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
-    clubs = cursor.fetchall()
-    conn.close()
-    return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
+    try:
+        cursor.execute(query)
+        conn.commit()
+        cursor.execute('''
+            SELECT clubs.CLUB_NAME, clubs.DESCRIPTION, COUNT(CLUB_MEMBERS.ROLLS_NO) AS "TOTAL_MEMBERS"
+            FROM clubs
+            JOIN CLUB_MEMBERS ON clubs.CLUB_NAME = CLUB_MEMBERS.CLUBS_NAME
+            WHERE clubs.COUNCIL_NAME = %s
+            GROUP BY clubs.CLUB_NAME, clubs.DESCRIPTION;''',(council_name,))
+        clubs = cursor.fetchall()
+        conn.close()
+        return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
+
+    except mysql.connector.IntegrityError as e:
+        message=f"Error : {e}"
+        render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=[], message=message)
 
 @app.route('/fetch_club_member/<club_name>', methods=['POST'])
 def fetch_club_members(club_name):
@@ -529,7 +559,7 @@ def fetch_club_members(club_name):
                 e.BUDGET,
                 a.APPROVAL_STATUS,
                 a.EMPLOYEE_ID  AS Overseer,
-                o.ROLL_NO AS Event Lead
+                o.ROLL_NO AS Event_Lead
             FROM
                 event e
             INNER JOIN
@@ -548,7 +578,8 @@ def fetch_club_members(club_name):
             print(event_info)
 
         except mysql.connector.Error as e:
-            return f"Error retrieving club information: {e}"
+            message=f"Error : {e}"
+            return render_template('clubs.html', data=[], club_name=club_name, show_form=show_form, event_info=[], message=message)
         finally:
             # Close database connection
             cursor_.close()
@@ -557,7 +588,7 @@ def fetch_club_members(club_name):
     option = request.form['option']
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
-    
+    query=""
     # Query to fetch data based on the selected option and club name
     if option == 'All member':
         query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, CLUB_MEMBERS.POSITION FROM STUDENTS, CLUB_MEMBERS WHERE CLUB_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND CLUB_MEMBERS.CLUBS_NAME = '{club_name}';"
@@ -568,8 +599,12 @@ def fetch_club_members(club_name):
     elif option == 'Secretary':
         query = f"SELECT STUDENTS.ROLL_NO, STUDENTS.EMAIL, STUDENTS.CONTACT_NO, STUDENTS.FIRST_NAME, CLUB_MEMBERS.POSITION FROM STUDENTS, CLUB_MEMBERS WHERE CLUB_MEMBERS.ROLLS_NO = STUDENTS.ROLL_NO AND CLUB_MEMBERS.POSITION = 'SECRETARY' AND CLUB_MEMBERS.CLUBS_NAME = '{club_name}';"
     
-    cursor.execute(query)
-    data = cursor.fetchall()
+    try:
+        cursor.execute(query)
+        data = cursor.fetchall()
+    except mysql.connector.Error as e:
+            message=f"Error : {e}"
+            render_template('clubs.html', data=[], club_name=club_name, show_form=show_form, event_info=event_info)
     print(data)
     conn.close()
     return render_template('clubs.html', data=data, club_name=club_name, show_form=show_form, event_info=event_info)
@@ -591,7 +626,7 @@ def update_club_members(club_name):
                 e.BUDGET,
                 a.APPROVAL_STATUS,
                 a.EMPLOYEE_ID  AS Overseer,
-                o.ROLL_NO AS Event Lead
+                o.ROLL_NO AS Event_Lead
             FROM
                 event e
             INNER JOIN
@@ -610,7 +645,8 @@ def update_club_members(club_name):
             print(event_info)
 
         except mysql.connector.Error as e:
-            return f"Error retrieving club information: {e}"
+            message=f"Error : {e}"
+            render_template('clubs.html', club_name=club_name, show_form=show_form, event_info=[], message=message)
         finally:
             # Close database connection
             cursor_.close()
@@ -631,20 +667,29 @@ def update_club_members(club_name):
     elif option == 'Remove coordinator':
         query = f"DELETE FROM CLUB_MEMBERS WHERE ROLLS_NO = {r} AND POSITION = 'Coordinator' AND CLUBS_NAME = '{club_name}';"
     
-    cursor.execute(query)
-    conn.commit()
-    conn.close()
+    try:
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except mysql.connector.Error as e:
+        message=f"Error : {e}"
+        render_template('clubs.html', club_name=club_name, show_form=show_form, event_info=event_info, message=message)
     return render_template('clubs.html', club_name=club_name, show_form=show_form, event_info=event_info)
 
 # Function to fetch all table names from MySQL
 def get_table_names():
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
-    cursor.execute("SHOW TABLES")
-    tables = [table[0] for table in cursor.fetchall()]
-    cursor.close()
-    conn.close()
-    return tables
+    try:
+        cursor.execute("SHOW TABLES")
+        tables = [table[0] for table in cursor.fetchall()]
+        cursor.close()
+        conn.close()
+        return tables
+    except mysql.connector.Error as e:
+        message=f"Error : {e}"
+        return message
+    
 
 @app.route('/admin')
 def admin_panel():
@@ -659,6 +704,8 @@ def admin_panel():
         return redirect(url_for('login')) 
 
     tables = get_table_names()
+    if type(tables)==str:
+        return render_template('admin.html', tables=[],message=tables)
     print(tables)
     return render_template('admin.html', tables=tables)
 
@@ -927,5 +974,5 @@ def returnequipment():
 def register():
     return render_template("registration.html")
 
-if __name__ == "_main_":
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0',debug=True)

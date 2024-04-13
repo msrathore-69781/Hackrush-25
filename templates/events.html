@@ -34,6 +34,15 @@
             </div>
         </div> -->
     <!-- </nav> --> 
+
+    {% if message is defined and message %}
+    <div class="col-span-3 mb-4">
+        <div class="bg-gray-300 shadow-md rounded p-3 text-center">
+            <div class="alert alert-warning">{{ message }}</div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="container">
         <h1 class="mt-5 mb-3 text-center">Upcoming Events</h1>
         <div class="row">

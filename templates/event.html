@@ -58,6 +58,15 @@
     }
 </style>
 <body>
+
+    {% if message is defined and message %}
+    <div class="col-span-3 mb-4">
+        <div class="bg-gray-300 shadow-md rounded p-3 text-center">
+            <div class="alert alert-warning">{{ message }}</div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="container_info">
         <h1>Event Details for {{event.EVENT_NAME, event.EDITION}}</h1>
         <div class="info">

@@ -63,6 +63,14 @@
                 </div>
                 {% endif %}
             </div>
+            
+    {% if message is defined and message %}
+    <div class="col-span-3 mb-4">
+        <div class="bg-gray-300 shadow-md rounded p-3 text-center">
+            <div class="alert alert-warning">{{ message }}</div>
+        </div>
+    </div>
+    {% endif %}
 
             <!-- Tables Section -->
             <div class="md:flex-1 md:p-4 mt-4 md:mt-0">
@@ -113,7 +121,7 @@
                                 <td>{{ event['BUDGET'] }}</td>
                                 <td>{{ event['APPROVAL_STATUS'] }}</td>
                                 <td>{{ event['Overseer'] }}</td>
-                                <td>{{ event['Event Lead'] }}</td>
+                                <td>{{ event['Event_Lead'] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
