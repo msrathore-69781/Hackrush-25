@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash , jsonify, redirect
 import mysql.connector
-import re
+# import re
 from datetime import datetime
+from authlib.integrations.flask_client import OAuth
+from oauthlib.oauth2 import WebApplicationClient
 
 app = Flask(__name__)
 
@@ -20,6 +22,42 @@ try:
 except mysql.connector.Error as e:
     print(f"Error connecting to MySQL database: {e}")
 conn = mysql.connector.connect(**mysql_config)
+
+
+# app.config['SERVER_NAME'] = 'localhost:5000'
+oauth = OAuth(app)
+ 
+@app.route('/google/')
+def google():
+   
+    # Google Oauth Config
+    # Get client_id and client_secret from environment variables
+    # For developement purpose you can directly put it here inside double quotes
+    GOOGLE_CLIENT_ID = "134133495392-9i6jrrg4abg2q4qlmhptcl2t9nfclmj9.apps.googleusercontent.com"
+    GOOGLE_CLIENT_SECRET = "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"
+    CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
+    oauth.register(
+        name='google',
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        server_metadata_url=CONF_URL,
+        client_kwargs={
+            'scope': 'openid email profile'
+        }
+    )
+     
+    # Redirect to google_auth function
+    redirect_uri = url_for('google_auth', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+ 
+@app.route('/google/auth/')
+def google_auth():
+    token = oauth.google.authorize_access_token()
+    
+    nonce = request.args.get('nonce')  # Retrieve the nonce from the request
+    user = oauth.google.parse_id_token(token, nonce=nonce)  
+    print(" Google User ", user)
+    return redirect('/register')
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
