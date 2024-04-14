@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash , jsonify, redirect
 import mysql.connector
-import re
+# import re
 from datetime import datetime
+from authlib.integrations.flask_client import OAuth
+from oauthlib.oauth2 import WebApplicationClient
 
 app = Flask(__name__)
 
@@ -11,7 +13,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'MyNewPass',    #Enter ur password for root
+    'password': 'Your_Password',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -20,6 +22,46 @@ try:
 except mysql.connector.Error as e:
     print(f"Error connecting to MySQL database: {e}")
 conn = mysql.connector.connect(**mysql_config)
+
+
+# app.config['SERVER_NAME'] = 'localhost:5000'
+oauth = OAuth(app)
+ 
+@app.route('/google/')
+def google():
+   
+    # Google Oauth Config
+    # Get client_id and client_secret from environment variables
+    # For developement purpose you can directly put it here inside double quotes
+    GOOGLE_CLIENT_ID = "134133495392-9i6jrrg4abg2q4qlmhptcl2t9nfclmj9.apps.googleusercontent.com"
+    GOOGLE_CLIENT_SECRET = "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"
+    CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
+    oauth.register(
+        name='google',
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        server_metadata_url=CONF_URL,
+        client_kwargs={
+            'scope': 'openid email profile'
+        }
+    )
+     
+    # Redirect to google_auth function
+    redirect_uri = url_for('google_auth', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+ 
+@app.route('/google/auth/')
+def google_auth():
+    token = oauth.google.authorize_access_token()
+    
+    nonce = request.args.get('nonce')  # Retrieve the nonce from the request
+    user = oauth.google.parse_id_token(token, nonce=nonce)  
+
+    email = user.get('email')  # Retrieve email from user info
+    session['email'] = email  # Store email in session
+
+    print(" Google User ", user)
+    return redirect('/register')
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -39,17 +81,25 @@ def login():
         print("Received email:", email)          # Debugging print statement
         print("Received roll number:", roll_no)  # Debugging print statement
         cursor = conn.cursor(dictionary=True)
+
         try:
             # cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s AND ROLL_NO = %s', (email, roll_no))
             cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s', (email,))
             user = cursor.fetchone()
             print("User:", user)                 # Debugging print statement
+
             if user:
                 # Password check
-                if roll_no != email.split("@")[0]:
+                query = "SELECT PASSWORD FROM PASSWORDS WHERE EMAIL = %s"
+                cursor.execute(query, (email,))
+                password = cursor.fetchone()
+
+                # if roll_no != email.split("@")[0]:
+                if int(roll_no) != password:
                     print("Incorrect Student Password")
                     # flash("Incorrect Student Password", 'error')         # Flash error message
                     message = "Incorrect Student Password"
+
                 else:
                     session['loggedin'] = "Student"
                     session['userid'] = user['ROLL_NO']
@@ -91,14 +141,21 @@ def login():
         print("Received email:", email)              # Debugging print statement
         print("Received employee id:", employee_id)  # Debugging print statement
         cursor = conn.cursor(dictionary=True)
+
         try:
             # cursor.execute('SELECT * FROM STUDENTS WHERE EMAIL = %s AND EMPLOYEE_ID = %s', (email, employee_id))
             cursor.execute('SELECT * FROM EMPLOYEE WHERE EMAIL = %s', (email,))
             user = cursor.fetchone()
             print("User:", user)                     # Debugging print statement
+
             if user:
                 # password-check
-                if int(employee_id) != user['EMPLOYEE_ID']:
+                query = "SELECT PASSWORD FROM PASSWORDS WHERE EMAIL = %s"
+                cursor.execute(query, (email,))
+                password = cursor.fetchone()
+
+                # if int(employee_id) != user['EMPLOYEE_ID']:
+                if int(employee_id) != password:
                     print("Incorrect Employee Password")
                     message = "Incorrect Employee Password"
                 else:
@@ -146,22 +203,40 @@ def login():
         print("Received email:", email)              # Debugging print statement
         print("Received password:", pw)              # Debugging print statement
         
-        try:
-            if email == "admin@iitgn.ac.in":
-                # password-check
-                if pw != "manudb":
-                    print("Incorrect Password")
-                    message = "Incorrect Password"
-                else:
-                    session['loggedin'] = "Admin"
-                    session['userid'] = 0
-                    session['name'] = "admin"
-                    session['email'] = "admin@iitgn.ac.in"
-                    message = 'Logged in successfully !'
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT ROLE, PASSWORD FROM PASSWORDS WHERE EMAIL = %s"
+        cursor.execute(query, (email,))
+        result = cursor.fetchone()
 
-                    # Page you want to navigate to if logged in successfully
-                    # return render_template('admin.html')
-                    return redirect(url_for('admin_panel'))
+        try:
+            # if email == "admin@iitgn.ac.in":
+                # password-check
+                # if pw != "manudb":
+
+            if result:
+                print(result)
+                role, stored_password = result["ROLE"], result["PASSWORD"]
+                print(role, stored_password)  # Debugging print statement
+
+                if role != 'Admin':
+                    message = "You do not have admin privileges"
+                    print("This user is not an admin.")
+
+                else:
+                    if pw != stored_password:
+                        print("Incorrect Password")
+                        message = "Incorrect Password"
+
+                    else:
+                        session['loggedin'] = "Admin"
+                        session['userid'] = 0
+                        session['name'] = "admin"
+                        session['email'] = "admin@iitgn.ac.in"
+                        message = 'Logged in successfully !'
+
+                        # Page you want to navigate to if logged in successfully
+                        # return render_template('admin.html')
+                        return redirect(url_for('admin_panel'))
             else:
                 print('User not found (incorrect email)')  # Debugging print statement
                 message = 'User not found (incorrect email)'
@@ -170,9 +245,102 @@ def login():
             print('Error:', e)  # Debugging print statement
             message = 'An error occurred during login.'
 
+        finally:
+            cursor.close()
+
     # we want to show the login page by default
     return render_template('login.html', message=message)
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    email = session.get('email')  # Retrieve email from session
+    print(email)
+
+    if email is None:
+        return render_template('login.html', message = "Sign-in your with your IITGN email id to register.")
+
+    ''' Register for Students '''
+    if request.method == 'POST' and 'userID_student' in request.form and 'password_student' in request.form and 'name_student' in request.form:
+        password = request.form['password_student']
+        roll_no = request.form['userID_student'] 
+        first_name = request.form['name_student']
+
+        if not roll_no.isnumeric():
+            return render_template("registration.html", email=email, message="Roll number should be numeric.")
+        if len(roll_no) != 7:
+            return render_template("registration.html", email=email, message="Roll number should be 7 digits long.")
+        if int(roll_no)<2000000:
+            return render_template("registration.html", email=email, message="Invalid Roll number. Should be greater than 2000000.")
+        
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute('SELECT * FROM STUDENTS WHERE ROLL_NO = %s', (roll_no,))
+            user = cursor.fetchone()
+            if user:
+                return render_template("registration.html", email=email, message="User already exists.")
+            else:
+                # Constant values for the fields
+                contact_no = '1234567890'
+                middle_name = None
+                last_name = None
+                street = '123 Street'
+                city = 'City'
+                state = 'State'
+                pincode = '123456'
+                dob = '2000-01-01'
+                age = 21
+                programme = 'BTech'
+                discipline = 'CSE'
+                year = '2022'
+
+                cursor.execute('INSERT INTO STUDENTS (ROLL_NO, EMAIL, CONTACT_NO, FIRST_NAME, MIDDLE_NAME, LAST_NAME, STREET, CITY, STATE, PINCODE, DATE_OF_BIRTH, AGE, PROGRAMME, DISCIPLINE, YEAR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (roll_no, email, contact_no, first_name, middle_name, last_name, street, city, state, pincode, dob, age, programme, discipline, year))
+                cursor.execute('INSERT INTO PASSWORDS (EMAIL, PASSWORD, ROLE) VALUES (%s, %s, %s)', (email, password, 'Student'))
+                conn.commit()
+                return redirect(url_for('login'))
+            
+        except Exception as e:
+            print('Error:', e)
+            return render_template("registration.html", email=email, message=e)
+        finally:
+            cursor.close()
+
+    ''' Register for Employees '''
+    if request.method == 'POST' and 'userID_employee' in request.form and 'password_employee' in request.form and 'name_employee' in request.form:
+        password = request.form['password_employee']
+        employee_id = request.form['userID_employee'] 
+        first_name = request.form['name_employee']
+
+        if not employee_id.isnumeric():
+            return render_template("registration.html", email=email, message="Employee ID should be numeric.")
+        if int(employee_id)<1000:
+            return render_template("registration.html", email=email, message="Invalid Employee ID. Should be less than 1000.")
+        
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute('SELECT * FROM EMPLOYEES WHERE EMPLOYEE_ID = %s', (employee_id,))
+            user = cursor.fetchone()
+            if user:
+                return render_template("registration.html", email=email, message="User already exists.")
+            else:
+                # Constant values for the fields
+                middle_name = None
+                last_name = None
+                phone_number = '1234567890'
+                department = 'Computer Science'
+                designation = 'PROFESSOR'
+
+                cursor.execute('INSERT INTO EMPLOYEES (EMPLOYEE_ID, EMAIL, FIRST_NAME, MIDDLE_NAME, LAST_NAME, PHONE_NUMBER, DEPARTMENT, DESIGNATION) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)', (employee_id, email, first_name, middle_name, last_name, phone_number, department, designation))
+                cursor.execute('INSERT INTO PASSWORDS (EMAIL, PASSWORD, ROLE) VALUES (%s, %s, %s)', (email, password, 'Employee'))
+                conn.commit()
+                return redirect(url_for('login'))
+            
+        except Exception as e:
+            print('Error:', e)
+            return render_template("registration.html", email=email, message=e)
+        finally:
+            cursor.close()
+
+    return render_template("registration.html", email=email)
 
 @app.route('/logout')
 @app.route('/council_members/logout')
@@ -1140,9 +1308,6 @@ def returnequipment():
         message="Select a valid Equipment to return"
     return render_template('equipments.html', message=message, a=0)
 
-@app.route('/register', methods=['GET'])
-def register():
-    return render_template("registration.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
