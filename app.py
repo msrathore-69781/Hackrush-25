@@ -11,7 +11,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'MyNewPass',    #Enter ur password for root
+    'password': 'DBMS_mysql@0204',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -683,6 +683,9 @@ def get_table_names():
     try:
         cursor.execute("SHOW TABLES")
         tables = [table[0] for table in cursor.fetchall()]
+        # print(tables)
+        tables.remove("passwords")
+
         cursor.close()
         conn.close()
         return tables
@@ -715,12 +718,18 @@ def view_table(table_name):
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
 
-    # Fetch column names for the specified table
-    cursor.execute(f"SHOW COLUMNS FROM {table_name}")
-    columns = [column[0] for column in cursor.fetchall()]
-    
-    cursor.execute(f"select * from {table_name}")
-    data = cursor.fetchall()
+    if table_name == "passwords":
+        return render_template('login.html', message = "You don't have authority to view the data.\nRe-login to continue.")
+
+    try:
+        # Fetch column names for the specified table
+        cursor.execute(f"SHOW COLUMNS FROM {table_name}")
+        columns = [column[0] for column in cursor.fetchall()]
+        
+        cursor.execute(f"select * from {table_name}")
+        data = cursor.fetchall()
+    except:
+        return render_template('admin.html', message = "Requested table does not exist.")
 
     if request.method == 'POST':
         action = request.form['action']
@@ -975,4 +984,4 @@ def register():
     return render_template("registration.html")
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',debug=True)
+    app.run(debug=True)

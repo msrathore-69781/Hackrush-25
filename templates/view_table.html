@@ -76,29 +76,7 @@
     
       <h1>Viewing Table: {{ table_name }}</h1>
     
-      <!-- Container to display existing data -->
-      <div>
-        <h2>Existing Data</h2>
-        <table>
-          <thead>
-            <tr>
-              {% for column in columns %}
-              <th>{{ column }}</th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in data %}
-            <tr>
-              {% for value in row %}
-              <td>{{ value }}</td>
-              {% endfor %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    
+      
       <form action="/view_table/{{table_name}}" method="post">
         <h2>Enter New Data</h2>
         <table>
@@ -122,14 +100,14 @@
         <button type="button" id="rename-btn">RENAME</button>
         <div id="rename-div">
           <input
-            type="text"
-            name="new_table_name"
-            placeholder="Enter new table name"
+          type="text"
+          name="new_table_name"
+          placeholder="Enter new table name"
           />
           <button type="submit" name="action" value="rename">Submit</button>
         </div>
       </form>
-    
+      
       <script>
         document
           .getElementById("rename-btn")
@@ -137,5 +115,28 @@
             document.getElementById("rename-div").style.display = "block";
           });
       </script>
+      
+    <!-- Container to display existing data -->
+    <div>
+      <h2>Existing Data</h2>
+      <table>
+        <thead>
+          <tr>
+            {% for column in columns %}
+            <th>{{ column }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in data %}
+          <tr>
+            {% for value in row %}
+            <td>{{ value }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
     </body>
-</html>
+    </html>
