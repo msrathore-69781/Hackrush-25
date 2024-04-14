@@ -974,7 +974,7 @@ def get_table_names():
         cursor.execute("SHOW TABLES")
         tables = [table[0] for table in cursor.fetchall()]
         # print(tables)
-        tables.remove("passwords")
+        # tables.remove("passwords")
 
         cursor.close()
         conn.close()
@@ -1034,61 +1034,68 @@ def view_table(table_name):
 
     if request.method == 'POST':
         action = request.form['action']
-        if action == 'insert':
+        try:
+            if action == 'insert':
         # Extract data from the form
-            new_entry_values = [request.form[column] for column in columns]
-            
-            # Construct the SQL query to insert new entry
-            placeholders = ', '.join(['%s'] * len(columns))
-            insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})"
-            
-            # Execute the insert query
-            cursor = conn.cursor()
-            cursor.execute(insert_query, new_entry_values)
-            conn.commit()  # Commit the transaction
-            
-            cursor = conn.cursor()
-            # Fetch data again after insertion
-            cursor.execute(f"select * from {table_name}")
-            data = cursor.fetchall()
-            conn.commit()
-    
-        elif action =='delete':
-            to_delete_values = [request.form[column] for column in columns]
-            query=f"DELETE FROM {table_name} WHERE "
-            print(query)
+                new_entry_values = [request.form[column] for column in columns]
+                
+                # Construct the SQL query to insert new entry
+                placeholders = ', '.join(['%s'] * len(columns))
+                insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})"
+                
+                # Execute the insert query
+                cursor = conn.cursor()
+                cursor.execute(insert_query, new_entry_values)
+                conn.commit()  # Commit the transaction
+                
+                cursor = conn.cursor()
+                message = "Inserted"
+                # Fetch data again after insertion
+                cursor.execute(f"select * from {table_name}")
+                data = cursor.fetchall()
+                conn.commit()
+        
+            elif action =='delete':
+                to_delete_values = [request.form[column] for column in columns]
+                query=f"DELETE FROM {table_name} WHERE "
+                print(query)
 
-            for i in range(len(columns)):
-                    if i==len(columns)-1:
-                        if columns[i].isnumeric():
-                            query+= f"{columns[i]} = {to_delete_values[i]}"
-                        else:
-                            query+= f"{columns[i]} = '{to_delete_values[i]}'"
-                    else :
-                        if columns[i].isnumeric():
-                            query+= f"{columns[i]} = {to_delete_values[i]} and "
-                        else:
-                            query+= f"{columns[i]} = '{to_delete_values[i]}' and "
-            query+=";"
-            print(query)
-            cursor.execute(query)  
-            conn.commit()  
-            cursor.execute(f"SELECT * FROM {table_name}")
-            data = cursor.fetchall()
-            conn.commit()
+                for i in range(len(columns)):
+                        if i==len(columns)-1:
+                            if columns[i].isnumeric():
+                                query+= f"{columns[i]} = {to_delete_values[i]}"
+                            else:
+                                query+= f"{columns[i]} = '{to_delete_values[i]}'"
+                        else :
+                            if columns[i].isnumeric():
+                                query+= f"{columns[i]} = {to_delete_values[i]} and "
+                            else:
+                                query+= f"{columns[i]} = '{to_delete_values[i]}' and "
+                query+=";"
+                print(query)
+                cursor.execute(query)  
+                message = "Deleted"
+                conn.commit()  
+                cursor.execute(f"SELECT * FROM {table_name}")
+                data = cursor.fetchall()
+                conn.commit()
 
-        elif action == 'rename':
-            new_table_name = request.form['new_table_name']
-            cursor=conn.cursor()
-            cursor.execute(f"RENAME TABLE {table_name} TO {new_table_name}")
-            conn.commit()
-            return redirect('/view_table/' + new_table_name)
-        # Close the cursor and connection
-        cursor.close()
-        conn.close()
-
+            elif action == 'rename':
+                new_table_name = request.form['new_table_name']
+                cursor=conn.cursor()
+                cursor.execute(f"RENAME TABLE {table_name} TO {new_table_name}")
+                message = "Renamed"
+                conn.commit()
+                return redirect('/view_table/' + new_table_name)
+            # Close the cursor and connection
+            cursor.close()
+            conn.close()
+        except mysql.connector.Error as e:
+            message = f"Error: {e}"
     # Render the HTML template with table name, column names, and data
-    return render_template('view_table.html', table_name=table_name, columns=columns, data=data)
+        return render_template('view_table.html', table_name=table_name, columns=columns, data=data,message=message)
+    else:
+        return render_template('view_table.html', table_name=table_name, columns=columns, data=data)
 
 @app.route('/addEvents', methods=['GET'])
 def addEvents():
@@ -1273,7 +1280,7 @@ def issueequipment():
         query = f"insert into ISSUE values ({id},{session['userid']},'{datetime.now()}',NULL,'{sop}')"
         cursor.execute(query)
 
-        query = f"select count(*) as c from ISSUE where EQUIPMENT_ID = {id} and RETURN_TIME = NULL"
+        query = f"select count(*) as c from ISSUE where EQUIPMENT_ID = {id} and RETURN_TIME IS NULL"
         cursor.execute(query)
         eq = cursor.fetchone()
         if eq[0]==count:
