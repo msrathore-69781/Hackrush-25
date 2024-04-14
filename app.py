@@ -547,6 +547,7 @@ def update_council_members(council_name):
 def fetch_club_members(club_name):
     show_form = session.get("club_secretary") == club_name
     
+    event_info = None
     if show_form:
         try:
             conn_ = mysql.connector.connect(**mysql_config)
@@ -614,6 +615,7 @@ def fetch_club_members(club_name):
 def update_club_members(club_name):
     show_form = session.get("club_secretary") == club_name
 
+    event_info = None
     if show_form:
         try:
             conn_ = mysql.connector.connect(**mysql_config)
