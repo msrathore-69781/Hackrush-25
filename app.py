@@ -295,6 +295,15 @@ def approval_update():
 #this is used to display council details 
 @app.route('/councils')
 def council():
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student or employee to view."
+        return redirect(url_for('login'))
+
     try:
         conn = mysql.connector.connect(**mysql_config)
         cursor = conn.cursor(dictionary=True)
@@ -329,6 +338,17 @@ def council():
 @app.route('/fetch_council_member/events', methods = ['GET'])
 @app.route('/events', methods = ['GET'])
 def events():
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student to access Events page."
+        return redirect(url_for('login'))
+
     try:
         conn = mysql.connector.connect(**mysql_config)
         cursor = conn.cursor(dictionary=True)
@@ -348,6 +368,17 @@ def events():
 
 @app.route('/event/<ev>/<ed>', methods = ['POST','GET'])
 def event(ev,ed):
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student to access Events page."
+        return redirect(url_for('login'))
+
     try:
 
         conn = mysql.connector.connect(**mysql_config)
@@ -366,6 +397,17 @@ def event(ev,ed):
         
 @app.route('/participate/<ev>/<ed>', methods = ['GET'])
 def participate(ev,ed):
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student to participate."
+        return redirect(url_for('login'))
+
     if (ed[0].isdigit()):
         return render_template('participation.html',ev=ev,ed=ed)
     else:
@@ -374,6 +416,17 @@ def participate(ev,ed):
 
 @app.route('/participation/<ev>/<ed>', methods = ['GET','POST'])
 def participation(ev,ed):
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student to participate."
+        return redirect(url_for('login'))
+
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor(dictionary=True)
     name = request.form['teamname']
@@ -410,6 +463,15 @@ def participation(ev,ed):
 
 @app.route('/council_members/<council_name>')
 def council_members(council_name):
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student or employee to view."
+        return redirect(url_for('login'))
+
     show_form = session.get("council_secretary") == council_name
     print(show_form)
     cursor = conn.cursor(dictionary=True)
@@ -427,10 +489,18 @@ def council_members(council_name):
         message=f"Error retrieving info {e}"
         return render_template('council_members.html', council_name=council_name, show_form=show_form, clubs=clubs)
 
-    
 
 @app.route('/clubs/<club_name>')
 def clubs(club_name):
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student or employee to view."
+        return redirect(url_for('login'))
+
     show_form = session.get("club_secretary") == club_name
     print(show_form)
 
@@ -477,6 +547,15 @@ def clubs(club_name):
 
 @app.route('/fetch_council_member/<council_name>', methods=['POST'])
 def fetch_council_members(council_name):
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student or employee to view."
+        return redirect(url_for('login'))
+
     option = request.form['option']
     show_form = session.get("council_secretary") == council_name
     conn = mysql.connector.connect(**mysql_config)
@@ -510,6 +589,15 @@ def fetch_council_members(council_name):
 
 @app.route('/update_council_members/<council_name>', methods=['POST'])
 def update_council_members(council_name):
+    
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student or employee to view."
+        return redirect(url_for('login'))
+    
     option = request.form['option2']
     r = request.form['r']
     show_form = session.get("council_secretary") == council_name
@@ -545,6 +633,15 @@ def update_council_members(council_name):
 
 @app.route('/fetch_club_member/<club_name>', methods=['POST'])
 def fetch_club_members(club_name):
+    
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student or employee to view."
+        return redirect(url_for('login'))
+    
     show_form = session.get("club_secretary") == club_name
     
     event_info = None
@@ -613,6 +710,15 @@ def fetch_club_members(club_name):
 
 @app.route('/update_club_members/<club_name>', methods=['POST'])
 def update_club_members(club_name):
+    
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student or employee to view."
+        return redirect(url_for('login'))
+    
     show_form = session.get("club_secretary") == club_name
 
     event_info = None
@@ -716,6 +822,17 @@ def admin_panel():
 
 @app.route('/view_table/<table_name>', methods=['GET', 'POST'])
 def view_table(table_name):
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Employee" or session["loggedin"] == "Student":
+        session["message"] = "Only admins can access this page."
+        return redirect(url_for('login')) 
+
     # Establish a connection to MySQL
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
@@ -894,10 +1011,31 @@ def submit():
 
 @app.route('/equipment', methods=['GET'])
 def equipment():
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student to access Equipments page."
+        return redirect(url_for('login'))
+    
     return render_template('equipments.html', a=0)
 
 @app.route('/equipmentaction', methods=['POST'])
 def action():
+
+    if 'loggedin' not in session:
+        session["message"] = "Please log in first."
+        return redirect(url_for('login'))
+    
+    print(session["loggedin"])
+    
+    if session["loggedin"] == "Admin" or session["loggedin"] == "Employee":
+        session["message"] = "Log-in as student to access this page."
+        return redirect(url_for('login'))
+
     option = request.form.get('option')
     conn = mysql.connector.connect(**mysql_config)
     cursor = conn.cursor()
