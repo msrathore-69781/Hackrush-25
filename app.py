@@ -300,7 +300,9 @@ def council():
         session["message"] = "Please log in first."
         return redirect(url_for('login'))
     
-    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+    print(session["loggedin"])
+    
+    if session["loggedin"] != "Student" and session["loggedin"] != "Employee":
         session["message"] = "Log-in as student or employee to view."
         return redirect(url_for('login'))
 
@@ -468,7 +470,9 @@ def council_members(council_name):
         session["message"] = "Please log in first."
         return redirect(url_for('login'))
     
-    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+    print(session["loggedin"])
+    
+    if session["loggedin"] != "Student" and session["loggedin"] != "Employee":
         session["message"] = "Log-in as student or employee to view."
         return redirect(url_for('login'))
 
@@ -497,7 +501,9 @@ def clubs(club_name):
         session["message"] = "Please log in first."
         return redirect(url_for('login'))
     
-    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+    print(session["loggedin"])
+    
+    if session["loggedin"] != "Student" and session["loggedin"] != "Employee":
         session["message"] = "Log-in as student or employee to view."
         return redirect(url_for('login'))
 
@@ -552,7 +558,9 @@ def fetch_council_members(council_name):
         session["message"] = "Please log in first."
         return redirect(url_for('login'))
     
-    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+    print(session["loggedin"])
+    
+    if session["loggedin"] != "Student" and session["loggedin"] != "Employee":
         session["message"] = "Log-in as student or employee to view."
         return redirect(url_for('login'))
 
@@ -594,7 +602,9 @@ def update_council_members(council_name):
         session["message"] = "Please log in first."
         return redirect(url_for('login'))
     
-    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+    print(session["loggedin"])
+    
+    if session["loggedin"] != "Student" and session["loggedin"] != "Employee":
         session["message"] = "Log-in as student or employee to view."
         return redirect(url_for('login'))
     
@@ -638,7 +648,9 @@ def fetch_club_members(club_name):
         session["message"] = "Please log in first."
         return redirect(url_for('login'))
     
-    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+    print(session["loggedin"])
+    
+    if session["loggedin"] != "Student" and session["loggedin"] != "Employee":
         session["message"] = "Log-in as student or employee to view."
         return redirect(url_for('login'))
     
@@ -715,7 +727,9 @@ def update_club_members(club_name):
         session["message"] = "Please log in first."
         return redirect(url_for('login'))
     
-    if session["loggedin"] != "Student" or session["loggedin"] == "Employee":
+    print(session["loggedin"])
+    
+    if session["loggedin"] != "Student" and session["loggedin"] != "Employee":
         session["message"] = "Log-in as student or employee to view."
         return redirect(url_for('login'))
     
