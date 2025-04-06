@@ -13,7 +13,7 @@ app.secret_key = 'xyzsdfg'
 mysql_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'Your_Password',    #Enter ur password for root
+    'password': '123456789',    #Enter ur password for root
     'database': 'CLUB_MS'
 }
 try:
@@ -62,6 +62,9 @@ def google_auth():
 
     print(" Google User ", user)
     return redirect('/register')
+# @app.route('/service-worker.js')
+# def sw():
+#     return send_from_directory('static', 'service-worker.js')
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -93,9 +96,11 @@ def login():
                 query = "SELECT PASSWORD FROM PASSWORDS WHERE EMAIL = %s"
                 cursor.execute(query, (email,))
                 password = cursor.fetchone()
+                print(password)
+                print(type(password))
 
                 # if roll_no != email.split("@")[0]:
-                if int(roll_no) != password:
+                if roll_no != password['PASSWORD']:
                     print("Incorrect Student Password")
                     # flash("Incorrect Student Password", 'error')         # Flash error message
                     message = "Incorrect Student Password"
